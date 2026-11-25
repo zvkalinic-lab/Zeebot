@@ -108,9 +108,11 @@ button.brick:active{transform:translateY(3px)}
 .hitfire{position:absolute;width:26%;aspect-ratio:.7;margin:0;transform:translate(-50%,-80%);border-radius:50% 50% 40% 40%;pointer-events:none;z-index:2;
   background:radial-gradient(ellipse at 50% 78%,#fff6a0 0 14%,#ffc51a 30%,#ff5a1f 52%,rgba(232,65,44,0) 70%);animation:flame .11s infinite alternate}
 @keyframes flame{to{transform:translate(-50%,-80%) scale(1.12,.82)}}
-.hero{position:absolute;left:0;top:0;width:min(26cqw,22cqh);z-index:6;pointer-events:none}
+.hero{position:absolute;left:0;top:0;width:min(34cqw,29cqh);z-index:6;pointer-events:none}
 .hero-art svg{width:100%;height:auto;display:block;overflow:visible}
 .hero-art.flip svg{transform:scaleX(-1)}
+.hero .duck-led{animation:tip .8s steps(1) infinite}
+.hero .duck-flame{animation:flick .1s infinite alternate;transform-box:fill-box;transform-origin:100% 50%}
 .hero .quack{position:absolute;left:50%;top:-30%;transform:translateX(-50%) scale(.5);font-family:var(--display);font-size:min(3.4cqw,4.2cqh);color:var(--ink);
   background:var(--yellow);padding:.15em .5em;border-radius:10px;box-shadow:0 3px 0 rgba(0,0,0,.35);opacity:0;transition:opacity .15s,transform .2s cubic-bezier(.3,1.6,.5,1);white-space:nowrap}
 .hero .quack.show{opacity:1;transform:translateX(-50%) scale(1)}
@@ -334,18 +336,25 @@ button.brick:active{transform:translateY(3px)}
     <div class="bossq" id="bossQ" hidden></div>
     <div class="timer off" id="timer" aria-label="Seconds left"><svg viewBox="0 0 100 100"><circle class="tb" cx="50" cy="50" r="42"/><circle class="tr" id="timerRing" cx="50" cy="50" r="42"/></svg><b id="timerNum">8</b></div>
     <div class="copilot" id="copilot" hidden></div>
-    <div class="hero" id="hero" hidden><div class="hero-art"><svg viewBox="0 0 140 92" aria-label="Duck hero ship" role="img">
-      <path d="M22 50 L0 40 L6 52 L0 64 Z" fill="#ff8a1f"/><path d="M22 51 L8 46 L11 52 L8 58 Z" fill="#ffe95a"/>
-      <path d="M34 40 L14 18 L44 34 Z" fill="#ff8a1f" stroke="#141a3a" stroke-width="3" stroke-linejoin="round"/><path d="M32 46 L10 34 L40 44 Z" fill="#ffb800" stroke="#141a3a" stroke-width="3" stroke-linejoin="round"/>
-      <rect x="66" y="70" width="36" height="9" rx="3" fill="#1fb5c9" stroke="#141a3a" stroke-width="3" stroke-linejoin="round"/><path d="M100 68 L118 60 L118 90 L100 82 Z" fill="#e8412c" stroke="#141a3a" stroke-width="3" stroke-linejoin="round"/><path d="M108 66 L108 84" stroke="#ffc51a" stroke-width="3"/>
-      <ellipse cx="66" cy="52" rx="46" ry="24" fill="#ffd21f" stroke="#141a3a" stroke-width="3" stroke-linejoin="round"/>
-      <ellipse cx="62" cy="60" rx="30" ry="9" fill="#fff" opacity=".45"/>
-      <path d="M46 50 Q62 32 82 48 Q66 64 46 50 Z" fill="#ffb800" stroke="#141a3a" stroke-width="3" stroke-linejoin="round"/>
-      <circle cx="96" cy="34" r="19" fill="#ffd21f" stroke="#141a3a" stroke-width="3" stroke-linejoin="round"/>
-      <path d="M110 36 Q134 34 137 43 Q124 51 108 47 Z" fill="#ff8a1f" stroke="#141a3a" stroke-width="3" stroke-linejoin="round"/><path d="M112 43 Q124 44 134 42" stroke="#141a3a" stroke-width="2" fill="none"/>
-      <circle cx="101" cy="29" r="5.5" fill="#141a3a"/><circle cx="103" cy="27" r="2" fill="#fff"/>
-      <ellipse cx="92" cy="42" rx="5" ry="3" fill="#ff7a9a" opacity=".8"/>
-      <path d="M92 15 Q96 6 102 12" stroke="#ff8a1f" stroke-width="4" fill="none" stroke-linecap="round"/>
+    <div class="hero" id="hero" hidden><div class="hero-art"><svg viewBox="0 0 150 100" aria-label="Duck Wing robot ship" role="img">
+      <defs><linearGradient id="duckG" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#ffe46b"/><stop offset=".55" stop-color="#ffc51a"/><stop offset="1" stop-color="#d99a00"/></linearGradient>
+        <linearGradient id="metalG" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#e9eef6"/><stop offset="1" stop-color="#8f9db5"/></linearGradient></defs>
+      <g class="duck-flame"><path d="M22 52 L0 42 L6 55 L0 68 Z" fill="#ff8a1f"/><path d="M22 54 L8 49 L11 55 L8 61 Z" fill="#ffe95a"/></g>
+      <rect x="14" y="44" width="14" height="22" rx="3" fill="url(#metalG)" stroke="#141a3a" stroke-width="3" stroke-linejoin="round"/><path d="M17 50 h8 M17 56 h8 M17 62 h8" stroke="#5d6b84" stroke-width="2"/>
+      <path d="M36 40 L16 16 L26 14 L48 34 Z" fill="#ff8a1f" stroke="#141a3a" stroke-width="3" stroke-linejoin="round"/><path d="M24 18 L40 34" stroke="#141a3a" stroke-width="2"/>
+      <rect x="68" y="76" width="38" height="10" rx="3" fill="#1fb5c9" stroke="#141a3a" stroke-width="3" stroke-linejoin="round"/><circle cx="76" cy="81" r="2" fill="#141a3a"/><circle cx="86" cy="81" r="2" fill="#141a3a"/>
+      <path d="M104 72 L124 63 L124 97 L104 88 Z" fill="#e8412c" stroke="#141a3a" stroke-width="3" stroke-linejoin="round"/><path d="M112 69 L112 91 M118 66 L118 94" stroke="#ffc51a" stroke-width="3"/>
+      <path d="M26 56 Q26 30 70 30 L104 34 Q118 44 112 66 Q104 82 70 82 Q30 82 26 56 Z" fill="url(#duckG)" stroke="#141a3a" stroke-width="3" stroke-linejoin="round"/>
+      <path d="M44 34 L44 80 M84 32 L84 80" stroke="#b07800" stroke-width="2.5"/>
+      <path d="M30 62 Q70 70 110 60" stroke="#b07800" stroke-width="2.5" fill="none"/>
+      <g fill="#8a5a00"><circle cx="36" cy="44" r="2"/><circle cx="36" cy="70" r="2"/><circle cx="52" cy="38" r="2"/><circle cx="52" cy="76" r="2"/><circle cx="76" cy="36" r="2"/><circle cx="76" cy="77" r="2"/><circle cx="96" cy="40" r="2"/><circle cx="98" cy="72" r="2"/></g>
+      <path d="M48 50 L58 40 L86 42 L92 52 L80 64 L52 62 Z" fill="url(#metalG)" stroke="#141a3a" stroke-width="3" stroke-linejoin="round"/><path d="M58 46 L84 48 M56 56 L82 58" stroke="#5d6b84" stroke-width="2.5"/><circle cx="52" cy="56" r="3.5" fill="#ff8a1f" stroke="#141a3a" stroke-width="3" stroke-linejoin="round"/>
+      <rect x="86" y="10" width="34" height="38" rx="12" fill="url(#duckG)" stroke="#141a3a" stroke-width="3" stroke-linejoin="round"/>
+      <path d="M90 22 L116 22" stroke="#b07800" stroke-width="2"/>
+      <rect x="96" y="25" width="26" height="12" rx="6" fill="#141a3a"/><rect x="104" y="27" width="14" height="8" rx="4" fill="#5ff2ff"/><rect x="104" y="27" width="14" height="8" rx="4" fill="#5ff2ff" opacity=".35" transform="translate(0 0) scale(1)"/>
+      <path d="M120 30 L144 32 L146 38 L120 40 Z" fill="#ff8a1f" stroke="#141a3a" stroke-width="3" stroke-linejoin="round"/><path d="M120 40 L142 40 L138 46 L120 46 Z" fill="#e06a00" stroke="#141a3a" stroke-width="3" stroke-linejoin="round"/><path d="M126 33 h4 M134 34 h4" stroke="#141a3a" stroke-width="2"/>
+      <path d="M100 10 L96 0" stroke="#5d6b84" stroke-width="3" stroke-linecap="round"/><circle class="duck-led" cx="95" cy="0" r="3.5" fill="#ff3b3b" stroke="#141a3a" stroke-width="3" stroke-linejoin="round"/>
+      <rect x="84" y="20" width="5" height="12" rx="2" fill="url(#metalG)" stroke="#141a3a" stroke-width="2"/>
     </svg></div><span class="quack" id="quack">PEW!</span></div>
     <div class="robot-wrap" id="robotWrap">
       <div class="bubble" id="bubble"></div>
@@ -775,14 +784,14 @@ const Hero = {
     const W = stage.clientWidth, H = stage.clientHeight, d = this.dir; this.dir = -d;
     this.el.hidden = false; const w = this.el.offsetWidth;
     this.el.querySelector('.hero-art').classList.toggle('flip', d < 0);
-    const y = H * (stage.classList.contains('bosslvl') ? .43 : .36);
+    const y = H * (stage.classList.contains('bosslvl') ? .42 : .34);
     const x0 = d > 0 ? -w-10 : W+10, x1 = d > 0 ? W+10 : -w-10;
     Sound.quack();
-    const anim = this.el.animate([{transform:`translate(${x0}px,${y}px) rotate(${d*4}deg)`},{transform:`translate(${(x0+x1)/2}px,${y+H*.03}px)`},{transform:`translate(${x1}px,${y-H*.05}px) rotate(${-d*6}deg)`}],{duration:1800,easing:'cubic-bezier(.35,.15,.65,.85)',fill:'forwards'});
+    const anim = this.el.animate([{transform:`translate(${x0}px,${y}px) rotate(${d*4}deg)`},{transform:`translate(${(x0+x1)/2}px,${y+H*.03}px)`},{transform:`translate(${x1}px,${y-H*.05}px) rotate(${-d*6}deg)`}],{duration:3000,easing:'cubic-bezier(.35,.15,.65,.85)',fill:'forwards'});
     this.run = anim.finished.catch(()=>{}).then(()=>{ this.el.hidden = true; });
     const sorted = hits.map(h => ({ ...h, x: stagePoint(h.el.getBoundingClientRect()).x })).sort((a,b) => d*(a.x-b.x));
     await Promise.all(sorted.map(async (h, i) => {
-      await wait(520 + i*330);
+      await wait(950 + i*520);
       const q = $('#quack'); q.textContent = pick(['PEW!','QUACK!','PEW PEW!']); q.classList.add('show'); setTimeout(()=>q.classList.remove('show'), 380);
       Sound.pew();
       await fireBolt(stagePoint(this.el.getBoundingClientRect(), .55, .4), stagePoint(h.el.getBoundingClientRect()), 'duck', 200);
