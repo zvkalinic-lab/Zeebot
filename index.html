@@ -35,7 +35,7 @@ body{margin:0;background:var(--space);color:var(--text);font-family:var(--body);
 button{font:inherit;color:inherit;cursor:pointer;border:0;background:none}
 button:focus-visible{outline:3px solid var(--yellow);outline-offset:3px}
 
-#app{height:100%;display:grid;grid-template-rows:auto 1fr auto;position:relative}
+#app{height:100%;display:grid;grid-template-rows:auto 1fr auto;grid-template-columns:minmax(0,1fr);position:relative}
 
 /* ---------- toy brick ---------- */
 .brick{--c:var(--red);--t:#fff;position:relative;background:var(--c);color:var(--t);border-radius:10px;
@@ -141,6 +141,80 @@ button.brick:active{transform:translateY(3px)}
 .bosslvl .planet{display:none}
 .bosslvl .robot-wrap{height:40cqh}
 .bolt.good{background:#fff;box-shadow:0 0 10px 4px #3fe3ff,0 0 30px 10px #1f6fe0}
+.fsvg .o{stroke:#141a3a;stroke-width:3;stroke-linejoin:round;stroke-linecap:round}
+.fsvg .fl{animation:fflick .12s infinite alternate;transform-box:fill-box;transform-origin:100% 50%}
+@keyframes fflick{from{transform:scaleX(.8)}to{transform:scaleX(1.1)}}
+.ship.wreck .ship-art svg{filter:brightness(.35) saturate(.3)}
+.debris{position:absolute;width:2.4cqmin;height:1.6cqmin;background:#3a4058;border:2px solid #141a3a;border-radius:2px;pointer-events:none;z-index:4}
+/* ---- underwater theme (Mission 2) ---- */
+.sea-decor{position:absolute;inset:0;pointer-events:none;display:none;overflow:hidden}
+.sea .sea-decor{display:block}
+.sea .planet{display:none}
+.fish{position:absolute;left:0;width:min(7cqw,9cqh);animation:swim linear infinite}
+.fish svg{width:100%;height:auto;display:block}
+.fish.rev svg{transform:scaleX(-1)}
+.fish.rev{animation-name:swimrev}
+@keyframes swim{from{transform:translateX(-12cqw)}to{transform:translateX(112cqw)}}
+@keyframes swimrev{from{transform:translateX(112cqw)}to{transform:translateX(-12cqw)}}
+.fish .fb{animation:wig .5s ease-in-out infinite alternate}
+@keyframes wig{to{transform:translateY(8%)}}
+.starfish{position:absolute;bottom:.5cqh;width:min(6cqw,7cqh);animation:sfpulse 4s ease-in-out infinite}
+@keyframes sfpulse{50%{transform:rotate(14deg) scale(1.08)}}
+.weed{position:absolute;bottom:-1cqh;width:min(5cqw,8cqh);transform-origin:50% 100%;animation:sway 3.5s ease-in-out infinite alternate}
+@keyframes sway{from{transform:rotate(-7deg)}to{transform:rotate(7deg)}}
+.dome{display:none;position:absolute;left:-16%;right:-16%;top:-9%;bottom:-3%;border-radius:50% 50% 14% 14%/62% 62% 10% 10%;pointer-events:none;
+  border:3px solid rgba(170,240,255,.75);background:radial-gradient(circle at 30% 22%,rgba(255,255,255,.4),rgba(255,255,255,0) 22%),radial-gradient(circle at 50% 45%,rgba(120,220,255,.06),rgba(120,220,255,.2));
+  box-shadow:inset 0 0 28px rgba(127,233,255,.4),0 0 22px rgba(127,233,255,.3)}
+.dome::after{content:"";position:absolute;left:3%;right:3%;bottom:-4%;height:9%;border-radius:8px;background:linear-gradient(#b8c6dd,#5d6b84);border:3px solid #141a3a}
+.sea .dome{display:block}
+/* helpers (Mission 2 power-ups) */
+.helpers{position:absolute;left:max(2cqw,8px);bottom:3cqh;display:flex;flex-direction:column-reverse;gap:1.4cqh;z-index:7}
+.hbtn{position:relative;width:min(11cqw,12cqh);aspect-ratio:1;border-radius:50%;padding:6%;background:radial-gradient(circle at 40% 30%,#3fd7a0,#1d7a55);border:3px solid #fff;
+  box-shadow:0 4px 0 rgba(0,0,0,.35),0 0 16px rgba(93,255,138,.5);animation:hpulse 1.6s ease-in-out infinite}
+.hbtn svg{width:100%;height:100%;display:block;overflow:visible}
+.hbtn b{position:absolute;left:50%;bottom:-.6em;transform:translateX(-50%);font-family:var(--display);font-weight:400;font-size:min(2cqw,2.4cqh);background:#fff;color:var(--ink);border-radius:6px;padding:0 .4em;white-space:nowrap}
+.hbtn.used{filter:grayscale(1) brightness(.45);animation:none;cursor:default;box-shadow:none}
+@keyframes hpulse{50%{box-shadow:0 4px 0 rgba(0,0,0,.35),0 0 26px rgba(93,255,138,.9)}}
+.hfly{position:absolute;width:min(16cqw,18cqh);pointer-events:none;z-index:8}
+.hfly svg{width:100%;height:auto;display:block;overflow:visible}
+.ans.hinted{animation:hint .6s ease-in-out infinite alternate;box-shadow:0 0 0 4px #fff,0 0 34px #ffe95a}
+@keyframes hint{to{transform:translateY(-6px) scale(1.06)}}
+.ans.dim{opacity:.25;pointer-events:none}
+.intro-card{position:absolute;left:50%;top:6cqh;transform:translateX(-50%);z-index:9;display:flex;align-items:center;gap:14px;max-width:min(560px,92%);
+  background:rgba(20,26,58,.92);border:3px solid var(--red);border-radius:16px;padding:10px 16px;box-shadow:0 8px 30px rgba(0,0,0,.5);animation:panelIn .4s cubic-bezier(.3,1.4,.5,1)}
+.intro-card.good{border-color:var(--green)}
+.intro-card .ia{width:min(110px,22cqw);flex:none}.intro-card .ia svg{width:100%;height:auto;display:block}
+.intro-card .it{font-family:var(--display);font-size:13px;color:var(--orange);letter-spacing:.06em}
+.intro-card h3{margin:2px 0;font-family:var(--display);font-weight:400;font-size:20px}
+.intro-card p{margin:0;font-size:13px;color:var(--muted);line-height:1.35}
+.minions .mn{position:absolute;width:min(14cqw,16cqh);z-index:2;animation:bob 2.2s ease-in-out infinite}
+.minions .mn svg{width:100%;height:auto;display:block;overflow:visible}
+.minions .mn:nth-child(even){animation-delay:-1.1s}
+.minions .mn.flip svg{transform:scaleX(-1)}
+/* mission tabs + fleet cards */
+.mtabs{display:flex;gap:12px;flex-wrap:wrap;justify-content:center}
+.mtab{padding:10px 16px;font-size:14px}
+.mtab.cur{box-shadow:0 0 0 3px #fff,inset 0 -6px 0 rgba(0,0,0,.25)}
+.mtab.locked{--c:#2a3070!important;--t:#7880c0!important}
+.fcards{display:grid;grid-template-columns:repeat(auto-fill,minmax(170px,1fr));gap:16px;width:100%}
+.fcard{border-radius:16px;padding:10px;text-align:left;background:linear-gradient(160deg,#2a2f6a,#1a1f50);box-shadow:0 0 0 3px var(--gc,#3a4290),0 8px 20px rgba(0,0,0,.4);animation:fcIn .55s cubic-bezier(.3,1.5,.5,1) backwards}
+.fcard.enemy{--gc:var(--red)}.fcard.helper{--gc:var(--green)}
+.fcard .fa{border-radius:10px;background:radial-gradient(circle at 50% 45%,rgba(255,255,255,.22),rgba(0,0,0,.2));aspect-ratio:4/3;display:grid;place-items:center}
+.fcard .fa svg{width:92%;height:auto}
+.fcard .ft{font-size:10px;letter-spacing:.1em;text-transform:uppercase;color:var(--gc);margin-top:6px}
+.fcard h4{margin:2px 0 4px;font-family:var(--display);font-weight:400;font-size:15px}
+.fcard p{margin:0;font-size:12px;line-height:1.35;color:#d6dcff}
+.fcard .pw{margin-top:6px;font-size:11px;background:rgba(93,255,138,.15);color:#c8ffd6;border-radius:8px;padding:4px 6px}
+.fcards.small{grid-template-columns:repeat(auto-fill,minmax(92px,1fr));gap:10px}
+.fcards.small .fcard.locked p,.fcards.small .fcard.locked .ft{display:none}
+.fcards.small .fcard.locked h4{font-size:12px;text-align:center}
+.fcards.small .fcard.locked .fa b{font-size:34px}
+.fcard.locked{--gc:#3a4290;color:#7880c0;background:repeating-linear-gradient(45deg,#232a68 0 10px,#1e245c 10px 20px)}
+.fcard.locked .fa{background:none}.fcard.locked .fa b{font-family:var(--display);font-size:48px;color:#3a4290}
+@keyframes fcIn{from{opacity:0;transform:translateY(30px) scale(.6) rotate(-6deg)}}
+.unlocked-title{font-family:var(--display);font-weight:400;margin:0;font-size:clamp(40px,9vw,84px);color:#5dff8a;text-shadow:0 5px 0 #1d7a33,0 0 30px rgba(93,255,138,.6);animation:ulk 1s cubic-bezier(.3,1.6,.5,1)}
+@keyframes ulk{from{transform:scale(.2) rotate(-12deg);opacity:0}}
+.grp-h{font-family:var(--display);font-weight:400;font-size:18px;margin:6px 0 0;align-self:flex-start}
 .bolt{position:absolute;width:3cqmin;height:3cqmin;border-radius:50%;background:#fff;box-shadow:0 0 10px 4px #ff3b3b,0 0 30px 10px #ff8a1f;pointer-events:none;z-index:4}
 
 /* robot */
@@ -317,8 +391,10 @@ button.brick:active{transform:translateY(3px)}
   <main class="stage" id="stage">
     <canvas id="stars"></canvas>
     <div class="planet"></div>
+    <div class="sea-decor" id="seaDecor" aria-hidden="true"><div class="fish " style="top:18cqh;animation-duration:14s;animation-delay:0s"><svg viewBox="0 0 60 36"><g class="fb"><path d="M10 18 L0 6 L2 18 L0 30 Z" fill="#ff8a1f" stroke="#141a3a" stroke-width="2" stroke-linejoin="round"/><ellipse cx="32" cy="18" rx="22" ry="13" fill="#ffc51a" stroke="#141a3a" stroke-width="2.5"/><path d="M26 6 Q32 0 38 6" fill="#ff8a1f" stroke="#141a3a" stroke-width="2"/><path d="M24 10 Q20 18 24 26" stroke="#ff8a1f" stroke-width="3" fill="none"/><circle cx="44" cy="15" r="4" fill="#fff" stroke="#141a3a" stroke-width="1.5"/><circle cx="45" cy="15" r="2" fill="#141a3a"/><path d="M48 22 Q51 23 53 21" stroke="#141a3a" stroke-width="1.5" fill="none"/></g></svg></div><div class="fish rev" style="top:44cqh;animation-duration:19s;animation-delay:-6s"><svg viewBox="0 0 60 36"><g class="fb"><path d="M10 18 L0 6 L2 18 L0 30 Z" fill="#8e44d6" stroke="#141a3a" stroke-width="2" stroke-linejoin="round"/><ellipse cx="32" cy="18" rx="22" ry="13" fill="#ff7ae0" stroke="#141a3a" stroke-width="2.5"/><path d="M26 6 Q32 0 38 6" fill="#8e44d6" stroke="#141a3a" stroke-width="2"/><path d="M24 10 Q20 18 24 26" stroke="#8e44d6" stroke-width="3" fill="none"/><circle cx="44" cy="15" r="4" fill="#fff" stroke="#141a3a" stroke-width="1.5"/><circle cx="45" cy="15" r="2" fill="#141a3a"/><path d="M48 22 Q51 23 53 21" stroke="#141a3a" stroke-width="1.5" fill="none"/></g></svg></div><div class="fish " style="top:30cqh;animation-duration:16s;animation-delay:-11s"><svg viewBox="0 0 60 36"><g class="fb"><path d="M10 18 L0 6 L2 18 L0 30 Z" fill="#1f6fe0" stroke="#141a3a" stroke-width="2" stroke-linejoin="round"/><ellipse cx="32" cy="18" rx="22" ry="13" fill="#5ad8ff" stroke="#141a3a" stroke-width="2.5"/><path d="M26 6 Q32 0 38 6" fill="#1f6fe0" stroke="#141a3a" stroke-width="2"/><path d="M24 10 Q20 18 24 26" stroke="#1f6fe0" stroke-width="3" fill="none"/><circle cx="44" cy="15" r="4" fill="#fff" stroke="#141a3a" stroke-width="1.5"/><circle cx="45" cy="15" r="2" fill="#141a3a"/><path d="M48 22 Q51 23 53 21" stroke="#141a3a" stroke-width="1.5" fill="none"/></g></svg></div><div class="fish rev" style="top:58cqh;animation-duration:22s;animation-delay:-3s"><svg viewBox="0 0 60 36"><g class="fb"><path d="M10 18 L0 6 L2 18 L0 30 Z" fill="#1d7a55" stroke="#141a3a" stroke-width="2" stroke-linejoin="round"/><ellipse cx="32" cy="18" rx="22" ry="13" fill="#5dff8a" stroke="#141a3a" stroke-width="2.5"/><path d="M26 6 Q32 0 38 6" fill="#1d7a55" stroke="#141a3a" stroke-width="2"/><path d="M24 10 Q20 18 24 26" stroke="#1d7a55" stroke-width="3" fill="none"/><circle cx="44" cy="15" r="4" fill="#fff" stroke="#141a3a" stroke-width="1.5"/><circle cx="45" cy="15" r="2" fill="#141a3a"/><path d="M48 22 Q51 23 53 21" stroke="#141a3a" stroke-width="1.5" fill="none"/></g></svg></div><div class="fish " style="top:70cqh;animation-duration:17s;animation-delay:-9s"><svg viewBox="0 0 60 36"><g class="fb"><path d="M10 18 L0 6 L2 18 L0 30 Z" fill="#e8412c" stroke="#141a3a" stroke-width="2" stroke-linejoin="round"/><ellipse cx="32" cy="18" rx="22" ry="13" fill="#ff8a1f" stroke="#141a3a" stroke-width="2.5"/><path d="M26 6 Q32 0 38 6" fill="#e8412c" stroke="#141a3a" stroke-width="2"/><path d="M24 10 Q20 18 24 26" stroke="#e8412c" stroke-width="3" fill="none"/><circle cx="44" cy="15" r="4" fill="#fff" stroke="#141a3a" stroke-width="1.5"/><circle cx="45" cy="15" r="2" fill="#141a3a"/><path d="M48 22 Q51 23 53 21" stroke="#141a3a" stroke-width="1.5" fill="none"/></g></svg></div><div class="fish rev" style="top:8cqh;animation-duration:25s;animation-delay:-15s"><svg viewBox="0 0 60 36"><g class="fb"><path d="M10 18 L0 6 L2 18 L0 30 Z" fill="#1fb5c9" stroke="#141a3a" stroke-width="2" stroke-linejoin="round"/><ellipse cx="32" cy="18" rx="22" ry="13" fill="#ffe95a" stroke="#141a3a" stroke-width="2.5"/><path d="M26 6 Q32 0 38 6" fill="#1fb5c9" stroke="#141a3a" stroke-width="2"/><path d="M24 10 Q20 18 24 26" stroke="#1fb5c9" stroke-width="3" fill="none"/><circle cx="44" cy="15" r="4" fill="#fff" stroke="#141a3a" stroke-width="1.5"/><circle cx="45" cy="15" r="2" fill="#141a3a"/><path d="M48 22 Q51 23 53 21" stroke="#141a3a" stroke-width="1.5" fill="none"/></g></svg></div><div class="starfish" style="left:33%;animation-delay:0s"><svg viewBox="0 0 50 50"><path d="M25 3 L31 18 L47 19 L34 29 L39 45 L25 36 L11 45 L16 29 L3 19 L19 18 Z" fill="#ff8a1f" stroke="#141a3a" stroke-width="2.5" stroke-linejoin="round"/><circle cx="25" cy="25" r="3" fill="#fff" opacity=".6"/><circle cx="20" cy="22" r="1.5" fill="#141a3a"/><circle cx="30" cy="22" r="1.5" fill="#141a3a"/></svg></div><div class="starfish" style="left:23%;animation-delay:-1.5s"><svg viewBox="0 0 50 50"><path d="M25 3 L31 18 L47 19 L34 29 L39 45 L25 36 L11 45 L16 29 L3 19 L19 18 Z" fill="#ff7ae0" stroke="#141a3a" stroke-width="2.5" stroke-linejoin="round"/><circle cx="25" cy="25" r="3" fill="#fff" opacity=".6"/><circle cx="20" cy="22" r="1.5" fill="#141a3a"/><circle cx="30" cy="22" r="1.5" fill="#141a3a"/></svg></div><div class="starfish" style="left:71%;animation-delay:-2.5s"><svg viewBox="0 0 50 50"><path d="M25 3 L31 18 L47 19 L34 29 L39 45 L25 36 L11 45 L16 29 L3 19 L19 18 Z" fill="#ffc51a" stroke="#141a3a" stroke-width="2.5" stroke-linejoin="round"/><circle cx="25" cy="25" r="3" fill="#fff" opacity=".6"/><circle cx="20" cy="22" r="1.5" fill="#141a3a"/><circle cx="30" cy="22" r="1.5" fill="#141a3a"/></svg></div><div class="starfish" style="left:88%;animation-delay:-.7s"><svg viewBox="0 0 50 50"><path d="M25 3 L31 18 L47 19 L34 29 L39 45 L25 36 L11 45 L16 29 L3 19 L19 18 Z" fill="#e8412c" stroke="#141a3a" stroke-width="2.5" stroke-linejoin="round"/><circle cx="25" cy="25" r="3" fill="#fff" opacity=".6"/><circle cx="20" cy="22" r="1.5" fill="#141a3a"/><circle cx="30" cy="22" r="1.5" fill="#141a3a"/></svg></div><div class="weed" style="left:14%;animation-delay:0s"><svg viewBox="0 0 30 90"><path d="M15 90 Q4 70 15 52 Q26 34 15 16 Q8 6 14 0" stroke="#2bb24c" stroke-width="7" fill="none" stroke-linecap="round"/><path d="M15 90 Q4 70 15 52 Q26 34 15 16 Q8 6 14 0" stroke="#5dff8a" stroke-width="2" fill="none" stroke-linecap="round" opacity=".6"/></svg></div><div class="weed" style="left:17%;animation-delay:-1.2s"><svg viewBox="0 0 30 90"><path d="M15 90 Q4 70 15 52 Q26 34 15 16 Q8 6 14 0" stroke="#2bb24c" stroke-width="7" fill="none" stroke-linecap="round"/><path d="M15 90 Q4 70 15 52 Q26 34 15 16 Q8 6 14 0" stroke="#5dff8a" stroke-width="2" fill="none" stroke-linecap="round" opacity=".6"/></svg></div><div class="weed" style="left:80%;animation-delay:-.6s"><svg viewBox="0 0 30 90"><path d="M15 90 Q4 70 15 52 Q26 34 15 16 Q8 6 14 0" stroke="#2bb24c" stroke-width="7" fill="none" stroke-linecap="round"/><path d="M15 90 Q4 70 15 52 Q26 34 15 16 Q8 6 14 0" stroke="#5dff8a" stroke-width="2" fill="none" stroke-linecap="round" opacity=".6"/></svg></div><div class="weed" style="left:95%;animation-delay:-2s"><svg viewBox="0 0 30 90"><path d="M15 90 Q4 70 15 52 Q26 34 15 16 Q8 6 14 0" stroke="#2bb24c" stroke-width="7" fill="none" stroke-linecap="round"/><path d="M15 90 Q4 70 15 52 Q26 34 15 16 Q8 6 14 0" stroke="#5dff8a" stroke-width="2" fill="none" stroke-linecap="round" opacity=".6"/></svg></div></div>
+    <div class="minions" id="minions"></div>
     <div id="ships"></div>
-    <div class="boss" id="boss" hidden><div class="boss-in"><svg viewBox="0 0 320 170" aria-label="Boss ship Scraptor" role="img">
+    <div class="boss" id="boss" hidden><div class="boss-in"><svg viewBox="0 0 320 170" data-kind="scraptor" data-eye=".5,.47" aria-label="Boss ship Scraptor" role="img">
       <g class="bpart" data-part="engineL"><g class="bs"><ellipse cx="91" cy="150" rx="13" ry="9" fill="#ff8a1f"/><rect x="72" y="102" width="38" height="44" rx="8" fill="#3a4058" stroke="#0b0d1a" stroke-width="3" stroke-linejoin="round"/><path d="M78 116 h26 M78 126 h26" stroke="#6b7590" stroke-width="3"/></g><g class="bfire"><ellipse cx="91" cy="116" rx="11" ry="17" fill="#ff5a1f" opacity=".9"/><ellipse cx="91" cy="120" rx="6" ry="10" fill="#ffe95a"/></g></g>
       <g class="bpart" data-part="engineR"><g class="bs"><ellipse cx="229" cy="150" rx="13" ry="9" fill="#ff8a1f"/><rect x="210" y="102" width="38" height="44" rx="8" fill="#3a4058" stroke="#0b0d1a" stroke-width="3" stroke-linejoin="round"/><path d="M216 116 h26 M216 126 h26" stroke="#6b7590" stroke-width="3"/></g><g class="bfire"><ellipse cx="229" cy="116" rx="11" ry="17" fill="#ff5a1f" opacity=".9"/><ellipse cx="229" cy="120" rx="6" ry="10" fill="#ffe95a"/></g></g>
       <g class="bpart" data-part="wingL"><g class="bs"><path d="M122 60 L8 38 L22 104 L122 100 Z" fill="#b3243a" stroke="#0b0d1a" stroke-width="3" stroke-linejoin="round"/><path d="M110 70 L30 56 M110 84 L28 74 M110 96 L32 92" stroke="#ffc51a" stroke-width="4"/></g><g class="bfire"><ellipse cx="64" cy="72" rx="11" ry="17" fill="#ff5a1f" opacity=".9"/><ellipse cx="64" cy="76" rx="6" ry="10" fill="#ffe95a"/></g></g>
@@ -333,6 +409,28 @@ button.brick:active{transform:translateY(3px)}
       <path class="beye" d="M128 68 L152 75 L150 88 L130 84 Z" fill="#ff1f1f" stroke="#0b0d1a" stroke-width="2.5" stroke-linejoin="round"/>
       <path class="beye" d="M192 68 L168 75 L170 88 L190 84 Z" fill="#ff1f1f" stroke="#0b0d1a" stroke-width="2.5" stroke-linejoin="round"/>
       <g class="bpart" data-part="jaw"><g class="bs"><path d="M122 106 L198 106 L186 142 L134 142 Z" fill="#4a5270" stroke="#0b0d1a" stroke-width="3" stroke-linejoin="round"/><path d="M138 112 l6 10 l6 -10 l6 10 l6 -10 l6 10 l6 -10 l6 10 l6 -10" stroke="#e8ecf4" stroke-width="3" fill="none" stroke-linejoin="round"/></g><g class="bfire"><ellipse cx="160" cy="122" rx="11" ry="17" fill="#ff5a1f" opacity=".9"/><ellipse cx="160" cy="126" rx="6" ry="10" fill="#ffe95a"/></g></g>
+    </svg>
+    <svg viewBox="0 0 320 170" data-kind="sub" data-eye=".47,.52" aria-label="Boss submarine Crankfin" role="img" hidden>
+      <g class="bpart"><g class="bs"><path d="M296 90 L316 62 L320 70 L304 90 L320 110 L316 118 Z" fill="#ffc51a" stroke="#0b0d1a" stroke-width="3" stroke-linejoin="round"/><circle cx="300" cy="90" r="8" fill="#5d6b84" stroke="#0b0d1a" stroke-width="3" stroke-linejoin="round"/></g><g class="bfire"><ellipse cx="306" cy="88" rx="11" ry="17" fill="#ff5a1f" opacity=".9"/><ellipse cx="306" cy="92" rx="6" ry="10" fill="#ffe95a"/></g></g>
+      <g class="bpart"><g class="bs"><path d="M256 52 L282 14 L298 18 L282 60 Z" fill="#e8412c" stroke="#0b0d1a" stroke-width="3" stroke-linejoin="round"/></g><g class="bfire"><ellipse cx="278" cy="36" rx="11" ry="17" fill="#ff5a1f" opacity=".9"/><ellipse cx="278" cy="40" rx="6" ry="10" fill="#ffe95a"/></g></g>
+      <g class="bpart"><g class="bs"><path d="M256 128 L282 166 L298 162 L282 120 Z" fill="#e8412c" stroke="#0b0d1a" stroke-width="3" stroke-linejoin="round"/></g><g class="bfire"><ellipse cx="278" cy="138" rx="11" ry="17" fill="#ff5a1f" opacity=".9"/><ellipse cx="278" cy="142" rx="6" ry="10" fill="#ffe95a"/></g></g>
+      <g class="bpart"><g class="bs"><path d="M182 24 L182 2 L204 2" stroke="#3a4058" stroke-width="7" fill="none" stroke-linecap="round"/><rect x="198" y="-4" width="16" height="12" rx="3" fill="#7fe9ff" stroke="#0b0d1a" stroke-width="3" stroke-linejoin="round"/></g><g class="bfire"><ellipse cx="190" cy="6" rx="11" ry="17" fill="#ff5a1f" opacity=".9"/><ellipse cx="190" cy="10" rx="6" ry="10" fill="#ffe95a"/></g></g>
+      <rect x="132" y="20" width="76" height="34" rx="10" fill="#2e7d6b" stroke="#0b0d1a" stroke-width="3" stroke-linejoin="round"/><path d="M142 32 h56" stroke="#ff8a1f" stroke-width="4"/>
+      <path d="M36 90 Q36 46 110 44 L232 44 Q296 50 300 90 Q296 130 232 136 L110 136 Q36 134 36 90 Z" fill="#2e9d82" stroke="#0b0d1a" stroke-width="3" stroke-linejoin="round"/>
+      <path d="M44 108 Q60 128 110 130 L232 130 Q286 126 296 104" stroke="#ff8a1f" stroke-width="6" fill="none"/>
+      <path d="M90 50 L90 132 M236 48 L236 132" stroke="#1d5e4f" stroke-width="3"/>
+      <g fill="#0f4a3e"><circle cx="70" cy="64" r="3"/><circle cx="70" cy="116" r="3"/><circle cx="112" cy="54" r="3"/><circle cx="210" cy="54" r="3"/><circle cx="256" cy="66" r="3"/><circle cx="256" cy="114" r="3"/></g>
+      <g class="bpart"><g class="bs"><path d="M44 72 L20 56" stroke="#3a4058" stroke-width="5" stroke-linecap="round"/><circle cx="18" cy="54" r="10" fill="#ffe95a" stroke="#0b0d1a" stroke-width="3" stroke-linejoin="round"/><circle cx="18" cy="54" r="16" fill="#ffe95a" opacity=".25"/></g><g class="bfire"><ellipse cx="22" cy="50" rx="11" ry="17" fill="#ff5a1f" opacity=".9"/><ellipse cx="22" cy="54" rx="6" ry="10" fill="#ffe95a"/></g></g>
+      <g class="bpart"><g class="bs"><path d="M42 102 L14 118" stroke="#3a4058" stroke-width="7" stroke-linecap="round"/><path d="M14 118 L0 108 M14 118 L2 132" stroke="#5d6b84" stroke-width="7" stroke-linecap="round"/><circle cx="14" cy="118" r="5" fill="#ff8a1f" stroke="#0b0d1a" stroke-width="3" stroke-linejoin="round"/></g><g class="bfire"><ellipse cx="12" cy="112" rx="11" ry="17" fill="#ff5a1f" opacity=".9"/><ellipse cx="12" cy="116" rx="6" ry="10" fill="#ffe95a"/></g></g>
+      <g class="bpart"><g class="bs"><rect x="70" y="134" width="70" height="16" rx="8" fill="#5d6b84" stroke="#0b0d1a" stroke-width="3" stroke-linejoin="round"/><path d="M70 136 L58 142 L70 148 Z" fill="#e8412c" stroke="#0b0d1a" stroke-width="3" stroke-linejoin="round"/></g><g class="bfire"><ellipse cx="104" cy="138" rx="11" ry="17" fill="#ff5a1f" opacity=".9"/><ellipse cx="104" cy="142" rx="6" ry="10" fill="#ffe95a"/></g></g>
+      <g class="bpart"><g class="bs"><rect x="182" y="134" width="70" height="16" rx="8" fill="#5d6b84" stroke="#0b0d1a" stroke-width="3" stroke-linejoin="round"/><path d="M182 136 L170 142 L182 148 Z" fill="#e8412c" stroke="#0b0d1a" stroke-width="3" stroke-linejoin="round"/></g><g class="bfire"><ellipse cx="216" cy="138" rx="11" ry="17" fill="#ff5a1f" opacity=".9"/><ellipse cx="216" cy="142" rx="6" ry="10" fill="#ffe95a"/></g></g>
+      <circle cx="150" cy="90" r="36" fill="#8f9db5" stroke="#0b0d1a" stroke-width="3" stroke-linejoin="round"/><circle cx="150" cy="90" r="29" fill="#0b2a33" stroke="#0b0d1a" stroke-width="3" stroke-linejoin="round"/>
+      <circle cx="140" cy="72" r="6" fill="#fff" opacity=".25"/>
+      <path d="M126 76 L146 84 M174 76 L154 84" stroke="#ffc51a" stroke-width="5" stroke-linecap="round"/>
+      <path class="beye" d="M128 84 L146 89 L145 99 L130 96 Z" fill="#ff1f1f" stroke="#0b0d1a" stroke-width="2" stroke-linejoin="round"/>
+      <path class="beye" d="M172 84 L154 89 L155 99 L170 96 Z" fill="#ff1f1f" stroke="#0b0d1a" stroke-width="2" stroke-linejoin="round"/>
+      <path d="M134 106 l4 6 l4 -6 l4 6 l4 -6 l4 6 l4 -6 l4 6 l4 -6" stroke="#e8ecf4" stroke-width="2.5" fill="none" stroke-linejoin="round"/>
+      <path d="M58 82 q-6 8 0 16 M66 80 q-6 10 0 20" stroke="#7fe9ff" stroke-width="2" fill="none" opacity=".7"/>
     </svg></div></div>
     <div class="bossq" id="bossQ" hidden></div>
     <div class="timer off" id="timer" aria-label="Seconds left"><svg viewBox="0 0 100 100"><circle class="tb" cx="50" cy="50" r="42"/><circle class="tr" id="timerRing" cx="50" cy="50" r="42"/></svg><b id="timerNum">8</b></div>
@@ -431,8 +529,10 @@ button.brick:active{transform:translateY(3px)}
             <polyline points="96,14 104,40 92,48 108,70" stroke="#fff" stroke-width="3"/>
           </g>
         </svg>
+        <div class="dome"></div>
       </div>
     </div>
+    <div class="helpers" id="helpers" hidden></div>
     <div class="lifebar" id="lifebar"><span class="lbl">POWER</span></div>
     <div class="flash" id="flash"></div>
   </main>
@@ -448,6 +548,8 @@ button.brick:active{transform:translateY(3px)}
    ===================================================================== */
 /* How many levels are always open from the start. The rest unlock by clearing the level before. (Set to 10 to open everything for testing.) */
 const OPEN_LEVELS = 2;
+/* Testing: open the game with #test at the end of the link to unlock every mission and level on this visit. */
+const TEST = location.hash === '#test';
 
 const MISSIONS = [
   { id:'m1', name:'Mission 1', title:'The Number Nebula',
@@ -464,8 +566,32 @@ const MISSIONS = [
       { name:'Star Forge',     op:'mul', tables:[2,3,4,5,6,7,8,9,10], count:10, card:'zanka' },
       { name:'Starfield Showdown', op:'mix', tables:[2,3,4,5,6,7,8,9,10], count:180, card:'prism', boss:true },
     ]},
-  // { id:'m2', name:'Mission 2', title:'...', levels:[...] },   <- next missions go here
+  { id:'m2', name:'Mission 2', title:'Deep Sea Stars', theme:'sea', requires:'m1', helpers:true,
+    intro:'Zeebot dives into a starry ocean inside his glass dome. Add and subtract to stop the sea raiders! Tap a helper when you need a hand.',
+    levels:[
+      { name:'Bubble Bay',      op:'add', tier:1, label:'+ to 20',      count:8,  card:'bubbles', enemies:['crab'] },
+      { name:'Coral Gap',       op:'sub', tier:1, label:'− to 20',      count:8,  card:'coral',   enemies:['crab'] },
+      { name:'Kelp Forest',     op:'add', tier:2, label:'+ tens',       count:8,  card:'finn',    enemies:['crab','spike'] },
+      { name:'Sunken Rocket',   op:'sub', tier:2, label:'− tens',       count:8,  card:'anchor',  enemies:['crab','spike'] },
+      { name:'Jelly Lights',    op:'add', tier:3, label:'+ no carry',   count:8,  card:'marina',  enemies:['crab','spike','shark'] },
+      { name:'Shipwreck Rise',  op:'sub', tier:3, label:'− no borrow',  count:8,  card:'puffer',  enemies:['crab','spike','shark'] },
+      { name:'Whale Road',      op:'add', tier:4, label:'+ carry',      count:9,  card:'kelp',    enemies:['crab','spike','shark','squid'], time:12 },
+      { name:'Trench Drop',     op:'sub', tier:4, label:'− borrow',     count:9,  card:'tidal',   enemies:['crab','spike','shark','squid'], time:12 },
+      { name:'Pearl Storm',     op:'add', tier:5, label:'+ to 100',     count:10, card:'octo',    enemies:['crab','spike','shark','squid'], time:12 },
+      { name:'Abyss Showdown',  op:'mix2', tier:5, label:'BOSS · + −',  count:180, card:'pearl', boss:true, bossKind:'sub', enemies:['crab','spike','shark','squid'], time:12 },
+    ]},
+  // { id:'m3', name:'Mission 3', title:'...', requires:'m2', levels:[...] },   <- next missions go here
 ];
+
+/* Ships from the fleet catalog (fleet/zeebot-fleet.pdf). Art is drawn facing right, viewBox 0 0 160 120. */
+const FLEET = [{"id": "crab", "name": "Pinchy Crab", "group": "enemy", "line": "Krade sanduke s brojevima svojim kliještima i bježi bočno, kao pravi rak.", "svg": "<g class=\"fl\"><path d=\"M40 52.0 L20.0 48.0 L26.0 60 L20.0 72.0 L40 68.0 Z\" fill=\"#ff8a1f\"/><path d=\"M40 56.0 L28.0 54.0 L31.0 60 L28.0 66.0 L40 64.0 Z\" fill=\"#ffe95a\"/></g>\n<path d=\"M58 78 L48 98 M74 84 L70 104 M90 82 L96 102\" stroke=\"#5d6b84\" stroke-width=\"5\" stroke-linecap=\"round\"/>\n<circle cx=\"48\" cy=\"99\" r=\"4\" fill=\"#ffc51a\" class=\"o\"/><circle cx=\"70\" cy=\"105\" r=\"4\" fill=\"#ffc51a\" class=\"o\"/><circle cx=\"96\" cy=\"103\" r=\"4\" fill=\"#ffc51a\" class=\"o\"/>\n<path d=\"M104 52 L122 38 M104 70 L122 84\" stroke=\"#b3243a\" stroke-width=\"7\" stroke-linecap=\"round\"/>\n<path d=\"M118 28 Q150 20 154 40 L138 39 L150 50 Q128 58 116 44 Z\" fill=\"#ff8a1f\" class=\"o\"/>\n<path d=\"M118 94 Q150 102 154 82 L138 83 L150 72 Q128 64 116 78 Z\" fill=\"#ff8a1f\" class=\"o\"/>\n<path d=\"M68 40 L64 20 M88 40 L92 20\" stroke=\"#5d6b84\" stroke-width=\"4\" stroke-linecap=\"round\"/>\n<ellipse cx=\"78\" cy=\"62\" rx=\"40\" ry=\"24\" fill=\"#e8412c\" class=\"o\"/>\n<ellipse cx=\"70\" cy=\"51\" rx=\"24\" ry=\"6\" fill=\"#fff\" opacity=\".35\"/>\n<circle cx=\"64\" cy=\"18\" r=\"8\" fill=\"#fff\" class=\"o\"/><circle cx=\"66\" cy=\"18\" r=\"3.6\" fill=\"#141a3a\"/><circle cx=\"65\" cy=\"16.5\" r=\"1.2\" fill=\"#fff\"/><circle cx=\"92\" cy=\"18\" r=\"8\" fill=\"#fff\" class=\"o\"/><circle cx=\"94\" cy=\"18\" r=\"3.6\" fill=\"#141a3a\"/><circle cx=\"93\" cy=\"16.5\" r=\"1.2\" fill=\"#fff\"/>\n<rect x=\"66\" y=\"64\" width=\"28\" height=\"10\" rx=\"4\" fill=\"#141a3a\"/><path d=\"M72 64 v10 M80 64 v10 M88 64 v10\" stroke=\"#ff8a1f\" stroke-width=\"2\"/>\n<circle cx=\"48\" cy=\"58\" r=\"2\" fill=\"#8a1a1a\"/><circle cx=\"52\" cy=\"72\" r=\"2\" fill=\"#8a1a1a\"/><circle cx=\"108\" cy=\"60\" r=\"2\" fill=\"#8a1a1a\"/><circle cx=\"104\" cy=\"72\" r=\"2\" fill=\"#8a1a1a\"/>"}, {"id": "drill", "name": "Grumble Drill", "group": "enemy", "line": "Gunđalo s bušilicom na nosu. Buši rupe u brojevima pa ih treba zakrpati tačnim odgovorom.", "svg": "<g class=\"fl\"><path d=\"M28 54.0 L8.0 50.0 L14.0 62 L8.0 74.0 L28 70.0 Z\" fill=\"#ff8a1f\"/><path d=\"M28 58.0 L16.0 56.0 L19.0 62 L16.0 68.0 L28 66.0 Z\" fill=\"#ffe95a\"/></g>\n<rect x=\"34\" y=\"86\" width=\"64\" height=\"16\" rx=\"8\" fill=\"#3a4058\" class=\"o\"/><circle cx=\"46\" cy=\"94\" r=\"4\" fill=\"#8f9db5\"/><circle cx=\"66\" cy=\"94\" r=\"4\" fill=\"#8f9db5\"/><circle cx=\"86\" cy=\"94\" r=\"4\" fill=\"#8f9db5\"/>\n<path d=\"M100 36 L154 62 L100 88 Z\" fill=\"url(#metal)\" class=\"o\"/>\n<path d=\"M110 41 L116 83 M122 47 L128 77 M134 53 L139 71\" stroke=\"#5d6b84\" stroke-width=\"3\"/>\n<rect x=\"26\" y=\"38\" width=\"78\" height=\"50\" rx=\"12\" fill=\"#ff8a1f\" class=\"o\"/>\n<rect x=\"32\" y=\"44\" width=\"14\" height=\"38\" rx=\"3\" fill=\"#ffc51a\"/><path d=\"M32 52 l14 -8 M32 62 l14 -8 M32 72 l14 -8 M32 82 l14 -8\" stroke=\"#141a3a\" stroke-width=\"3\"/>\n<rect x=\"54\" y=\"22\" width=\"36\" height=\"20\" rx=\"9\" fill=\"#7fe9ff\" class=\"o\"/><rect x=\"60\" y=\"26\" width=\"10\" height=\"5\" rx=\"2\" fill=\"#fff\" opacity=\".7\"/>\n<circle cx=\"66\" cy=\"62\" r=\"8\" fill=\"#ffe95a\" class=\"o\"/><circle cx=\"88\" cy=\"62\" r=\"8\" fill=\"#ffe95a\" class=\"o\"/><circle cx=\"68\" cy=\"63\" r=\"3.5\" fill=\"#141a3a\"/><circle cx=\"90\" cy=\"63\" r=\"3.5\" fill=\"#141a3a\"/>\n<path d=\"M56 50 L74 56 M98 50 L80 56\" stroke=\"#141a3a\" stroke-width=\"4\" stroke-linecap=\"round\"/>\n<path d=\"M66 78 Q77 72 88 78\" stroke=\"#141a3a\" stroke-width=\"3\" fill=\"none\" stroke-linecap=\"round\"/>"}, {"id": "magnet", "name": "Magnet Max", "group": "enemy", "line": "Velika ljubičasta potkovica koja privlači tačne odgovore i pokušava ih sakriti.", "svg": "<g class=\"fl\"><path d=\"M40 52.0 L20.0 48.0 L26.0 60 L20.0 72.0 L40 68.0 Z\" fill=\"#ff8a1f\"/><path d=\"M40 56.0 L28.0 54.0 L31.0 60 L28.0 66.0 L40 64.0 Z\" fill=\"#ffe95a\"/></g>\n<path d=\"M130 32 L82 32 A28 28 0 0 0 82 88 L130 88\" stroke=\"#141a3a\" stroke-width=\"30\" fill=\"none\"/>\n<path d=\"M130 32 L82 32 A28 28 0 0 0 82 88 L130 88\" stroke=\"#8e44d6\" stroke-width=\"24\" fill=\"none\"/>\n<path d=\"M120 26 L82 26 A34 34 0 0 0 52 50\" stroke=\"#fff\" stroke-width=\"4\" fill=\"none\" opacity=\".35\" stroke-linecap=\"round\"/>\n<rect x=\"122\" y=\"18\" width=\"22\" height=\"28\" rx=\"3\" fill=\"url(#metal)\" class=\"o\"/><rect x=\"122\" y=\"74\" width=\"22\" height=\"28\" rx=\"3\" fill=\"url(#metal)\" class=\"o\"/>\n<path d=\"M150 22 l6 -4 M152 32 h7 M150 42 l6 4 M150 78 l6 -4 M152 88 h7 M150 98 l6 4\" stroke=\"#5ff2ff\" stroke-width=\"3\" stroke-linecap=\"round\"/>\n<circle cx=\"72\" cy=\"16\" r=\"12\" fill=\"#7fe9ff\" class=\"o\"/><circle cx=\"68\" cy=\"60\" r=\"7\" fill=\"#fff\" class=\"o\"/><circle cx=\"70\" cy=\"60\" r=\"3.15\" fill=\"#141a3a\"/><circle cx=\"69\" cy=\"58.5\" r=\"1.05\" fill=\"#fff\"/><circle cx=\"88\" cy=\"60\" r=\"7\" fill=\"#fff\" class=\"o\"/><circle cx=\"90\" cy=\"60\" r=\"3.15\" fill=\"#141a3a\"/><circle cx=\"89\" cy=\"58.5\" r=\"1.05\" fill=\"#fff\"/>\n<path d=\"M66 48 L76 52 M94 48 L84 52\" stroke=\"#141a3a\" stroke-width=\"3.5\" stroke-linecap=\"round\"/>\n<path d=\"M74 72 h12\" stroke=\"#141a3a\" stroke-width=\"3\" stroke-linecap=\"round\"/>"}, {"id": "spike", "name": "Spikey Mine", "group": "enemy", "line": "Bodljikava lebdeća mina s jednim ljutim okom. Samo stoji i čeka da pogriješiš.", "svg": "<g class=\"fl\"><path d=\"M50 53.6 L34.0 50.4 L38.8 60 L34.0 69.6 L50 66.4 Z\" fill=\"#ff8a1f\"/><path d=\"M50 56.8 L40.4 55.2 L42.8 60 L40.4 64.8 L50 63.2 Z\" fill=\"#ffe95a\"/></g>\n<path d=\"M113.6 54.8 L130.0 60.0 L113.6 65.2 Z\" fill=\"#e8412c\" class=\"o\"/><path d=\"M110.9 73.2 L121.2 87.0 L104.9 81.5 Z\" fill=\"#e8412c\" class=\"o\"/><path d=\"M98.0 86.5 L98.2 103.7 L88.2 89.7 Z\" fill=\"#e8412c\" class=\"o\"/><path d=\"M79.8 89.7 L69.8 103.7 L70.0 86.5 Z\" fill=\"#e8412c\" class=\"o\"/><path d=\"M63.1 81.5 L46.8 87.0 L57.1 73.2 Z\" fill=\"#e8412c\" class=\"o\"/><path d=\"M54.4 65.2 L38.0 60.0 L54.4 54.8 Z\" fill=\"#e8412c\" class=\"o\"/><path d=\"M57.1 46.8 L46.8 33.0 L63.1 38.5 Z\" fill=\"#e8412c\" class=\"o\"/><path d=\"M70.0 33.5 L69.8 16.3 L79.8 30.3 Z\" fill=\"#e8412c\" class=\"o\"/><path d=\"M88.2 30.3 L98.2 16.3 L98.0 33.5 Z\" fill=\"#e8412c\" class=\"o\"/><path d=\"M104.9 38.5 L121.2 33.0 L110.9 46.8 Z\" fill=\"#e8412c\" class=\"o\"/>\n<circle cx=\"84\" cy=\"60\" r=\"32\" fill=\"#3a4058\" class=\"o\"/>\n<path d=\"M60 46 Q84 30 108 46\" stroke=\"#6b7590\" stroke-width=\"4\" fill=\"none\" stroke-linecap=\"round\"/>\n<circle cx=\"86\" cy=\"62\" r=\"15\" fill=\"#fff\" class=\"o\"/><circle cx=\"90\" cy=\"62\" r=\"8\" fill=\"#ff1f1f\"/><circle cx=\"90\" cy=\"62\" r=\"3.5\" fill=\"#141a3a\"/><circle cx=\"87\" cy=\"59\" r=\"2\" fill=\"#fff\"/>\n<path d=\"M70 42 L100 50\" stroke=\"#141a3a\" stroke-width=\"5\" stroke-linecap=\"round\"/>\n<circle cx=\"64\" cy=\"74\" r=\"2\" fill=\"#8f9db5\"/><circle cx=\"104\" cy=\"76\" r=\"2\" fill=\"#8f9db5\"/><circle cx=\"84\" cy=\"88\" r=\"2\" fill=\"#8f9db5\"/>"}, {"id": "shark", "name": "Shark Byte", "group": "enemy", "line": "Svemirska ajkula s crvenim vizirom. Grize sanduke i ostavlja tragove zuba na ciframa.", "svg": "<path d=\"M30 58 L6 34 L14 60 L6 86 Z\" fill=\"#1559b8\" class=\"o\"/>\n<g class=\"fl\"><path d=\"M18 91.2 L6.0 88.8 L9.600000000000001 96 L6.0 103.2 L18 100.8 Z\" fill=\"#ff8a1f\"/><path d=\"M18 93.6 L10.8 92.4 L12.6 96 L10.8 99.6 L18 98.4 Z\" fill=\"#ffe95a\"/></g>\n<path d=\"M70 40 L82 10 L102 38 Z\" fill=\"#1559b8\" class=\"o\"/>\n<path d=\"M60 76 L50 98 L78 80 Z\" fill=\"#1559b8\" class=\"o\"/>\n<path d=\"M24 60 Q44 36 92 36 Q134 38 156 62 Q134 84 92 86 Q44 86 24 60 Z\" fill=\"#1f6fe0\" class=\"o\"/>\n<path d=\"M40 70 Q90 90 150 66 Q130 82 92 84 Q56 84 40 70 Z\" fill=\"#e9eef6\"/>\n<path d=\"M118 66 Q136 70 150 64 L146 72 Q132 78 118 74 Z\" fill=\"#141a3a\"/>\n<path d=\"M122 67 l4 6 l4 -6 l4 6 l4 -6 l4 5\" stroke=\"#fff\" stroke-width=\"2.5\" fill=\"none\" stroke-linejoin=\"round\"/>\n<path d=\"M112 48 L136 52 L132 58 L112 56 Z\" fill=\"#ff1f1f\" class=\"o\"/>\n<path d=\"M78 50 q-4 8 0 16 M86 50 q-4 8 0 16 M94 50 q-4 8 0 16\" stroke=\"#0e3f8a\" stroke-width=\"3\" fill=\"none\" stroke-linecap=\"round\"/>\n<ellipse cx=\"70\" cy=\"44\" rx=\"20\" ry=\"4\" fill=\"#fff\" opacity=\".3\"/>"}, {"id": "snore", "name": "Snore-Tron", "group": "enemy", "line": "Pospani oblak s kapicom za spavanje. Zijeva i pokušava uspavati Zeebota, zato budi brz!", "svg": "<path d=\"M80 22 L80 12\" stroke=\"#5d6b84\" stroke-width=\"4\"/>\n<g class=\"prop\"><ellipse cx=\"80\" cy=\"10\" rx=\"22\" ry=\"4\" fill=\"#ff8a1f\" class=\"o\"/></g>\n<g fill=\"#c9b8ff\" class=\"o\"><circle cx=\"46\" cy=\"66\" r=\"22\"/><circle cx=\"76\" cy=\"50\" r=\"28\"/><circle cx=\"110\" cy=\"62\" r=\"24\"/><circle cx=\"84\" cy=\"80\" r=\"22\"/><circle cx=\"56\" cy=\"84\" r=\"16\"/><circle cx=\"114\" cy=\"84\" r=\"14\"/></g>\n<g fill=\"#c9b8ff\"><ellipse cx=\"80\" cy=\"68\" rx=\"50\" ry=\"20\"/><circle cx=\"60\" cy=\"62\" r=\"18\"/></g>\n<path d=\"M98 44 Q120 30 140 46 L132 50 Q120 42 104 50 Z\" fill=\"#e8412c\" class=\"o\"/><circle cx=\"142\" cy=\"48\" r=\"6\" fill=\"#fff\" class=\"o\"/>\n<path d=\"M66 62 Q72 68 78 62 M92 62 Q98 68 104 62\" stroke=\"#141a3a\" stroke-width=\"3\" fill=\"none\" stroke-linecap=\"round\"/>\n<ellipse cx=\"86\" cy=\"80\" rx=\"7\" ry=\"5\" fill=\"#141a3a\"/>\n<circle cx=\"58\" cy=\"74\" r=\"5\" fill=\"#ff7ae0\" opacity=\".5\"/><circle cx=\"112\" cy=\"74\" r=\"5\" fill=\"#ff7ae0\" opacity=\".5\"/>\n<text x=\"128\" y=\"30\" font-family=\"Bungee,Arial Black,sans-serif\" font-size=\"14\" fill=\"#5ff2ff\">z</text><text x=\"140\" y=\"18\" font-family=\"Bungee,Arial Black,sans-serif\" font-size=\"11\" fill=\"#5ff2ff\">z</text>"}, {"id": "squid", "name": "Squid Jammer", "group": "enemy", "line": "Ružičasta lignja koja prska tamnu tintu i sakriva brojeve na tren.", "svg": "<g stroke-linecap=\"round\" fill=\"none\">\n<path d=\"M66 50 Q44 40 34 50 T6 46\" stroke=\"#141a3a\" stroke-width=\"10\"/><path d=\"M66 50 Q44 40 34 50 T6 46\" stroke=\"#d94fbf\" stroke-width=\"5\"/>\n<path d=\"M64 62 Q42 58 30 66 T4 66\" stroke=\"#141a3a\" stroke-width=\"10\"/><path d=\"M64 62 Q42 58 30 66 T4 66\" stroke=\"#d94fbf\" stroke-width=\"5\"/>\n<path d=\"M66 74 Q46 80 34 88 T8 90\" stroke=\"#141a3a\" stroke-width=\"10\"/><path d=\"M66 74 Q46 80 34 88 T8 90\" stroke=\"#d94fbf\" stroke-width=\"5\"/>\n<path d=\"M70 82 Q58 98 40 104 T20 112\" stroke=\"#141a3a\" stroke-width=\"10\"/><path d=\"M70 82 Q58 98 40 104 T20 112\" stroke=\"#d94fbf\" stroke-width=\"5\"/></g>\n<path d=\"M62 40 Q100 20 152 62 Q100 102 62 84 Q50 62 62 40 Z\" fill=\"#ff7ae0\" class=\"o\"/>\n<path d=\"M100 34 L120 14 L124 44 Z M100 90 L120 108 L124 80 Z\" fill=\"#d94fbf\" class=\"o\"/>\n<circle cx=\"112\" cy=\"52\" r=\"4\" fill=\"#fff\" opacity=\".6\"/><circle cx=\"124\" cy=\"62\" r=\"3\" fill=\"#fff\" opacity=\".6\"/><circle cx=\"110\" cy=\"72\" r=\"3\" fill=\"#fff\" opacity=\".6\"/>\n<circle cx=\"78\" cy=\"54\" r=\"9\" fill=\"#fff\" class=\"o\"/><circle cx=\"80\" cy=\"54\" r=\"4.05\" fill=\"#141a3a\"/><circle cx=\"79\" cy=\"52.5\" r=\"1.3499999999999999\" fill=\"#fff\"/><circle cx=\"80\" cy=\"74\" r=\"8\" fill=\"#fff\" class=\"o\"/><circle cx=\"82\" cy=\"74\" r=\"3.6\" fill=\"#141a3a\"/><circle cx=\"81\" cy=\"72.5\" r=\"1.2\" fill=\"#fff\"/>\n<rect x=\"138\" y=\"56\" width=\"14\" height=\"12\" rx=\"3\" fill=\"#5d6b84\" class=\"o\"/>\n<circle cx=\"156\" cy=\"50\" r=\"4\" fill=\"#3b1b5a\"/><circle cx=\"158\" cy=\"62\" r=\"3\" fill=\"#3b1b5a\"/>"}, {"id": "hornet", "name": "Buzz Hornet", "group": "enemy", "line": "Prugasti stršljen koji leti u roju. Što više tačnih odgovora, to manje zuja.", "svg": "<defs><clipPath id=\"hb\"><ellipse cx=\"70\" cy=\"66\" rx=\"44\" ry=\"22\"/></clipPath></defs>\n<path d=\"M28 66 L8 66\" stroke=\"#141a3a\" stroke-width=\"5\" stroke-linecap=\"round\"/><path d=\"M26 60 L6 66 L26 72 Z\" fill=\"url(#metal)\" class=\"o\"/>\n<ellipse cx=\"70\" cy=\"30\" rx=\"16\" ry=\"26\" fill=\"#bff6ff\" opacity=\".75\" transform=\"rotate(-25 70 30)\" class=\"o\"/>\n<ellipse cx=\"90\" cy=\"32\" rx=\"12\" ry=\"20\" fill=\"#bff6ff\" opacity=\".75\" transform=\"rotate(15 90 32)\" class=\"o\"/>\n<g clip-path=\"url(#hb)\"><rect x=\"20\" y=\"40\" width=\"100\" height=\"60\" fill=\"#ffc51a\"/>\n<rect x=\"44\" y=\"40\" width=\"10\" height=\"60\" fill=\"#141a3a\"/><rect x=\"64\" y=\"40\" width=\"10\" height=\"60\" fill=\"#141a3a\"/><rect x=\"84\" y=\"40\" width=\"10\" height=\"60\" fill=\"#141a3a\"/></g>\n<ellipse cx=\"70\" cy=\"66\" rx=\"44\" ry=\"22\" fill=\"none\" class=\"o\"/>\n<circle cx=\"124\" cy=\"60\" r=\"20\" fill=\"#ffc51a\" class=\"o\"/>\n<path d=\"M114 54 L138 50 L138 64 L116 64 Z\" fill=\"#ff1f1f\" class=\"o\"/><path d=\"M120 56 L132 55\" stroke=\"#fff\" stroke-width=\"2\"/>\n<path d=\"M120 42 Q120 26 110 20 M130 42 Q138 28 134 18\" stroke=\"#141a3a\" stroke-width=\"3\" fill=\"none\" stroke-linecap=\"round\"/><circle cx=\"110\" cy=\"19\" r=\"3.5\" fill=\"#ff8a1f\" class=\"o\"/><circle cx=\"134\" cy=\"17\" r=\"3.5\" fill=\"#ff8a1f\" class=\"o\"/>\n<path d=\"M60 86 L54 100 M80 86 L84 100\" stroke=\"#141a3a\" stroke-width=\"4\" stroke-linecap=\"round\"/>"}, {"id": "toad", "name": "Hop Toad", "group": "enemy", "line": "Žaba na oprugama koja skače s asteroida na asteroid i jezikom hvata brojeve.", "svg": "<g class=\"fl\"><path d=\"M30 52.0 L10.0 48.0 L16.0 60 L10.0 72.0 L30 68.0 Z\" fill=\"#ff8a1f\"/><path d=\"M30 56.0 L18.0 54.0 L21.0 60 L18.0 66.0 L30 64.0 Z\" fill=\"#ffe95a\"/></g>\n<path d=\"M50 80 l-8 6 l10 4 l-10 4 l10 4 l-10 4\" stroke=\"#8f9db5\" stroke-width=\"4\" fill=\"none\" stroke-linejoin=\"round\"/>\n<path d=\"M110 80 l-8 6 l10 4 l-10 4 l10 4 l-10 4\" stroke=\"#8f9db5\" stroke-width=\"4\" fill=\"none\" stroke-linejoin=\"round\"/>\n<rect x=\"36\" y=\"104\" width=\"22\" height=\"8\" rx=\"4\" fill=\"#2bb24c\" class=\"o\"/><rect x=\"96\" y=\"104\" width=\"22\" height=\"8\" rx=\"4\" fill=\"#2bb24c\" class=\"o\"/>\n<path d=\"M30 76 Q30 40 80 38 Q132 40 136 70 Q136 86 80 86 Q30 86 30 76 Z\" fill=\"#2bb24c\" class=\"o\"/>\n<path d=\"M44 74 Q80 86 124 72\" stroke=\"#ffe95a\" stroke-width=\"5\" fill=\"none\" opacity=\".8\"/>\n<circle cx=\"66\" cy=\"34\" r=\"14\" fill=\"#2bb24c\" class=\"o\"/><circle cx=\"102\" cy=\"34\" r=\"14\" fill=\"#2bb24c\" class=\"o\"/>\n<circle cx=\"67\" cy=\"32\" r=\"9\" fill=\"#fff\" class=\"o\"/><circle cx=\"69\" cy=\"32\" r=\"4.05\" fill=\"#141a3a\"/><circle cx=\"68\" cy=\"30.5\" r=\"1.3499999999999999\" fill=\"#fff\"/><circle cx=\"103\" cy=\"32\" r=\"9\" fill=\"#fff\" class=\"o\"/><circle cx=\"105\" cy=\"32\" r=\"4.05\" fill=\"#141a3a\"/><circle cx=\"104\" cy=\"30.5\" r=\"1.3499999999999999\" fill=\"#fff\"/>\n<path d=\"M96 62 Q118 70 134 60\" stroke=\"#141a3a\" stroke-width=\"3.5\" fill=\"none\" stroke-linecap=\"round\"/>\n<path d=\"M134 60 Q150 58 154 66\" stroke=\"#ff7ae0\" stroke-width=\"4\" fill=\"none\" stroke-linecap=\"round\"/><circle cx=\"155\" cy=\"67\" r=\"4\" fill=\"#ff7ae0\" class=\"o\"/>\n<circle cx=\"58\" cy=\"60\" r=\"5\" fill=\"#1d7a33\"/><circle cx=\"74\" cy=\"66\" r=\"3.5\" fill=\"#1d7a33\"/><circle cx=\"48\" cy=\"70\" r=\"3\" fill=\"#1d7a33\"/>"}, {"id": "turtle", "name": "Shell Turtle", "group": "helper", "line": "Spora ali jaka kornjača. Njen štit od šestougaonika čuva Zeebota od jednog pogotka.", "svg": "<ellipse cx=\"80\" cy=\"60\" rx=\"70\" ry=\"50\" fill=\"#5ff2ff\" opacity=\".12\" stroke=\"#5ff2ff\" stroke-width=\"2\" stroke-dasharray=\"6 6\"/>\n<g class=\"fl\"><path d=\"M30 63.6 L14.0 60.4 L18.8 70 L14.0 79.6 L30 76.4 Z\" fill=\"#ff8a1f\"/><path d=\"M30 66.8 L20.4 65.2 L22.8 70 L20.4 74.8 L30 73.2 Z\" fill=\"#ffe95a\"/></g>\n<path d=\"M48 82 L34 100 L56 92 Z M104 82 L118 100 L96 92 Z\" fill=\"#ffc51a\" class=\"o\"/>\n<path d=\"M118 62 Q138 50 150 60 Q152 74 132 76 L116 74 Z\" fill=\"#ffc51a\" class=\"o\"/>\n<rect x=\"132\" y=\"56\" width=\"18\" height=\"9\" rx=\"4\" fill=\"#141a3a\"/><circle cx=\"144\" cy=\"60\" r=\"3\" fill=\"#5ff2ff\"/>\n<path d=\"M136 70 Q142 73 148 70\" stroke=\"#141a3a\" stroke-width=\"2.5\" fill=\"none\" stroke-linecap=\"round\"/>\n<path d=\"M30 80 Q30 30 80 30 Q126 30 126 80 Z\" fill=\"#2bb24c\" class=\"o\"/>\n<polygon points=\"85.0,58.0 81.5,64.1 74.5,64.1 71.0,58.0 74.5,51.9 81.5,51.9\" fill=\"#7bd36a\" stroke=\"#1d7a33\" stroke-width=\"2.5\"/><polygon points=\"69.0,64.0 65.5,70.1 58.5,70.1 55.0,64.0 58.5,57.9 65.5,57.9\" fill=\"#7bd36a\" stroke=\"#1d7a33\" stroke-width=\"2.5\"/><polygon points=\"101.0,64.0 97.5,70.1 90.5,70.1 87.0,64.0 90.5,57.9 97.5,57.9\" fill=\"#7bd36a\" stroke=\"#1d7a33\" stroke-width=\"2.5\"/><polygon points=\"77.0,48.0 73.5,54.1 66.5,54.1 63.0,48.0 66.5,41.9 73.5,41.9\" fill=\"#7bd36a\" stroke=\"#1d7a33\" stroke-width=\"2.5\"/><polygon points=\"93.0,48.0 89.5,54.1 82.5,54.1 79.0,48.0 82.5,41.9 89.5,41.9\" fill=\"#7bd36a\" stroke=\"#1d7a33\" stroke-width=\"2.5\"/>\n<rect x=\"26\" y=\"76\" width=\"104\" height=\"10\" rx=\"5\" fill=\"#ff8a1f\" class=\"o\"/>\n<circle cx=\"40\" cy=\"81\" r=\"2\" fill=\"#8a4a00\"/><circle cx=\"60\" cy=\"81\" r=\"2\" fill=\"#8a4a00\"/><circle cx=\"80\" cy=\"81\" r=\"2\" fill=\"#8a4a00\"/><circle cx=\"100\" cy=\"81\" r=\"2\" fill=\"#8a4a00\"/><circle cx=\"118\" cy=\"81\" r=\"2\" fill=\"#8a4a00\"/>"}, {"id": "owl", "name": "Owl Scope", "group": "helper", "line": "Sova s dva teleskopa umjesto očiju. Izdaleka vidi koji je odgovor tačan i namigne.", "svg": "<g class=\"fl\"><path d=\"M40 66.4 L26.0 63.6 L30.200000000000003 72 L26.0 80.4 L40 77.6 Z\" fill=\"#ff8a1f\"/><path d=\"M40 69.2 L31.6 67.8 L33.7 72 L31.6 76.2 L40 74.8 Z\" fill=\"#ffe95a\"/></g>\n<path d=\"M48 26 L54 6 L66 22 Z M112 26 L106 6 L94 22 Z\" fill=\"#a0612c\" class=\"o\"/>\n<path d=\"M36 64 Q22 52 18 70 Q28 84 44 80 Z M124 64 Q138 52 142 70 Q132 84 116 80 Z\" fill=\"#c97a3a\" class=\"o\"/>\n<rect x=\"40\" y=\"20\" width=\"80\" height=\"80\" rx=\"34\" fill=\"#c97a3a\" class=\"o\"/>\n<path d=\"M58 80 q6 -6 12 0 M76 84 q6 -6 12 0 M92 80 q6 -6 12 0\" stroke=\"#7a4518\" stroke-width=\"2.5\" fill=\"none\" stroke-linecap=\"round\"/>\n<rect x=\"44\" y=\"36\" width=\"34\" height=\"34\" rx=\"17\" fill=\"url(#metal)\" class=\"o\"/><rect x=\"82\" y=\"36\" width=\"34\" height=\"34\" rx=\"17\" fill=\"url(#metal)\" class=\"o\"/>\n<circle cx=\"61\" cy=\"53\" r=\"11\" fill=\"#1f6fe0\" class=\"o\"/><circle cx=\"99\" cy=\"53\" r=\"11\" fill=\"#1f6fe0\" class=\"o\"/>\n<circle cx=\"63\" cy=\"53\" r=\"5\" fill=\"#5ff2ff\"/><circle cx=\"101\" cy=\"53\" r=\"5\" fill=\"#5ff2ff\"/><circle cx=\"58\" cy=\"49\" r=\"2.5\" fill=\"#fff\"/><circle cx=\"96\" cy=\"49\" r=\"2.5\" fill=\"#fff\"/>\n<path d=\"M74 66 L86 66 L80 78 Z\" fill=\"#ffc51a\" class=\"o\"/>\n<path d=\"M60 100 L56 110 M100 100 L104 110\" stroke=\"#5d6b84\" stroke-width=\"4\" stroke-linecap=\"round\"/>"}, {"id": "medic", "name": "Bubble Fixer", "group": "helper", "line": "Bijela kapsula s robotskim rukama i ključem. Popravlja Zeebota kad ostane bez baterije.", "svg": "<g class=\"fl\"><path d=\"M26 54.0 L6.0 50.0 L12.0 62 L6.0 74.0 L26 70.0 Z\" fill=\"#ff8a1f\"/><path d=\"M26 58.0 L14.0 56.0 L17.0 62 L14.0 68.0 L26 66.0 Z\" fill=\"#ffe95a\"/></g>\n<path d=\"M110 82 L124 98 L140 96\" stroke=\"#5d6b84\" stroke-width=\"5\" fill=\"none\" stroke-linecap=\"round\" stroke-linejoin=\"round\"/>\n<path d=\"M138 88 L148 104 M134 92 L152 100\" stroke=\"#8f9db5\" stroke-width=\"6\" stroke-linecap=\"round\"/><circle cx=\"150\" cy=\"96\" r=\"6\" fill=\"none\" stroke=\"#8f9db5\" stroke-width=\"4\"/>\n<path d=\"M50 84 L40 100 L30 102\" stroke=\"#5d6b84\" stroke-width=\"5\" fill=\"none\" stroke-linecap=\"round\" stroke-linejoin=\"round\"/>\n<rect x=\"18\" y=\"96\" width=\"16\" height=\"12\" rx=\"3\" fill=\"#ffc51a\" class=\"o\"/><path d=\"M22 100 h8 M22 104 h6\" stroke=\"#141a3a\" stroke-width=\"2\"/>\n<rect x=\"26\" y=\"34\" width=\"106\" height=\"54\" rx=\"27\" fill=\"#ffffff\" class=\"o\"/>\n<path d=\"M30 70 Q80 84 128 70\" stroke=\"#1fb5c9\" stroke-width=\"6\" fill=\"none\"/>\n<path d=\"M86 32 Q86 14 104 14 Q122 14 122 34 Z\" fill=\"#7fe9ff\" class=\"o\"/><circle cx=\"108\" cy=\"26\" r=\"5\" fill=\"#141a3a\"/><circle cx=\"110\" cy=\"25\" r=\"2\" fill=\"#fff\"/>\n<path d=\"M62 46 c-6 -8 -18 -2 -12 8 l12 10 l12 -10 c6 -10 -6 -16 -12 -8 Z\" fill=\"#ff4f7a\" class=\"o\"/>\n<circle cx=\"124\" cy=\"58\" r=\"4\" fill=\"#2bb24c\" class=\"o\"/>\n<circle cx=\"144\" cy=\"30\" r=\"6\" fill=\"#bff6ff\" opacity=\".7\" class=\"o\"/><circle cx=\"150\" cy=\"16\" r=\"4\" fill=\"#bff6ff\" opacity=\".7\" class=\"o\"/>"}, {"id": "penguin", "name": "Ice Glider", "group": "helper", "line": "Pingvin s kapom koji klizi po zaleđenim kometama. Najbrži dostavljač zvjezdica.", "svg": "<g class=\"fl\"><path d=\"M20 84.4 L6.0 81.6 L10.200000000000001 90 L6.0 98.4 L20 95.6 Z\" fill=\"#ff8a1f\"/><path d=\"M20 87.2 L11.6 85.8 L13.7 90 L11.6 94.2 L20 92.8 Z\" fill=\"#ffe95a\"/></g>\n<path d=\"M14 96 L134 96 Q150 96 152 84\" stroke=\"#141a3a\" stroke-width=\"8\" fill=\"none\" stroke-linecap=\"round\"/><path d=\"M14 96 L134 96 Q150 96 152 84\" stroke=\"#1fb5c9\" stroke-width=\"4\" fill=\"none\" stroke-linecap=\"round\"/>\n<path d=\"M50 86 L46 96 M100 86 L104 96\" stroke=\"#5d6b84\" stroke-width=\"4\"/>\n<path d=\"M28 70 Q28 40 84 40 Q136 40 140 64 Q136 88 84 88 Q28 90 28 70 Z\" fill=\"#2c3247\" class=\"o\"/>\n<path d=\"M46 76 Q84 92 130 70 Q110 86 84 86 Q56 86 46 76 Z\" fill=\"#fff\"/>\n<path d=\"M134 58 L156 64 L134 70 Z\" fill=\"#ff8a1f\" class=\"o\"/>\n<rect x=\"104\" y=\"46\" width=\"28\" height=\"12\" rx=\"6\" fill=\"#7fe9ff\" class=\"o\"/><circle cx=\"122\" cy=\"52\" r=\"3\" fill=\"#141a3a\"/>\n<path d=\"M66 60 Q54 70 40 66\" stroke=\"#141a3a\" stroke-width=\"3\" fill=\"#3a4058\"/>\n<path d=\"M60 40 Q66 20 86 22 Q104 24 100 40\" fill=\"#e8412c\" class=\"o\"/><rect x=\"56\" y=\"36\" width=\"48\" height=\"8\" rx=\"4\" fill=\"#fff\" class=\"o\"/><circle cx=\"88\" cy=\"20\" r=\"6\" fill=\"#fff\" class=\"o\"/>"}, {"id": "firefly", "name": "Glow Bug", "group": "helper", "line": "Mala krijesnica s lampom na repu. Osvjetljava mračne magline da se brojevi bolje vide.", "svg": "<circle cx=\"44\" cy=\"68\" r=\"30\" fill=\"#ffe95a\" opacity=\".25\"/><circle cx=\"44\" cy=\"68\" r=\"20\" fill=\"#ffe95a\" opacity=\".35\"/>\n<ellipse cx=\"78\" cy=\"38\" rx=\"14\" ry=\"24\" fill=\"#bff6ff\" opacity=\".75\" transform=\"rotate(-30 78 38)\" class=\"o\"/>\n<ellipse cx=\"96\" cy=\"40\" rx=\"10\" ry=\"18\" fill=\"#bff6ff\" opacity=\".75\" transform=\"rotate(20 96 40)\" class=\"o\"/>\n<ellipse cx=\"46\" cy=\"68\" rx=\"20\" ry=\"16\" fill=\"#fff6a0\" class=\"o\"/><ellipse cx=\"42\" cy=\"64\" rx=\"8\" ry=\"5\" fill=\"#fff\" opacity=\".8\"/>\n<rect x=\"60\" y=\"50\" width=\"54\" height=\"34\" rx=\"16\" fill=\"#2bb24c\" class=\"o\"/>\n<path d=\"M76 52 v30 M92 52 v30\" stroke=\"#1d7a33\" stroke-width=\"3\"/>\n<circle cx=\"122\" cy=\"62\" r=\"16\" fill=\"#1f6fe0\" class=\"o\"/>\n<circle cx=\"126\" cy=\"58\" r=\"6\" fill=\"#fff\" class=\"o\"/><circle cx=\"128\" cy=\"58\" r=\"2.7\" fill=\"#141a3a\"/><circle cx=\"127\" cy=\"56.5\" r=\"0.8999999999999999\" fill=\"#fff\"/>\n<path d=\"M120 70 Q126 74 132 70\" stroke=\"#fff\" stroke-width=\"2.5\" fill=\"none\" stroke-linecap=\"round\"/>\n<path d=\"M120 46 Q116 28 102 22 M130 48 Q140 30 136 18\" stroke=\"#141a3a\" stroke-width=\"3\" fill=\"none\" stroke-linecap=\"round\"/><circle cx=\"101\" cy=\"21\" r=\"4\" fill=\"#ffe95a\" class=\"o\"/><circle cx=\"136\" cy=\"17\" r=\"4\" fill=\"#ffe95a\" class=\"o\"/>\n<path d=\"M76 84 L72 96 M96 84 L100 96\" stroke=\"#141a3a\" stroke-width=\"3.5\" stroke-linecap=\"round\"/>"}, {"id": "whale", "name": "Star Whale", "group": "helper", "line": "Ogromni svemirski kit, matični brod. U trbuhu nosi cijelu Zeebotovu posadu.", "svg": "<g class=\"fl\"><path d=\"M14 60.4 L0.0 57.6 L4.200000000000001 66 L0.0 74.4 L14 71.6 Z\" fill=\"#ff8a1f\"/><path d=\"M14 63.2 L5.6 61.8 L7.7 66 L5.6 70.2 L14 68.8 Z\" fill=\"#ffe95a\"/></g>\n<path d=\"M26 60 L4 36 L12 62 L4 88 Z\" fill=\"#3d7fd6\" class=\"o\"/>\n<path d=\"M22 62 Q30 30 90 28 Q150 28 156 64 Q152 96 90 96 Q36 96 22 62 Z\" fill=\"#3d7fd6\" class=\"o\"/>\n<path d=\"M30 72 Q90 104 154 70 Q148 94 90 94 Q44 94 30 72 Z\" fill=\"#cfe6ff\"/>\n<path d=\"M40 82 h96 M48 88 h80\" stroke=\"#8fb8e8\" stroke-width=\"2.5\"/>\n<g fill=\"#ffe95a\" class=\"o\"><circle cx=\"56\" cy=\"52\" r=\"5\"/><circle cx=\"74\" cy=\"48\" r=\"5\"/><circle cx=\"92\" cy=\"48\" r=\"5\"/><circle cx=\"110\" cy=\"50\" r=\"5\"/></g>\n<circle cx=\"132\" cy=\"58\" r=\"6\" fill=\"#fff\" class=\"o\"/><circle cx=\"134\" cy=\"58\" r=\"2.7\" fill=\"#141a3a\"/><circle cx=\"133\" cy=\"56.5\" r=\"0.8999999999999999\" fill=\"#fff\"/>\n<path d=\"M132 74 Q144 76 154 68\" stroke=\"#141a3a\" stroke-width=\"3\" fill=\"none\" stroke-linecap=\"round\"/>\n<path d=\"M80 84 L66 106 L96 90 Z\" fill=\"#2c66b8\" class=\"o\"/>\n<path d=\"M90 28 L90 14\" stroke=\"#5d6b84\" stroke-width=\"3\"/>\n<g fill=\"#5ff2ff\"><path d=\"M90 4 l2 5 l5 1 l-5 2 l-2 5 l-2 -5 l-5 -2 l5 -1 Z\"/><circle cx=\"78\" cy=\"10\" r=\"2.5\"/><circle cx=\"102\" cy=\"10\" r=\"2.5\"/><circle cx=\"72\" cy=\"2\" r=\"1.8\"/><circle cx=\"108\" cy=\"2\" r=\"1.8\"/></g>"}, {"id": "pizza", "name": "Pizza Saucer", "group": "odd", "line": "Leteća kriška pice koja dostavlja užinu pilotima. Ukusno i brzo, garantovano vruće.", "svg": "<g class=\"fl\"><path d=\"M28 40.4 L14.0 37.6 L18.200000000000003 46 L14.0 54.4 L28 51.6 Z\" fill=\"#ff8a1f\"/><path d=\"M28 43.2 L19.6 41.8 L21.7 46 L19.6 50.2 L28 48.8 Z\" fill=\"#ffe95a\"/></g><g class=\"fl\"><path d=\"M28 74.4 L14.0 71.6 L18.200000000000003 80 L14.0 88.4 L28 85.6 Z\" fill=\"#ff8a1f\"/><path d=\"M28 77.2 L19.6 75.8 L21.7 80 L19.6 84.2 L28 82.8 Z\" fill=\"#ffe95a\"/></g>\n<path d=\"M34 24 L152 62 L34 100 Z\" fill=\"#ffd35a\" class=\"o\"/>\n<path d=\"M34 30 L140 62 L34 94 Z\" fill=\"#ff6a3d\"/>\n<path d=\"M60 48 L68 52 M90 70 l10 2 M74 80 l4 8\" stroke=\"#2bb24c\" stroke-width=\"4\" stroke-linecap=\"round\"/>\n<g fill=\"#b3243a\" class=\"o\"><circle cx=\"58\" cy=\"62\" r=\"8\"/><circle cx=\"82\" cy=\"50\" r=\"6\"/><circle cx=\"104\" cy=\"64\" r=\"6\"/><circle cx=\"66\" cy=\"84\" r=\"5\"/></g>\n<rect x=\"22\" y=\"22\" width=\"18\" height=\"80\" rx=\"9\" fill=\"#e0a040\" class=\"o\"/><path d=\"M26 34 h10 M26 50 h10 M26 74 h10 M26 90 h10\" stroke=\"#a46a1c\" stroke-width=\"2.5\"/>\n<path d=\"M76 36 Q86 16 104 24 Q110 34 104 42 Z\" fill=\"#7fe9ff\" class=\"o\"/><circle cx=\"96\" cy=\"30\" r=\"3.5\" fill=\"#141a3a\"/>"}, {"id": "teapot", "name": "Tea Rocket", "group": "odd", "line": "Čajnik na mlazni pogon. Kad se pregrije, zviždi i ispušta oblačiće pare.", "svg": "<g class=\"fl\"><path d=\"M16 57.6 L0.0 54.4 L4.800000000000001 64 L0.0 73.6 L16 70.4 Z\" fill=\"#ff8a1f\"/><path d=\"M16 60.8 L6.4 59.2 L8.8 64 L6.4 68.8 L16 67.2 Z\" fill=\"#ffe95a\"/></g>\n<path d=\"M36 46 Q12 46 14 64 Q16 82 38 80\" stroke=\"#141a3a\" stroke-width=\"12\" fill=\"none\" stroke-linecap=\"round\"/><path d=\"M36 46 Q12 46 14 64 Q16 82 38 80\" stroke=\"#1fb5c9\" stroke-width=\"6\" fill=\"none\" stroke-linecap=\"round\"/>\n<path d=\"M112 60 Q132 56 140 36 L150 38 Q146 70 118 82 Z\" fill=\"#1fb5c9\" class=\"o\"/>\n<g fill=\"#fff\" opacity=\".85\"><circle cx=\"150\" cy=\"26\" r=\"6\"/><circle cx=\"144\" cy=\"14\" r=\"5\"/><circle cx=\"154\" cy=\"6\" r=\"4\"/></g>\n<path d=\"M30 70 Q30 38 76 38 Q122 38 122 70 Q122 100 76 100 Q30 100 30 70 Z\" fill=\"#1fb5c9\" class=\"o\"/>\n<path d=\"M34 76 Q76 90 118 76\" stroke=\"#ff7ae0\" stroke-width=\"6\" fill=\"none\"/>\n<g fill=\"#ff7ae0\"><circle cx=\"54\" cy=\"60\" r=\"4\"/><circle cx=\"76\" cy=\"54\" r=\"4\"/><circle cx=\"98\" cy=\"60\" r=\"4\"/></g>\n<path d=\"M48 40 Q76 24 104 40 Z\" fill=\"#ffc51a\" class=\"o\"/>\n<circle cx=\"76\" cy=\"20\" r=\"10\" fill=\"#7fe9ff\" class=\"o\"/><circle cx=\"79\" cy=\"19\" r=\"3.5\" fill=\"#141a3a\"/>\n<rect x=\"56\" y=\"98\" width=\"40\" height=\"8\" rx=\"4\" fill=\"#5d6b84\" class=\"o\"/>"}, {"id": "unicycle", "name": "Wobble Wheel", "group": "odd", "line": "Svemirski monocikl koji se stalno ljulja. Niko ne zna kako se ne prevrne.", "svg": "<g class=\"fl\"><path d=\"M46 44.4 L32.0 41.6 L36.2 50 L32.0 58.4 L46 55.6 Z\" fill=\"#ff8a1f\"/><path d=\"M46 47.2 L37.6 45.8 L39.7 50 L37.6 54.2 L46 52.8 Z\" fill=\"#ffe95a\"/></g>\n<g class=\"wheel\"><circle cx=\"80\" cy=\"88\" r=\"24\" fill=\"#3a4058\" class=\"o\"/><circle cx=\"80\" cy=\"88\" r=\"14\" fill=\"url(#metal)\" class=\"o\"/>\n<path d=\"M80 74 v28 M66 88 h28 M70 78 l20 20 M90 78 l-20 20\" stroke=\"#5d6b84\" stroke-width=\"2.5\"/></g>\n<circle cx=\"80\" cy=\"88\" r=\"4\" fill=\"#ffc51a\" class=\"o\"/>\n<path d=\"M80 88 L80 58\" stroke=\"#5d6b84\" stroke-width=\"6\"/>\n<rect x=\"52\" y=\"36\" width=\"56\" height=\"26\" rx=\"10\" fill=\"#ff8a1f\" class=\"o\"/>\n<path d=\"M60 36 Q80 6 100 36 Z\" fill=\"#7fe9ff\" class=\"o\"/>\n<rect x=\"70\" y=\"20\" width=\"20\" height=\"14\" rx=\"5\" fill=\"#e9eef6\" class=\"o\"/><circle cx=\"76\" cy=\"27\" r=\"2.5\" fill=\"#141a3a\"/><circle cx=\"85\" cy=\"27\" r=\"2.5\" fill=\"#141a3a\"/>\n<path d=\"M108 46 L130 40 M52 46 L34 38\" stroke=\"#5d6b84\" stroke-width=\"4\" stroke-linecap=\"round\"/>\n<circle cx=\"132\" cy=\"40\" r=\"6\" fill=\"#e8412c\" class=\"o\"/><circle cx=\"32\" cy=\"38\" r=\"6\" fill=\"#ffc51a\" class=\"o\"/>\n<path d=\"M100 112 h40 M20 112 h30\" stroke=\"#5ff2ff\" stroke-width=\"3\" stroke-linecap=\"round\" opacity=\".6\"/>"}, {"id": "balloon", "name": "Moon Balloon", "group": "odd", "line": "Šareni balon s malom kapsulom ispod. Polako plovi do Mjeseca i nazad.", "svg": "<path d=\"M60 58 L70 90 M100 58 L90 90\" stroke=\"#a46a1c\" stroke-width=\"3\"/>\n<defs><clipPath id=\"bl\"><path d=\"M80 4 Q124 4 124 44 Q124 66 92 80 L68 80 Q36 66 36 44 Q36 4 80 4 Z\"/></clipPath></defs>\n<g clip-path=\"url(#bl)\"><rect x=\"30\" y=\"0\" width=\"100\" height=\"90\" fill=\"#e8412c\"/>\n<rect x=\"46\" y=\"0\" width=\"14\" height=\"90\" fill=\"#ffc51a\"/><rect x=\"73\" y=\"0\" width=\"14\" height=\"90\" fill=\"#2bb24c\"/><rect x=\"100\" y=\"0\" width=\"14\" height=\"90\" fill=\"#1f6fe0\"/></g>\n<path d=\"M80 4 Q124 4 124 44 Q124 66 92 80 L68 80 Q36 66 36 44 Q36 4 80 4 Z\" fill=\"none\" class=\"o\"/>\n<path d=\"M52 20 Q60 10 72 10\" stroke=\"#fff\" stroke-width=\"4\" fill=\"none\" opacity=\".5\" stroke-linecap=\"round\"/>\n<path d=\"M68 80 L92 80\" stroke=\"#ff8a1f\" stroke-width=\"6\"/>\n<rect x=\"60\" y=\"88\" width=\"40\" height=\"22\" rx=\"6\" fill=\"#e9eef6\" class=\"o\"/><circle cx=\"80\" cy=\"99\" r=\"6\" fill=\"#7fe9ff\" class=\"o\"/>\n<g class=\"fl\"><path d=\"M60 106 L48 112 L60 112 Z M100 106 L112 112 L100 112 Z\" fill=\"#ff8a1f\"/></g>\n<rect x=\"52\" y=\"96\" width=\"8\" height=\"12\" rx=\"2\" fill=\"#5d6b84\" class=\"o\"/><rect x=\"100\" y=\"96\" width=\"8\" height=\"12\" rx=\"2\" fill=\"#5d6b84\" class=\"o\"/>"}, {"id": "snail", "name": "Snail Express", "group": "odd", "line": "Puž s raketom na kućici. Piše EXPRESS, ali i dalje stiže posljednji.", "svg": "<g class=\"fl\"><path d=\"M28 42.8 L10.0 39.2 L15.4 50 L10.0 60.8 L28 57.2 Z\" fill=\"#ff8a1f\"/><path d=\"M28 46.4 L17.200000000000003 44.6 L19.9 50 L17.200000000000003 55.4 L28 53.6 Z\" fill=\"#ffe95a\"/></g>\n<rect x=\"30\" y=\"38\" width=\"24\" height=\"24\" rx=\"5\" fill=\"url(#metal)\" class=\"o\"/><path d=\"M34 44 h16 M34 50 h16 M34 56 h16\" stroke=\"#5d6b84\" stroke-width=\"2\"/>\n<path d=\"M30 100 Q24 86 44 86 L140 86 Q156 86 152 98 Q150 104 140 104 L40 104 Q30 104 30 100 Z\" fill=\"#a8e06a\" class=\"o\"/>\n<path d=\"M126 86 Q128 70 136 62 L144 64 Q150 76 146 88 Z\" fill=\"#a8e06a\" class=\"o\"/>\n<path d=\"M134 64 L128 42 M144 64 L150 42\" stroke=\"#a8e06a\" stroke-width=\"5\" stroke-linecap=\"round\"/><path d=\"M134 64 L128 42 M144 64 L150 42\" stroke=\"#141a3a\" stroke-width=\"1.5\" stroke-linecap=\"round\" opacity=\".5\"/>\n<circle cx=\"128\" cy=\"40\" r=\"6\" fill=\"#fff\" class=\"o\"/><circle cx=\"130\" cy=\"40\" r=\"2.7\" fill=\"#141a3a\"/><circle cx=\"129\" cy=\"38.5\" r=\"0.8999999999999999\" fill=\"#fff\"/><circle cx=\"150\" cy=\"40\" r=\"6\" fill=\"#fff\" class=\"o\"/><circle cx=\"152\" cy=\"40\" r=\"2.7\" fill=\"#141a3a\"/><circle cx=\"151\" cy=\"38.5\" r=\"0.8999999999999999\" fill=\"#fff\"/>\n<path d=\"M138 78 Q142 82 146 78\" stroke=\"#141a3a\" stroke-width=\"2.5\" fill=\"none\" stroke-linecap=\"round\"/>\n<circle cx=\"88\" cy=\"58\" r=\"34\" fill=\"#ff8a1f\" class=\"o\"/>\n<path d=\"M88 58 m0 -6 a6 6 0 1 1 -6 6 a12 12 0 0 1 12 -12 a18 18 0 0 1 18 18 a24 24 0 0 1 -24 24 a30 30 0 0 1 -28 -20\" stroke=\"#b35a00\" stroke-width=\"4\" fill=\"none\" stroke-linecap=\"round\"/>\n<rect x=\"64\" y=\"90\" width=\"48\" height=\"10\" rx=\"3\" fill=\"#ffc51a\" class=\"o\"/><text x=\"88\" y=\"98.5\" font-family=\"Bungee,Arial Black,sans-serif\" font-size=\"8\" text-anchor=\"middle\" fill=\"#141a3a\">EXPRESS</text>\n<path d=\"M14 110 h20 M4 98 h16\" stroke=\"#5ff2ff\" stroke-width=\"3\" stroke-linecap=\"round\" opacity=\".6\"/>"}];
+/* What finishing Mission 1 unlocks. Helpers are power-ups in Mission 2; enemies fly in Mission 2. */
+const UNLOCK_AFTER = { m1: ['owl','firefly','penguin','crab','spike','shark','squid'] };
+const HELPER_POWERS = {
+  owl:     { tag:'ANSWER', text:'Super power: shows the whole answer. Once per level.' },
+  firefly: { tag:'DIGIT',  text:'Super power: lights up one digit of the answer. Once per level.' },
+  penguin: { tag:'SKIP',   text:'Super power: freezes and smashes the problem, a new one comes with no penalty. Once per level.' },
+};
 
 /* kind = art template; colors = [main, accent, eyes]; stats are 1–10 */
 const CREW = [
@@ -479,6 +605,16 @@ const CREW = [
   { id:'quill',  name:'Professor Quill',kind:'tall',    rarity:'rare',      colors:['#ffc51a','#1f6fe0','#2bb24c'], role:'Math droid',          stats:{strength:3,battery:10,speed:4}, special:'Splits any number into equal groups.' },
   { id:'zanka',  name:'Zanka the Bold', kind:'pilot',   rarity:'rare',      colors:['#2bb24c','#e8412c','#c98a62'], role:'Rebel ace',           stats:{strength:8,battery:6,speed:8},  special:'Flies straight into meteor storms, grinning.' },
   { id:'prism',  name:'Prism Prime',    kind:'crystal', rarity:'legendary', colors:['#7fe9ff','#ff7ae0','#ffffff'], role:'Legendary star guardian', stats:{strength:9,battery:10,speed:9}, special:'Glows brighter with every right answer.' },
+  { id:'bubbles',name:'Bubbles',        kind:'orb',     rarity:'common',    colors:['#5ad8ff','#ff7ae0','#ffffff'], role:'Bubble scout',        stats:{strength:2,battery:5,speed:8},  special:'Blows bubble shields around baby fish.' },
+  { id:'coral',  name:'Captain Coral',  kind:'pilot',   rarity:'common',    colors:['#ff7a5a','#1fb5c9','#f2c29b'], role:'Submarine pilot',     stats:{strength:5,battery:6,speed:6},  special:'Knows every reef by heart.' },
+  { id:'finn',   name:'Finn-8',         kind:'dome',    rarity:'common',    colors:['#1fb5c9','#ffc51a','#5ff2ff'], role:'Sonar droid',         stats:{strength:3,battery:8,speed:5},  special:'Pings the deep to find hidden numbers.' },
+  { id:'anchor', name:'Anchorbot',      kind:'box',     rarity:'common',    colors:['#5d6b84','#ff8a1f','#ffe95a'], role:'Heavy lifter',        stats:{strength:9,battery:6,speed:2},  special:'Drops anchor so nobody drifts away.' },
+  { id:'marina', name:'Marina Vale',    kind:'pilot',   rarity:'rare',      colors:['#2bb24c','#ffc51a','#8d5a3b'], role:'Deep diver',          stats:{strength:5,battery:7,speed:8},  special:'Counts to 100 on one breath.' },
+  { id:'puffer', name:'Puff-O',         kind:'orb',     rarity:'rare',      colors:['#ffc51a','#e8412c','#ffffff'], role:'Puffer drone',        stats:{strength:6,battery:7,speed:4},  special:'Puffs up big when enemies come close.' },
+  { id:'kelp',   name:'Kelpie',         kind:'tall',    rarity:'rare',      colors:['#2bb24c','#7fe9ff','#ffe95a'], role:'Garden droid',        stats:{strength:4,battery:9,speed:4},  special:'Grows kelp ladders ten steps at a time.' },
+  { id:'tidal',  name:'Tidal Tess',     kind:'pilot',   rarity:'rare',      colors:['#1f6fe0','#ff7ae0','#c98a62'], role:'Wave racer',          stats:{strength:4,battery:5,speed:10}, special:'Surfs sonic waves faster than torpedoes.' },
+  { id:'octo',   name:'Octo-Max',       kind:'box',     rarity:'rare',      colors:['#8e44d6','#ff7ae0','#5ff2ff'], role:'Eight-arm mechanic',  stats:{strength:8,battery:8,speed:6},  special:'Adds and takes away with eight arms at once.' },
+  { id:'pearl',  name:'Pearl Prime',    kind:'crystal', rarity:'legendary', colors:['#ffffff','#7fe9ff','#ff7ae0'], role:'Legendary ocean guardian', stats:{strength:9,battery:10,speed:9}, special:'Shines like a pearl at the bottom of the sea.' },
 ];
 
 const PRAISE = ['Beep-boop!','Awesome!','Super star!','Zwee-oo!','Perfect!','You got it!','Brilliant!','Woo-hoo!'];
@@ -489,10 +625,13 @@ const OUCH   = ['Bzzzt!','Yikes!','Zap! Ouch!','Fzzt!'];
    ===================================================================== */
 const SAVE_KEY = 'bleep-star-math-v1';
 const Save = {
-  d: { missions:{}, crew:[], copilot:null, sound:true, seen:[] },
+  d: { missions:{}, crew:[], copilot:null, sound:true, seen:[], fleet:[], lastMission:0 },
   load(){ try{ const raw = localStorage.getItem(SAVE_KEY); if(raw) Object.assign(this.d, JSON.parse(raw)); }catch(e){} },
   write(){ try{ localStorage.setItem(SAVE_KEY, JSON.stringify(this.d)); }catch(e){} },
   mission(id){ return this.d.missions[id] || (this.d.missions[id] = { unlocked:1, stars:{} }); },
+  hasFleet(id){ return this.d.fleet.includes(id); },
+  unlockFleet(ids){ for(const id of ids) if(!this.d.fleet.includes(id)) this.d.fleet.push(id); this.write(); },
+  missionOpen(m){ return TEST || !m.requires || !!(this.d.missions[m.requires] && this.d.missions[m.requires].done); },
   hasCrew(id){ return this.d.crew.includes(id); },
   addCrew(id){ if(!this.hasCrew(id)){ this.d.crew.push(id); this.write(); return true; } return false; },
 };
@@ -557,6 +696,33 @@ const Sound = {
   rumble(){ this.tone(55,0,1.2,'sawtooth',.14,40); this.noise(0,1.2,.15,200,80); },
   repair(){ [440,554,659].forEach((f,i)=>this.tone(f,i*.06,.1,'square',.05)); },
   click(){ this.tone(900,0,.05,'square',.05); },
+  /* Original space-march theme for the unlock screen (C major, 110 bpm, 8 bars, loops). */
+  music:null,
+  musicStart(){
+    if(!this.ok || this.music) return;
+    const c=this.ctx, bus=c.createGain(); bus.gain.value=.55; bus.connect(this.master);
+    const m={bus, timer:null}; this.music=m;
+    const hz=n=>440*Math.pow(2,(n-69)/12), B=60/110;
+    const lead=[[72,1],[67,.5],[72,.5],[76,2],[74,1],[72,.5],[71,.5],[67,2],[69,1],[72,.5],[77,.5],[76,1],[74,1],[72,3],[67,1],
+                [72,1],[76,.5],[79,.5],[84,2],[83,1],[81,.5],[79,.5],[76,2],[77,1],[76,.5],[74,.5],[72,1],[71,1],[72,4]];
+    const roots=[[48,4],[43,4],[41,4],[48,4],[48,4],[43,4],[41,2],[43,2],[48,4]].slice(0,8);
+    const note=(f,t,d,type,vol)=>{ const o=c.createOscillator(), g=c.createGain(); o.type=type; o.frequency.value=f;
+      g.gain.setValueAtTime(.0001,t); g.gain.exponentialRampToValueAtTime(vol,t+.02); g.gain.setValueAtTime(vol,t+Math.max(.03,d-.06)); g.gain.exponentialRampToValueAtTime(.0001,t+d);
+      o.connect(g); g.connect(bus); o.start(t); o.stop(t+d+.05); };
+    const loop=start=>{
+      if(this.music!==m) return;
+      let t=start; for(const [n,b] of lead){ note(hz(n),t,b*B*.95,'square',.045); note(hz(n+12),t,Math.min(.12,b*B*.5),'sine',.03); t+=b*B; }
+      t=start; for(const [n,b] of roots){ for(let k=0;k<b*2;k++){ note(hz(k%2? n+7 : n),t,B*.45,'triangle',.11); t+=B/2; } }
+      t=start; for(const [n,b] of roots){ [n+12,n+16,n+19].forEach(x=>note(hz(x),t,b*B,'triangle',.018)); for(let k=0;k<b;k++) note(hz(n+31+(k%2?4:0)),t+k*B+B/2,.06,'square',.02); t+=b*B; }
+      const len=32*B; m.timer=setTimeout(()=>loop(start+len), (start+len-c.currentTime-.3)*1000);
+    };
+    loop(c.currentTime+.1);
+  },
+  musicStop(){
+    const m=this.music; if(!m) return; this.music=null; clearTimeout(m.timer);
+    try{ m.bus.gain.setTargetAtTime(0,this.ctx.currentTime,.15); setTimeout(()=>m.bus.disconnect(),900); }catch(e){}
+  },
+  freeze(){ this.noise(0,.5,.12,4000,800); [1800,1500,2100].forEach((f,i)=>this.tone(f,i*.06,.12,'sine',.05)); },
   pop(){ this.tone(300,0,.15,'sine',.2,1200); this.noise(0,.12,.15,2000); },
 };
 
@@ -574,7 +740,39 @@ const robotSvg = $('#robot'), robotAnim = $('#robotAnim'), robotWrap = $('#robot
 /* =====================================================================
    PROBLEMS
    ===================================================================== */
+function genAddSub(op, tier){
+  const ones = n => n % 10;
+  for(let tries=0; tries<200; tries++){
+    let a, b;
+    if(op === 'add'){
+      if(tier===1){ a=rnd(1,15); b=rnd(1,20-a); }
+      else if(tier===2){ if(Math.random()<.5){ a=rnd(1,9)*10; b=rnd(1,9); } else { a=rnd(1,8)*10; b=rnd(1,10-a/10)*10; } }
+      else if(tier===3){ a=rnd(11,88); b=rnd(10,99-a); if(ones(a)+ones(b)>=10) continue; }
+      else if(tier===4){ a=rnd(12,88); b=rnd(5,100-a); if(ones(a)+ones(b)<10) continue; }
+      else { a=rnd(2,95); b=rnd(2,100-a); }
+      if(a<1||b<1||a+b>100) continue;
+      return { op, a, b, ans:a+b };
+    } else {
+      if(tier===1){ a=rnd(3,20); b=rnd(1,a-1); }
+      else if(tier===2){ if(Math.random()<.5){ a=rnd(2,10)*10; b=rnd(1,a/10-1)*10; } else { a=rnd(21,99); b=Math.floor(Math.random()*Math.floor(a/10))*10 || 10; if(b>=a) continue; } }
+      else if(tier===3){ a=rnd(21,99); b=rnd(11,a-1); if(ones(a)<ones(b)) continue; }
+      else if(tier===4){ a=rnd(21,99); b=rnd(6,a-2); if(ones(a)>=ones(b)) continue; }
+      else { a=rnd(10,100); b=rnd(2,a-1); }
+      if(b<1||a-b<1) continue;
+      return { op, a, b, ans:a-b };
+    }
+  }
+  return op==='add' ? { op, a:2, b:3, ans:5 } : { op, a:9, b:4, ans:5 };
+}
 function makeProblems(level){
+  if(['add','sub','mix2'].includes(level.op)){
+    const out=[], seen=new Set();
+    for(let i=0; out.length<level.count && i<level.count*30; i++){
+      const p = genAddSub(level.op==='mix2' ? pick(['add','sub']) : level.op, level.tier||5);
+      const k = p.op+p.a+','+p.b; if(seen.has(k) && i<level.count*20) continue; seen.add(k); out.push(p);
+    }
+    return out;
+  }
   const ops = level.op === 'mix' ? ['mul','div'] : [level.op];
   const pool = [];
   for(const t of level.tables) for(let k=1;k<=10;k++) for(const op of ops){
@@ -589,17 +787,27 @@ function makeChoices(p){
   if(p.op === 'mul'){
     near.push((p.a+1)*p.b, (p.a-1)*p.b, p.a*(p.b+1), p.a*(p.b-1));
     far.push(p.ans+1, p.ans-1, p.ans+10, p.ans-10, p.a+p.b, p.ans+2);
+  } else if(p.op === 'add' || p.op === 'sub'){
+    const swap = p.ans>=10 && p.ans%10!==Math.floor(p.ans/10) ? (p.ans%10)*10+Math.floor(p.ans/10) : 0;
+    near.push(p.ans+1, p.ans-1, p.ans+10, p.ans-10, p.op==='add' ? p.ans-10 : p.ans+10);
+    far.push(p.ans+2, p.ans-2, swap, p.ans+11, p.ans-9);
   } else {
     near.push(p.ans+1, p.ans-1, p.ans+2, p.ans-2);
     far.push(p.b, p.ans+3, p.ans+5, p.a-p.b, p.ans*2, p.ans+10);
   }
   const set = new Set();
-  for(const v of [...shuffle(near), ...shuffle(far)]){ if(v>0 && v!==p.ans && v<=120 && set.size<4) set.add(v); }
-  let k=3; while(set.size<4){ const v=p.ans+k++; if(v!==p.ans) set.add(v); }
+  const cap = (p.op==='add'||p.op==='sub') ? 100 : 120;
+  for(const v of [...shuffle(near), ...shuffle(far)]){ if(v>0 && v!==p.ans && v<=cap && set.size<4) set.add(v); }
+  let k=3; while(set.size<4){ const v = p.ans+k <= cap ? p.ans+k : p.ans-k; k++; if(v>0 && v!==p.ans) set.add(v); }
   return shuffle([p.ans, ...set]);
 }
-function hintFor(p){ return p.op==='mul' ? `${p.a} groups of ${p.b}` : `? × ${p.b} = ${p.a}`; }
-const sym = op => op==='mul' ? '×' : '÷';
+function hintFor(p){
+  if(p.op==='mul') return `${p.a} groups of ${p.b}`;
+  if(p.op==='div') return `? × ${p.b} = ${p.a}`;
+  if(p.op==='add') return (p.a>=10 && p.b>=10) ? `tens ${Math.floor(p.a/10)*10}+${Math.floor(p.b/10)*10}, ones ${p.a%10}+${p.b%10}` : `count on from ${Math.max(p.a,p.b)}`;
+  return `? + ${p.b} = ${p.a}`;
+}
+const sym = op => ({ mul:'×', div:'÷', add:'+', sub:'−' })[op];
 
 /* =====================================================================
    ROBOT
@@ -711,7 +919,8 @@ const Ships = {
   make(x, n, kind, from, big){
     const [c1,c2] = pick(SHIP_COLORS);
     const el = document.createElement('div'); el.className = 'ship' + (big?' big':''); el.style.left = (x*100)+'%';
-    el.innerHTML = `<div class="ship-bob"><div class="ship-art ${from==='right'?'flip':''}">${SHIP_ART[kind](c1,c2)}</div><div class="tether"></div><div class="crate brick ${pick(CRATE_COLORS)}">${n}</div></div>`;
+    const art = kind.startsWith('fleet:') ? fleetSVG(kind.slice(6)) : SHIP_ART[kind](c1,c2);
+    el.innerHTML = `<div class="ship-bob"><div class="ship-art ${from==='right'?'flip':''}">${art}</div><div class="tether"></div><div class="crate brick ${pick(CRATE_COLORS)}">${n}</div></div>`;
     shipsEl.appendChild(el); el._x = x; el._from = from; return el;
   },
   fly(el, fromDx, fromDy, toDx, toDy, dur, easing){
@@ -720,8 +929,9 @@ const Ships = {
   async show(p){
     this.clear();
     const W = this.W(), H = this.H();
-    const kinds = shuffle(Object.keys(SHIP_ART).filter(k=>k!=='hauler'));
-    const a = this.make(.14, p.a, p.op==='div' && p.a>=20 ? 'hauler' : kinds[0], 'left', p.op==='div');
+    const en = Game.level.enemies;
+    const kinds = en ? [ 'fleet:'+pick(en), 'fleet:'+pick(en) ] : shuffle(Object.keys(SHIP_ART).filter(k=>k!=='hauler'));
+    const a = this.make(.14, p.a, en ? kinds[0] : (p.op==='div' && p.a>=20 ? 'hauler' : kinds[0]), 'left', p.op==='div');
     const b = this.make(.48, p.b, kinds[1], 'right');
     const op = document.createElement('div'); op.className='op'; op.style.left='31%'; op.textContent = sym(p.op); shipsEl.appendChild(op);
     const eq = document.createElement('div'); eq.className='eq'; eq.style.left='69%'; eq.textContent='= ?'; shipsEl.appendChild(eq);
@@ -742,10 +952,19 @@ const Ships = {
   async blast(){
     const hits = [];
     for(const ship of this.els.slice(0,2).filter(Boolean)){
-      const parts = [...ship.querySelectorAll('.spart')]; if(!parts.length) continue;
+      const parts = [...ship.querySelectorAll('.spart')];
+      if(!parts.length){ const art = ship.querySelector('.ship-art'); hits.push({ el:art, onHit:()=>this.wreck(ship, art) }); continue; }
       const part = pick(parts); hits.push({ el:part, onHit:()=>this.damage(ship, part, parts) });
     }
     await Hero.attack(hits);
+  },
+  wreck(ship, art){
+    const pt = stagePoint(art.getBoundingClientRect(), .55, .45), bob = ship.querySelector('.ship-bob');
+    const fire = document.createElement('div'); fire.className = 'hitfire'; fire.style.left = '55%'; fire.style.top = '35%'; bob.appendChild(fire);
+    ship.classList.add('hit','damaged','wreck'); Sound.boom(); stageSparks(pt, 14);
+    for(let i=0;i<4;i++){ const d=document.createElement('div'); d.className='debris'; d.style.left=pt.x+'px'; d.style.top=pt.y+'px'; stage.appendChild(d);
+      d.animate([{transform:'none',opacity:1},{transform:`translate(${rnd(-60,60)}px,${rnd(90,180)}px) rotate(${rnd(-400,400)}deg)`,opacity:0}],{duration:1100+Math.random()*400,easing:'ease-in'}).onfinish=()=>d.remove(); }
+    setTimeout(()=>ship.classList.remove('hit'), 420);
   },
   damage(ship, part, parts){
     const target = stagePoint(part.getBoundingClientRect());
@@ -829,9 +1048,17 @@ const Hero = {
 
 const Boss = {
   el: $('#boss'), q: $('#bossQ'), parts: [],
-  reset(on){
+  kind:'scraptor',
+  reset(on, kind='scraptor', minions=[]){
     this.el.hidden = !on; this.q.hidden = !on; this.el.className = 'boss'; this.q.textContent = ''; this.q.classList.remove('solved');
-    this.parts = [...this.el.querySelectorAll('.bpart')]; this.parts.forEach(p=>p.classList.remove('burnt','fixed'));
+    this.kind = kind; this.svg = null;
+    this.el.querySelectorAll('svg[data-kind]').forEach(sv => { const show = sv.dataset.kind === kind; sv.toggleAttribute('hidden', !show); if(show) this.svg = sv; });
+    this.parts = [...this.svg.querySelectorAll('.bpart')]; this.parts.forEach(p=>p.classList.remove('burnt','fixed'));
+    const mEl = $('#minions'); mEl.innerHTML = '';
+    if(on){
+      const spots = [['left:1%;top:4cqh',0],['left:2%;top:22cqh',0],['right:1%;top:21cqh',1],['right:3%;top:37cqh',1]];
+      minions.slice(0,4).forEach((id,i)=>{ const d=document.createElement('div'); d.className='mn'+(spots[i][1]?' flip':''); d.style.cssText=spots[i][0]; d.innerHTML=fleetSVG(id); mEl.appendChild(d); });
+    }
   },
   burntCount(){ return this.parts.filter(p=>p.classList.contains('burnt')).length; },
   allDown(){ return this.burntCount() === this.parts.length; },
@@ -853,7 +1080,10 @@ const Boss = {
   },
   shoot(){
     Sound.tone(300,0,.25,'sawtooth',.08,900);
-    return fireBolt(stagePoint(this.el.getBoundingClientRect(), .5, .47), stagePoint(robotWrap.getBoundingClientRect(), .5, .35), '', 260);
+    const mins = [...document.querySelectorAll('#minions .mn')];
+    const [ex,ey] = (this.svg.dataset.eye||'.5,.47').split(',').map(Number);
+    const from = (mins.length && Math.random()<.5) ? stagePoint(pick(mins).getBoundingClientRect(), .5, .5) : stagePoint(this.el.getBoundingClientRect(), ex, ey);
+    return fireBolt(from, stagePoint(robotWrap.getBoundingClientRect(), .5, .35), '', 260);
   },
   repair(){
     const burnt = this.parts.filter(p=>p.classList.contains('burnt')); if(!burnt.length) return;
@@ -864,9 +1094,65 @@ const Boss = {
   async explode(){
     const r = this.el.getBoundingClientRect();
     this.el.classList.add('dead');
+    document.querySelectorAll('#minions .mn').forEach((m,i)=>m.animate([{opacity:1},{opacity:0,transform:`translateY(-40px) scale(.4) rotate(${i%2?200:-200}deg)`}],{duration:900,delay:300+i*150,fill:'forwards'}));
     for(let i=0;i<6;i++) setTimeout(()=>{ Sound.boom(); stageSparks(stagePoint(r, .15+Math.random()*.7, .2+Math.random()*.6), 16); }, i*200);
     setTimeout(()=>{ $('#flash').classList.remove('go'); void stage.offsetWidth; $('#flash').classList.add('go'); }, 1000);
     await wait(1400); this.el.hidden = true; this.q.hidden = true;
+  },
+};
+
+/* =====================================================================
+   FLEET (helpers, enemies, oddballs) + HELPER POWER-UPS
+   ===================================================================== */
+const fleetById = id => FLEET.find(f=>f.id===id);
+function fleetSVG(id){ const f = fleetById(id); return f ? `<svg class="fsvg" viewBox="0 0 160 120" role="img" aria-label="${f.name}">${f.svg}</svg>` : ''; }
+function fleetCardHTML(f, locked, delay=0){
+  const tag = { enemy:'Enemy', helper:'Helper', odd:'Oddball' }[f.group];
+  if(locked) return `<div class="fcard locked" style="animation-delay:${delay}s"><div class="fa"><b>?</b></div><div class="ft">locked</div><h4>???</h4><p>Unlock it in a future mission.</p></div>`;
+  const pw = HELPER_POWERS[f.id];
+  return `<div class="fcard ${f.group}" style="animation-delay:${delay}s"><div class="fa">${fleetSVG(f.id)}</div><div class="ft">${tag}${pw?' · '+pw.tag:''}</div><h4>${f.name}</h4><p>${f.line}</p>${pw?`<div class="pw">★ ${pw.text}</div>`:''}</div>`;
+}
+const Helpers = {
+  used:new Set(),
+  setup(on){
+    const el = $('#helpers'); this.used = new Set(); el.innerHTML = '';
+    const list = on ? Object.keys(HELPER_POWERS).filter(id => Save.hasFleet(id) || TEST) : [];
+    el.hidden = !list.length;
+    for(const id of list){
+      const f = fleetById(id), b = document.createElement('button');
+      b.className = 'hbtn'; b.dataset.id = id; b.setAttribute('aria-label', `${f.name}: ${HELPER_POWERS[id].text}`);
+      b.innerHTML = fleetSVG(id) + `<b>${HELPER_POWERS[id].tag}</b>`;
+      b.onclick = () => this.use(id, b); el.appendChild(b);
+    }
+  },
+  async use(id, btn){
+    if(this.used.has(id) || Game.busy || !Game.cur || !overlay.hidden) return;
+    this.used.add(id); btn.classList.add('used'); Sound.init();
+    const f = document.createElement('div'); f.className='hfly'; f.innerHTML = fleetSVG(id); stage.appendChild(f);
+    const br = stagePoint(btn.getBoundingClientRect()), W = stage.clientWidth, H = stage.clientHeight;
+    Sound.flyby(.4, .7, .4);
+    f.animate([{transform:`translate(${br.x-40}px,${br.y-40}px) scale(.4)`,opacity:.6},{transform:`translate(${W*.42}px,${H*.32}px) scale(1.2)`,opacity:1,offset:.45},{transform:`translate(${W*.42}px,${H*.3}px) scale(1.2)`,opacity:1,offset:.75},{transform:`translate(${W+60}px,${H*.05}px) scale(.6)`,opacity:0}],{duration:1500,easing:'ease-in-out'}).onfinish=()=>f.remove();
+    await wait(650);
+    const p = Game.cur, btns = [...answersEl.querySelectorAll('.ans')];
+    const eq = Game.level.boss ? Boss.q : Ships.eq;
+    if(id === 'owl'){
+      Sound.correct(); const right = btns.find(b=>+b.dataset.v===p.ans); if(right) right.classList.add('hinted');
+      Robot.say('Hoo-hoo!', `Owl Scope sees ${p.ans}`, 1800);
+    } else if(id === 'firefly'){
+      Sound.repair();
+      if(p.ans >= 10){
+        const tens = Math.random()<.5, d = tens ? Math.floor(p.ans/10)%10 : p.ans%10, s = String(p.ans);
+        const shown = tens ? s.slice(0,-1).replace(/\d$/, String(d)) + '?' : s.slice(0,-1).replace(/\d/g,'?') + d;
+        if(eq) eq.textContent = eq.textContent.replace(/= .*$/, '= ' + shown);
+        btns.forEach(b => { const v=+b.dataset.v; const vd = tens ? Math.floor(v/10)%10 : v%10; if(v!==p.ans && (vd!==d || String(v).length!==s.length)) b.classList.add('dim'); });
+        Robot.say('Glow!', `One digit is ${d}`, 1800);
+      } else {
+        btns.filter(b=>+b.dataset.v!==p.ans).slice(0,2).forEach(b=>b.classList.add('dim'));
+        Robot.say('Glow!', 'Two wrong answers gone', 1800);
+      }
+    } else if(id === 'penguin'){
+      Game.skip();
+    }
   },
 };
 
@@ -914,15 +1200,15 @@ function renderCopilot(){
    ===================================================================== */
 const TIME_LIMIT = 8;
 const Timer = {
-  id:null, left:TIME_LIMIT, lastSec:null, onOut:null,
+  id:null, limit:TIME_LIMIT, left:TIME_LIMIT, lastSec:null, onOut:null,
   paint(){
-    const el=$('#timer'), frac=Math.max(0,this.left/TIME_LIMIT), sec=Math.ceil(this.left);
+    const el=$('#timer'), frac=Math.max(0,this.left/this.limit), sec=Math.ceil(this.left);
     $('#timerRing').style.strokeDashoffset = (264*(1-frac)).toFixed(1);
     $('#timerNum').textContent = sec;
     el.classList.toggle('mid', sec<=5 && sec>3); el.classList.toggle('low', sec<=3);
   },
   start(onOut){
-    this.stop(); this.left = TIME_LIMIT; this.lastSec = TIME_LIMIT; this.onOut = onOut;
+    this.stop(); this.left = this.limit; this.lastSec = this.limit; this.onOut = onOut;
     $('#timer').classList.remove('off'); this.paint();
     let prev = performance.now();
     this.id = setInterval(()=>{
@@ -934,14 +1220,15 @@ const Timer = {
     }, 100);
   },
   stop(keepShown){ clearInterval(this.id); this.id=null; if(!keepShown) $('#timer').classList.add('off'); },
-  reset(){ this.stop(); this.left = TIME_LIMIT; this.paint(); },
+  reset(){ this.stop(); this.left = this.limit; this.paint(); },
 };
 
 /* =====================================================================
    GAME FLOW
    ===================================================================== */
 const Game = {
-  run:0, mission: MISSIONS[0], li:0, probs:[], idx:0, lives:5, busy:true, hitsThisLevel:0,
+  run:0, mi:0, li:0,
+  get mission(){ return MISSIONS[this.mi]; }, probs:[], idx:0, lives:5, busy:true, hitsThisLevel:0,
   get level(){ return this.mission.levels[this.li]; },
   hud(){
     const L = this.level;
@@ -949,15 +1236,20 @@ const Game = {
     const n = L.boss ? Boss.parts.length : this.probs.length, done = L.boss ? Boss.burntCount() : this.idx;
     $('#pips').innerHTML = Array.from({length:n},(_,i)=>`<span class="pip ${i<done?'on':''}"></span>`).join('');
   },
-  async start(li, { landing=false }={}){
+  async start(li, { landing=false, mi }={}){
     const t = ++this.run;
+    if(mi !== undefined) this.mi = mi; Save.d.lastMission = this.mi; Save.write();
     overlay.hidden = true; this.li = li; this.probs = makeProblems(this.level); this.idx = 0; this.lives = 5; this.hitsThisLevel = 0;
-    Robot.reset(); Robot.setPower(5); robotAnim.style.opacity='1'; Ships.clear(); Timer.reset(); const boss = !!this.level.boss; stage.classList.toggle('bosslvl', boss); Boss.reset(boss); this.hud(); this.setAnswers(null);
+    Robot.reset(); Robot.setPower(5); robotAnim.style.opacity='1'; Ships.clear(); Timer.reset(); const boss = !!this.level.boss; stage.classList.toggle('bosslvl', boss); stage.classList.toggle('sea', this.mission.theme==='sea'); Boss.reset(boss, this.level.bossKind||'scraptor', this.level.enemies||[]);
+    Timer.limit = this.level.time || TIME_LIMIT; Timer.reset(); Helpers.setup(!!this.mission.helpers); this.hud(); this.setAnswers(null);
     this.busy = true;
     if(landing) await Robot.land();
     if(t !== this.run) return;
     if(boss){ await Boss.enter(); if(t !== this.run) return; Robot.say('Boss fight!', 'Right answers call the Duck Wing', 1800); await wait(900); }
-    else Robot.say(`Level ${li+1}!`, this.level.op==='mul'?'Multiply ×':this.level.op==='div'?'Divide ÷':'Mixed × and ÷', 1500);
+    else Robot.say(`Level ${li+1}!`, ({mul:'Multiply ×', div:'Divide ÷', mix:'Mixed × and ÷', add:'Add +', sub:'Subtract −', mix2:'Mixed + and −'})[this.level.op], 1500);
+    const prev = li>0 ? (this.mission.levels[li-1].enemies||[]) : [];
+    const fresh = (this.level.enemies||[]).filter(e=>!prev.includes(e));
+    for(const id of (this.level.boss ? [] : fresh)){ await introCard(fleetById(id)); if(t !== this.run) return; }
     await wait(700);
     if(t !== this.run) return;
     this.next();
@@ -969,6 +1261,15 @@ const Game = {
     if(this.cur !== p || t !== this.run) return;
     this.setAnswers(makeChoices(p)); this.busy = false;
     this.armTimer();
+  },
+  async skip(){
+    const t = this.run; Timer.stop(true); this.busy = true; Sound.freeze(); Sound.whoosh(.15,.6);
+    Robot.say('Brrr… smash!', 'New problem, no penalty', 1600);
+    if(this.level.boss){ Boss.q.animate([{transform:'translateX(-50%) scale(1)'},{transform:'translateX(-50%) scale(1.4)',opacity:0,filter:'brightness(3)'}],{duration:450}); }
+    else { this.cur && Ships.els.slice(0,2).forEach(sh=>{ sh && stageSparks(stagePoint(sh.getBoundingClientRect()), 12, '#bff6ff'); }); await wait(250); if(t!==this.run) return; await Ships.leave(); }
+    if(t !== this.run) return;
+    let np; for(let i=0;i<20;i++){ np = makeProblems({ ...this.level, count:1 })[0]; if(!this.cur || np.a!==this.cur.a || np.b!==this.cur.b) break; }
+    this.probs[this.idx] = np; await wait(300); if(t !== this.run) return; this.next();
   },
   armTimer(){ const p = this.cur; Timer.start(()=>{ if(this.cur===p && !this.busy) this.miss(null); }); },
   setAnswers(choices){
@@ -1019,7 +1320,7 @@ const Game = {
       <p class="sub">Five zaps drained the power cells. A quick recharge and you can try Level ${this.li+1} again.</p>
       <div class="row"><button class="brick b-green big-btn" id="oRetry">RECHARGE & RETRY</button><button class="brick b-blue big-btn" id="oMap">MAP</button></div></div>`, 'clear');
     $('#oRetry').onclick = () => { Sound.init(); Sound.beeps(5); this.start(this.li); };
-    $('#oMap').onclick = () => { Robot.reset(); showMap(); };
+    $('#oMap').onclick = () => { Robot.reset(); showMap(this.mi); };
   },
   async complete(){
     Timer.reset(); this.setAnswers(null); const t = this.run;
@@ -1039,7 +1340,8 @@ const Game = {
       <div class="stars-row">${[1,2,3].map(i=>`<i class="${i<=stars?'on':''}">★</i>`).join('')}</div>
       <p class="sub">${msg}${last ? ` <b>You finished ${this.mission.name}: ${this.mission.title}!</b>` : ''}</p>
       <div id="giftZone">${isNew ? `<button class="gift" id="gift" aria-label="Open your gift"><div class="box"></div><div class="rib"></div><div class="lid"></div><div class="bow"></div></button><p class="muted">A gift card arrived! Tap to open.</p>` : ''}</div>
-      <div class="row" id="doneBtns" ${isNew?'hidden':''}>${!last?`<button class="brick b-green big-btn" id="oNext">NEXT LEVEL ▸</button>`:''}<button class="brick b-blue big-btn" id="oMap">MAP</button></div></div>`);
+      <div class="row" id="doneBtns" ${isNew?'hidden':''}>${!last?`<button class="brick b-green big-btn" id="oNext">NEXT LEVEL ▸</button>`:''}${last && UNLOCK_AFTER[this.mission.id]?`<button class="brick b-green big-btn" id="oUnlock">SEE WHAT'S UNLOCKED ▸</button>`:''}<button class="brick b-blue big-btn" id="oMap">MAP</button></div></div>`);
+    const ub = $('#oUnlock'); if(ub) ub.onclick = () => showUnlock(this.mi);
     if(isNew){
       $('#gift').onclick = async () => {
         const g = $('#gift'); if(g.classList.contains('open')) return; g.classList.add('open'); Sound.pop();
@@ -1051,9 +1353,16 @@ const Game = {
       };
     }
     const nb = $('#oNext'); if(nb) nb.onclick = () => { Sound.init(); this.start(this.li+1, { landing:true }); };
-    $('#oMap').onclick = () => { showMap(); };
+    if(last && UNLOCK_AFTER[this.mission.id]) Save.unlockFleet(UNLOCK_AFTER[this.mission.id]);
+    $('#oMap').onclick = () => { showMap(this.mi); };
   },
 };
+async function introCard(f){
+  if(!f) return; const d=document.createElement('div'); d.className='intro-card'+(f.group==='helper'?' good':'');
+  d.innerHTML=`<div class="ia">${fleetSVG(f.id)}</div><div><div class="it">${f.group==='helper'?'NEW HELPER':'NEW ENEMY'}</div><h3>${f.name}</h3><p>${f.line}</p></div>`;
+  stage.appendChild(d); Sound.tone(220,0,.25,'sawtooth',.06,440); Sound.tone(330,.25,.3,'sawtooth',.06,220);
+  await wait(2800); d.animate([{opacity:1},{opacity:0,transform:'translateX(-50%) translateY(-20px)'}],{duration:300}).onfinish=()=>d.remove(); await wait(250);
+}
 answersEl.addEventListener('click', e => { const b = e.target.closest('.ans'); if(b) Game.answer(b); });
 addEventListener('keydown', e => { if(overlay.hidden && /^[1-5]$/.test(e.key)){ const b = answersEl.children[+e.key-1]; if(b) Game.answer(b); } });
 
@@ -1068,33 +1377,74 @@ function showTitle(){
     <p class="muted">Works with a mouse or a touch screen. Keys 1–5 pick answers too.</p></div>`, 'clear');
   $('#oStart').onclick = () => { Sound.init(); Sound.beeps(6); showMap(); };
 }
-function showMap(){
-  Game.run++;
-  Ships.clear(); Timer.reset(); stage.classList.remove('bosslvl'); Boss.reset(false); Robot.reset(); Robot.setPower(5); robotAnim.style.opacity='1'; Game.busy = true; Game.cur = null;
+function resetStage(){
+  Game.run++; Sound.musicStop();
+  Ships.clear(); Timer.reset(); stage.classList.remove('bosslvl'); Boss.reset(false); Helpers.setup(false); Robot.reset(); Robot.setPower(5); robotAnim.style.opacity='1'; Game.busy = true; Game.cur = null;
   $('#hudTitle').textContent = "Zeebot's Star Math"; $('#pips').innerHTML=''; Game.setAnswers(null);
-  const m = MISSIONS[0], ms = Save.mission(m.id);
-  const opLabel = L => L.boss ? 'BOSS · × ÷' : (L.op==='mix' ? '× ÷ mix' : (L.op==='mul'?'× ':'÷ ') + (L.tables.length>5 ? 'all' : L.tables.join(', ')));
+}
+function showMap(mi){
+  resetStage();
+  if(mi === undefined) mi = Save.d.lastMission || 0;
+  if(!MISSIONS[mi] || !Save.missionOpen(MISSIONS[mi])) mi = 0;
+  const m = MISSIONS[mi], ms = Save.mission(m.id);
+  stage.classList.toggle('sea', m.theme==='sea');
+  const opLabel = L => L.label || (L.boss ? 'BOSS · × ÷' : (L.op==='mix' ? '× ÷ mix' : (L.op==='mul'?'× ':'÷ ') + (L.tables.length>5 ? 'all' : L.tables.join(', '))));
+  const isOpen = i => TEST || i < Math.max(ms.unlocked, OPEN_LEVELS);
   showOverlay(`<div class="panel">
+    <div class="mtabs">${MISSIONS.map((M,k)=>{ const o=Save.missionOpen(M); return `<button class="brick mtab ${k===mi?'cur':''} ${o?(k%2?'b-teal':'b-orange'):'locked'}" data-mi="${k}">${o?'':'🔒 '}${M.name.toUpperCase()}</button>`; }).join('')}</div>
     <div><div class="mission-tag">${m.name.toUpperCase()}</div><h2 class="h2">${m.title}</h2></div>
     <p class="sub">${m.intro}</p>
     <div class="levels">${m.levels.map((L,i)=>{
-      const open = i < Math.max(ms.unlocked, OPEN_LEVELS), st = ms.stars[i]||0, col = L.boss?'b-red':['b-yellow','b-blue','b-green','b-orange','b-teal'][i%5];
+      const open = isOpen(i), st = ms.stars[i]||0, col = L.boss?'b-red':['b-yellow','b-blue','b-green','b-orange','b-teal'][i%5];
       return `<button class="brick lv ${col} ${open?'':'locked'}" data-li="${i}" ${open?'':'aria-disabled="true"'}>
         <span class="n">${open? i+1 : '🔒'}</span><span class="nm">${L.name}</span><span class="opl">${opLabel(L)}</span>
         <span class="st">${open ? '★'.repeat(st)+'☆'.repeat(3-st) : ''}</span></button>`; }).join('')}</div>
-    <div class="row"><button class="brick b-purple big-btn" id="oCrew">CREW CARDS ${Save.d.crew.length}/${CREW.length}</button></div>
-    <div class="coming">Mission 2 is coming soon. Your crew cards will fly with you.</div></div>`);
-  overlay.querySelectorAll('.lv').forEach(b => b.onclick = () => { const i=+b.dataset.li; if(i < Math.max(ms.unlocked, OPEN_LEVELS)){ Sound.init(); Sound.click(); Game.start(i); } else { Sound.tone(200,0,.15,'square',.06); Robot.say('Locked!', 'Finish the level before it', 1400); } });
+    <div class="row"><button class="brick b-purple big-btn" id="oCrew">CREW & FLEET</button>${Save.d.fleet.length?`<button class="brick b-green big-btn" id="oUnl">UNLOCKED SHIPS</button>`:''}</div>
+    <div class="coming">${mi===MISSIONS.length-1 ? 'Mission '+(MISSIONS.length+1)+' is coming soon. Your crew and helpers will fly with you.' : 'Finish this mission to unlock the next one.'}</div></div>`);
+  overlay.querySelectorAll('.lv').forEach(b => b.onclick = () => { const i=+b.dataset.li; if(isOpen(i)){ Sound.init(); Sound.click(); Game.start(i, { mi }); } else { Sound.tone(200,0,.15,'square',.06); Robot.say('Locked!', 'Finish the level before it', 1400); } });
+  overlay.querySelectorAll('.mtab').forEach(b => b.onclick = () => {
+    const k=+b.dataset.mi, M=MISSIONS[k]; Sound.init(); Sound.click();
+    if(!Save.missionOpen(M)){ Robot.say('Locked!', `Finish ${MISSIONS.findIndex(x=>x.id===M.requires)>=0 ? MISSIONS.find(x=>x.id===M.requires).name : 'the mission before'} first`, 1600); return; }
+    const req = M.requires && UNLOCK_AFTER[M.requires];
+    if(req && !Save.d.seen.includes('unlock-'+M.requires)){ Save.unlockFleet(req); return showUnlock(MISSIONS.findIndex(x=>x.id===M.requires)); }
+    showMap(k);
+  });
   $('#oCrew').onclick = showCrew;
+  const ul = $('#oUnl'); if(ul) ul.onclick = () => showUnlock(0, true);
+}
+function showUnlock(fromMi, replay){
+  resetStage(); Sound.init();
+  const id = MISSIONS[fromMi].id, ids = UNLOCK_AFTER[id] || [];
+  Save.unlockFleet(ids); if(!Save.d.seen.includes('unlock-'+id)){ Save.d.seen.push('unlock-'+id); Save.write(); }
+  const next = MISSIONS[fromMi+1];
+  const shown = FLEET.filter(f=>ids.includes(f.id)).sort((a,b)=>(a.group==='helper'?0:1)-(b.group==='helper'?0:1));
+  const locked = FLEET.filter(f=>!Save.hasFleet(f.id));
+  showOverlay(`<div class="panel">
+    <h2 class="unlocked-title">UNLOCKED!</h2>
+    <p class="sub">${MISSIONS[fromMi].name} complete! New ships join the story. Helpers give super powers in ${next?next.name:'the next mission'}. Enemies are coming too…</p>
+    <div class="grp-h" style="color:#5dff8a">Helpers</div>
+    <div class="fcards">${shown.filter(f=>f.group==='helper').map((f,i)=>fleetCardHTML(f,false,.4+i*.35)).join('')}</div>
+    <div class="grp-h" style="color:#ff6a4a">Enemies</div>
+    <div class="fcards">${shown.filter(f=>f.group==='enemy').map((f,i)=>fleetCardHTML(f,false,1.5+i*.35)).join('')}</div>
+    <div class="grp-h" style="color:#7880c0">Still locked</div>
+    <div class="fcards small">${locked.map((f,i)=>fleetCardHTML(f,true,3+i*.06)).join('')}</div>
+    <div class="row">${next?`<button class="brick b-green big-btn" id="oGo">START ${next.name.toUpperCase()} ▸</button>`:''}<button class="brick b-blue big-btn" id="oMap">MAP</button></div></div>`);
+  Sound.fanfare(); setTimeout(()=>{ if(!overlay.hidden && $('.unlocked-title')) Sound.musicStart(); }, 1200);
+  const go = $('#oGo'); if(go) go.onclick = () => { Sound.musicStop(); Game.start(0, { mi: fromMi+1, landing:true }); };
+  $('#oMap').onclick = () => showMap(next && !replay ? fromMi+1 : undefined);
 }
 function showCrew(){
   Sound.click();
+  resetStage();
   showOverlay(`<div class="panel"><div><div class="mission-tag">YOUR CREW</div><h2 class="h2">Crew cards ${Save.d.crew.length}/${CREW.length}</h2></div>
     <p class="sub">Win a card by clearing a level for the first time. Tap a card to see it up close and pick your co-pilot.</p>
     <div class="cards">${CREW.map(c=>cardHTML(c,{locked:!Save.hasCrew(c.id)})).join('')}</div>
+    <div><div class="mission-tag">THE FLEET</div><h2 class="h2">Ships ${Save.d.fleet.length}/${FLEET.length}</h2></div>
+    <div class="fcards">${FLEET.filter(f=>Save.hasFleet(f.id)).map(f=>fleetCardHTML(f,false)).join('')}</div>
+    <div class="fcards small">${FLEET.filter(f=>!Save.hasFleet(f.id)).map(f=>fleetCardHTML(f,true)).join('')}</div>
     <button class="brick b-blue big-btn" id="oBack">◂ MAP</button></div>`);
   overlay.querySelectorAll('.cards .card[data-id]').forEach(el => el.onclick = () => showCard(el.dataset.id));
-  $('#oBack').onclick = showMap;
+  $('#oBack').onclick = () => showMap();
 }
 function showCard(id){
   const c = CREW.find(x=>x.id===id); Sound.beeps(3);
@@ -1107,6 +1457,7 @@ function showCard(id){
   $('#oBack').onclick = showCrew;
 }
 $('#btnMap').onclick = () => { Sound.init(); Sound.click(); showMap(); };
+function showMapDefault(){ showMap(); }
 $('#btnCards').onclick = () => { Sound.init(); showCrew(); };
 const sb = $('#btnSound'); const paintSound = () => { sb.textContent = Save.d.sound ? '♪' : '✕'; sb.setAttribute('aria-pressed', Save.d.sound); };
 sb.onclick = () => { Save.d.sound = !Save.d.sound; Save.write(); paintSound(); Sound.init(); Sound.click(); }; paintSound();
@@ -1122,7 +1473,21 @@ function sizeStars(){
   dust = Array.from({length: Math.round(SW*SH/500)}, () => ({ x:Math.random()*SW, y:Math.random()*SH, a:Math.random()*.6+.2, t:Math.random()*6 }));
   stars = Array.from({length: Math.round(SW*SH/2600)}, () => ({ x:Math.random()*SW, y:Math.random()*SH, z:Math.random()*.9+.1, t:Math.random()*6 }));
 }
+let bubbles = [];
+function drawSea(dt){
+  const g = cx.createLinearGradient(0,0,0,SH); g.addColorStop(0,'#0b4a6e'); g.addColorStop(.55,'#062c52'); g.addColorStop(1,'#031634');
+  cx.fillStyle = g; cx.fillRect(0,0,SW,SH);
+  for(const s of stars){ s.t += dt; const a = (.25 + .3*Math.abs(Math.sin(s.t)))*s.z; cx.fillStyle = `rgba(220,240,255,${a.toFixed(2)})`; cx.fillRect(s.x, s.y*.7, s.z*1.6, s.z*1.6); }
+  const tt = performance.now()/1000;
+  for(let i=0;i<4;i++){ const x = SW*(.15+i*.25) + Math.sin(tt*.3+i)*SW*.04; cx.fillStyle='rgba(180,240,255,.05)'; cx.beginPath(); cx.moveTo(x-SW*.03,0); cx.lineTo(x+SW*.03,0); cx.lineTo(x+SW*.12,SH); cx.lineTo(x-SW*.02,SH); cx.fill(); }
+  if(bubbles.length < 40 && Math.random()<.3) bubbles.push({ x:Math.random()*SW, y:SH+10, r:2+Math.random()*6, v:30+Math.random()*50, p:Math.random()*6 });
+  cx.strokeStyle='rgba(200,245,255,.55)'; cx.lineWidth=1.5;
+  for(const b of bubbles){ if(!still){ b.y -= b.v*dt; b.p += dt*2; } const x=b.x+Math.sin(b.p)*6; cx.beginPath(); cx.arc(x,b.y,b.r,0,Math.PI*2); cx.stroke(); cx.fillStyle='rgba(255,255,255,.5)'; cx.fillRect(x-b.r*.4,b.y-b.r*.5,1.5,1.5); }
+  bubbles = bubbles.filter(b=>b.y>-20);
+  const sg = cx.createLinearGradient(0,SH*.9,0,SH); sg.addColorStop(0,'rgba(200,170,110,0)'); sg.addColorStop(1,'rgba(200,170,110,.35)'); cx.fillStyle=sg; cx.fillRect(0,SH*.9,SW,SH*.1);
+}
 function drawStars(dt){
+  if(stage.classList.contains('sea')) return drawSea(dt);
   const g = cx.createLinearGradient(0,0,0,SH); g.addColorStop(0,'#0a0e2c'); g.addColorStop(1,'#1b1f63');
   cx.fillStyle = g; cx.fillRect(0,0,SW,SH);
   const n1 = cx.createRadialGradient(SW*.2,SH*.3,0,SW*.2,SH*.3,SW*.45); n1.addColorStop(0,'rgba(142,68,214,.28)'); n1.addColorStop(1,'rgba(142,68,214,0)');
@@ -1141,8 +1506,7 @@ function loop(now){ const dt = Math.min(.05,(now-last)/1000); last = now; drawSt
 new ResizeObserver(sizeStars).observe(stage); sizeStars(); requestAnimationFrame(loop);
 
 renderCopilot(); Game.setAnswers(null); showTitle();
-window.__bleep = { Game, Save, MISSIONS, CREW };
-if('serviceWorker' in navigator && location.protocol==='https:') addEventListener('load',()=>navigator.serviceWorker.register('sw.js').catch(()=>{}));
+window.__bleep = { Game, Save, MISSIONS, CREW, FLEET, Helpers };
 </script>
 
 </body>
