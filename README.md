@@ -2,7 +2,7 @@
 
 A space math game for kids: help Zeebot the robot multiply and divide, collect crew cards and beat the boss.
 
-**Play:** https://zvkalinic-lab.github.io/zeebot/
+**Play:** https://zvkalinic-lab.github.io/Zeebot/
 
 On a phone, open the link and choose "Add to Home Screen" to install it like an app. It works offline after the first visit.
 
