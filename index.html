@@ -533,7 +533,24 @@ const Sound = {
   whoosh(at=0,dur=.6){ this.noise(at,dur,.22,300,3000); },
   transform(){ [392,523,659,784,988,1175].forEach((f,i)=>this.tone(f,i*.07,.12,'square',.07)); this.whoosh(.4,1.1); this.tone(150,.4,1.1,'sawtooth',.08,900); },
   fanfare(){ [[523,0],[659,.14],[784,.28],[1047,.46],[784,.66],[1047,.8]].forEach(([f,t])=>this.tone(f,t,.28,'triangle',.22)); this.tone(1568,.8,.6,'sine',.1); },
-  quack(){ this.tone(520,0,.09,'square',.08,340); this.tone(470,.1,.12,'square',.08,300); },
+  quack(){ this.tone(520,0,.09,'square',.045,340); this.tone(470,.1,.12,'square',.045,300); },
+  /* soft gliding engine hum for the Duck Wing: rises on arrival, hums while hovering, slides up as it leaves */
+  flyby(inDur, outAt, outDur){
+    if(!this.ok) return; const c=this.ctx, t=c.currentTime, end=t+outAt+outDur;
+    const lp=c.createBiquadFilter(); lp.type='lowpass'; lp.frequency.setValueAtTime(500,t); lp.frequency.linearRampToValueAtTime(1100,t+inDur); lp.frequency.linearRampToValueAtTime(1600,end); lp.Q.value=4;
+    const g=c.createGain(); g.gain.setValueAtTime(.0001,t); g.gain.exponentialRampToValueAtTime(.06,t+inDur*.6); g.gain.setValueAtTime(.06,t+outAt); g.gain.exponentialRampToValueAtTime(.0001,end);
+    lp.connect(g); g.connect(this.master);
+    const lfo=c.createOscillator(), lg=c.createGain(); lfo.frequency.value=5.5; lg.gain.value=4; lfo.connect(lg);
+    [[0,'sine'],[7,'triangle'],[-5,'sine']].forEach(([det,type],i)=>{
+      const o=c.createOscillator(); o.type=type; o.detune.value=det*(i+1);
+      const base=i===2?.5:1;
+      o.frequency.setValueAtTime(150*base,t); o.frequency.exponentialRampToValueAtTime(270*base,t+inDur);
+      o.frequency.setValueAtTime(270*base,t+outAt); o.frequency.exponentialRampToValueAtTime(520*base,end);
+      lg.connect(o.frequency); o.connect(lp); o.start(t); o.stop(end+.05);
+    });
+    lfo.start(t); lfo.stop(end+.05);
+    this.noise(0,inDur,.03,400,2200); this.noise(outAt,outDur,.03,1200,4000);
+  },
   pew(){ this.tone(1300,0,.14,'square',.06,420); this.tone(2600,0,.06,'sine',.05); },
   boom(){ this.noise(0,.6,.4,600,80); this.tone(160,0,.5,'sine',.3,40); },
   laser(){ this.tone(1800,0,.18,'square',.07,500); },
@@ -788,22 +805,23 @@ const Hero = {
     const y = H * (stage.classList.contains('bosslvl') ? .42 : .34);
     const x0 = d > 0 ? -w-10 : W+10, x1 = d > 0 ? W+10 : -w-10;
     const xm = W/2 - w/2;
-    Sound.quack();
-    const inA = this.el.animate([{transform:`translate(${x0}px,${y-H*.06}px) rotate(${d*6}deg)`},{transform:`translate(${xm}px,${y}px) rotate(0deg)`}],{duration:1500,easing:'cubic-bezier(.2,.7,.3,1)',fill:'forwards'});
+    const IN = .65, PRE = .15, SHOT = .2, GAP = .28, POST = .08, OUT = .6;
+    Sound.flyby(IN, IN+PRE+hits.length*(SHOT+GAP)+POST, OUT); Sound.quack();
+    const inA = this.el.animate([{transform:`translate(${x0}px,${y-H*.06}px) rotate(${d*6}deg)`},{transform:`translate(${xm}px,${y}px) rotate(0deg)`}],{duration:IN*1000,easing:'cubic-bezier(.2,.7,.3,1)',fill:'forwards'});
     await inA.finished.catch(()=>{});
     this.el.classList.add('hover');
-    await wait(350);
+    await wait(PRE*1000);
     const sorted = hits.map(h => ({ ...h, x: stagePoint(h.el.getBoundingClientRect()).x })).sort((a,b) => d*(a.x-b.x));
     for(const h of sorted){
-      const q = $('#quack'); q.textContent = pick(['PEW!','QUACK!','PEW PEW!']); q.classList.add('show'); setTimeout(()=>q.classList.remove('show'), 450);
+      const q = $('#quack'); q.textContent = pick(['PEW!','QUACK!','PEW PEW!']); q.classList.add('show'); setTimeout(()=>q.classList.remove('show'), 400);
       Sound.pew();
-      await fireBolt(stagePoint(this.el.getBoundingClientRect(), .55, .4), stagePoint(h.el.getBoundingClientRect()), 'duck', 260);
+      await fireBolt(stagePoint(this.el.getBoundingClientRect(), .55, .4), stagePoint(h.el.getBoundingClientRect()), 'duck', SHOT*1000);
       h.onHit();
-      await wait(450);
+      await wait(GAP*1000);
     }
-    await wait(300);
-    this.el.classList.remove('hover'); Sound.whoosh(0,.8);
-    const outA = this.el.animate([{transform:`translate(${xm}px,${y}px) rotate(0deg)`},{transform:`translate(${x1}px,${y-H*.08}px) rotate(${-d*8}deg)`}],{duration:1400,easing:'cubic-bezier(.6,0,.9,.6)',fill:'forwards'});
+    await wait(POST*1000);
+    this.el.classList.remove('hover');
+    const outA = this.el.animate([{transform:`translate(${xm}px,${y}px) rotate(0deg)`},{transform:`translate(${x1}px,${y-H*.08}px) rotate(${-d*8}deg)`}],{duration:OUT*1000,easing:'cubic-bezier(.6,0,.9,.6)',fill:'forwards'});
     inA.cancel();
     this.run = outA.finished.catch(()=>{}).then(()=>{ this.el.hidden = true; });
   },
