@@ -11,7 +11,7 @@ All content lives at the top of the `<script>` in `index.html`:
 - **CREW**: collectible cards. `kind` picks the art template (`box`, `orb`, `dome`, `tall`, `pilot`, `crystal`),
   `colors` = [main, accent, eyes/skin], `stats` = strength / battery / speed (1–10).
   Link a card to a level with that level's `card` field.
-- **UNLOCK_ALL**: `true` opens every level for testing; set `false` for normal one-by-one unlocking.
+- **OPEN_LEVELS**: how many levels are open from the start (2). Others unlock by clearing the previous level; set to 10 to open all for testing.
 - **Boss levels** (`boss:true`): the level is a boss fight (Boss object). Right answer burns one of 8 boss parts, a miss repairs one; all parts burnt = win.
 - **TIME_LIMIT**: seconds per problem (8). Running out counts as a miss.
 - **SHIP_ART**: add new ship designs (SVG drawn facing right). Wrap pieces that can be shot off in `<g class="spart">`.

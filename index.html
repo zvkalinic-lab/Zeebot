@@ -446,8 +446,8 @@ button.brick:active{transform:translateY(3px)}
 /* =====================================================================
    GAME CONTENT — add new missions, levels and crew cards here.
    ===================================================================== */
-/* Testing switch: true opens every level on the map. Set to false so levels unlock one by one. */
-const UNLOCK_ALL = true;
+/* How many levels are always open from the start. The rest unlock by clearing the level before. (Set to 10 to open everything for testing.) */
+const OPEN_LEVELS = 2;
 
 const MISSIONS = [
   { id:'m1', name:'Mission 1', title:'The Number Nebula',
@@ -1078,13 +1078,13 @@ function showMap(){
     <div><div class="mission-tag">${m.name.toUpperCase()}</div><h2 class="h2">${m.title}</h2></div>
     <p class="sub">${m.intro}</p>
     <div class="levels">${m.levels.map((L,i)=>{
-      const open = UNLOCK_ALL || i < ms.unlocked, st = ms.stars[i]||0, col = L.boss?'b-red':['b-yellow','b-blue','b-green','b-orange','b-teal'][i%5];
+      const open = i < Math.max(ms.unlocked, OPEN_LEVELS), st = ms.stars[i]||0, col = L.boss?'b-red':['b-yellow','b-blue','b-green','b-orange','b-teal'][i%5];
       return `<button class="brick lv ${col} ${open?'':'locked'}" data-li="${i}" ${open?'':'aria-disabled="true"'}>
         <span class="n">${open? i+1 : '🔒'}</span><span class="nm">${L.name}</span><span class="opl">${opLabel(L)}</span>
         <span class="st">${open ? '★'.repeat(st)+'☆'.repeat(3-st) : ''}</span></button>`; }).join('')}</div>
     <div class="row"><button class="brick b-purple big-btn" id="oCrew">CREW CARDS ${Save.d.crew.length}/${CREW.length}</button></div>
     <div class="coming">Mission 2 is coming soon. Your crew cards will fly with you.</div></div>`);
-  overlay.querySelectorAll('.lv').forEach(b => b.onclick = () => { const i=+b.dataset.li; if(UNLOCK_ALL || i < ms.unlocked){ Sound.init(); Sound.click(); Game.start(i); } else { Sound.tone(200,0,.15,'square',.06); Robot.say('Locked!', 'Finish the level before it', 1400); } });
+  overlay.querySelectorAll('.lv').forEach(b => b.onclick = () => { const i=+b.dataset.li; if(i < Math.max(ms.unlocked, OPEN_LEVELS)){ Sound.init(); Sound.click(); Game.start(i); } else { Sound.tone(200,0,.15,'square',.06); Robot.say('Locked!', 'Finish the level before it', 1400); } });
   $('#oCrew').onclick = showCrew;
 }
 function showCrew(){
