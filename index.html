@@ -173,8 +173,23 @@ button.brick:active{transform:translateY(3px)}
   box-shadow:0 4px 0 rgba(0,0,0,.35),0 0 16px rgba(93,255,138,.5);animation:hpulse 1.6s ease-in-out infinite}
 .hbtn svg{width:100%;height:100%;display:block;overflow:visible}
 .hbtn b{position:absolute;left:50%;bottom:-.6em;transform:translateX(-50%);font-family:var(--display);font-weight:400;font-size:min(2cqw,2.4cqh);background:#fff;color:var(--ink);border-radius:6px;padding:0 .4em;white-space:nowrap}
+.hbtn::after{content:"";position:absolute;inset:-16%;border-radius:50%;border:3px dashed #ffe95a;animation:hspin 5s linear infinite;pointer-events:none;box-shadow:0 0 14px rgba(255,233,90,.6)}
+.hbtn::before{content:"";position:absolute;inset:-30%;border-radius:50%;background:radial-gradient(circle,rgba(255,233,90,.55),rgba(93,255,138,.25) 45%,rgba(93,255,138,0) 70%);animation:haura 1.4s ease-in-out infinite;pointer-events:none;z-index:-1}
 .hbtn.used{filter:grayscale(1) brightness(.45);animation:none;cursor:default;box-shadow:none}
-@keyframes hpulse{50%{box-shadow:0 4px 0 rgba(0,0,0,.35),0 0 26px rgba(93,255,138,.9)}}
+.hbtn.used::after,.hbtn.used::before{display:none}
+@keyframes hpulse{0%,100%{transform:scale(1);box-shadow:0 4px 0 rgba(0,0,0,.35),0 0 14px 4px rgba(93,255,138,.6)}50%{transform:scale(1.09);box-shadow:0 4px 0 rgba(0,0,0,.35),0 0 30px 12px rgba(255,233,90,.85)}}
+@keyframes hspin{to{transform:rotate(360deg)}}
+@keyframes haura{50%{transform:scale(1.18);opacity:.6}}
+.raider{position:absolute;left:0;top:0;width:min(22cqw,26cqh);z-index:8;padding:0;border:0;background:none;cursor:pointer;touch-action:manipulation}
+.raider svg{width:100%;height:auto;display:block;overflow:visible}
+.raider.left svg{transform:scaleX(1)}.raider.right svg{transform:scaleX(-1)}
+.raider.warn svg{animation:raidwarn .4s ease-in-out infinite alternate}
+.raider.warn.fast svg{animation-duration:.15s}
+@keyframes raidwarn{from{filter:drop-shadow(0 0 4px #ff3b3b)}to{filter:drop-shadow(0 0 16px #ff3b3b) brightness(1.25)}}
+.raider .tap{position:absolute;left:50%;top:-22%;transform:translateX(-50%);font-family:var(--display);font-size:min(3.2cqw,3.8cqh);background:var(--red);color:#fff;padding:.1em .55em;border-radius:8px;box-shadow:0 3px 0 rgba(0,0,0,.35);animation:tapb .45s ease-in-out infinite alternate;white-space:nowrap}
+@keyframes tapb{to{transform:translateX(-50%) translateY(-5px) scale(1.1)}}
+.floattxt{position:absolute;font-family:var(--display);font-size:min(5cqw,6cqh);color:#ff6a4a;text-shadow:0 3px 0 #141a3a;pointer-events:none;z-index:9}
+.ink{position:absolute;width:min(16cqw,18cqh);aspect-ratio:1;border-radius:50%;background:radial-gradient(circle,#1a1030 0 45%,rgba(26,16,48,.7) 55%,rgba(26,16,48,0) 70%);pointer-events:none;z-index:6}
 .hfly{position:absolute;width:min(16cqw,18cqh);pointer-events:none;z-index:8}
 .hfly svg{width:100%;height:auto;display:block;overflow:visible}
 .ans.hinted{animation:hint .6s ease-in-out infinite alternate;box-shadow:0 0 0 4px #fff,0 0 34px #ffe95a}
@@ -566,19 +581,19 @@ const MISSIONS = [
       { name:'Star Forge',     op:'mul', tables:[2,3,4,5,6,7,8,9,10], count:10, card:'zanka' },
       { name:'Starfield Showdown', op:'mix', tables:[2,3,4,5,6,7,8,9,10], count:180, card:'prism', boss:true },
     ]},
-  { id:'m2', name:'Mission 2', title:'Deep Sea Stars', theme:'sea', requires:'m1', helpers:true,
+  { id:'m2', name:'Mission 2', title:'Deep Sea Stars', theme:'sea', requires:'m1', helpers:true, raids:true,
     intro:'Zeebot dives into a starry ocean inside his glass dome. Add and subtract to stop the sea raiders! Tap a helper when you need a hand.',
     levels:[
-      { name:'Bubble Bay',      op:'add', tier:1, label:'+ to 20',      count:8,  card:'bubbles', enemies:['crab'] },
-      { name:'Coral Gap',       op:'sub', tier:1, label:'− to 20',      count:8,  card:'coral',   enemies:['crab'] },
-      { name:'Kelp Forest',     op:'add', tier:2, label:'+ tens',       count:8,  card:'finn',    enemies:['crab','spike'] },
-      { name:'Sunken Rocket',   op:'sub', tier:2, label:'− tens',       count:8,  card:'anchor',  enemies:['crab','spike'] },
-      { name:'Jelly Lights',    op:'add', tier:3, label:'+ no carry',   count:8,  card:'marina',  enemies:['crab','spike','shark'] },
-      { name:'Shipwreck Rise',  op:'sub', tier:3, label:'− no borrow',  count:8,  card:'puffer',  enemies:['crab','spike','shark'] },
-      { name:'Whale Road',      op:'add', tier:4, label:'+ carry',      count:9,  card:'kelp',    enemies:['crab','spike','shark','squid'], time:12 },
-      { name:'Trench Drop',     op:'sub', tier:4, label:'− borrow',     count:9,  card:'tidal',   enemies:['crab','spike','shark','squid'], time:12 },
-      { name:'Pearl Storm',     op:'add', tier:5, label:'+ to 100',     count:10, card:'octo',    enemies:['crab','spike','shark','squid'], time:12 },
-      { name:'Abyss Showdown',  op:'mix2', tier:5, label:'BOSS · + −',  count:180, card:'pearl', boss:true, bossKind:'sub', enemies:['crab','spike','shark','squid'], time:12 },
+      { name:'Bubble Bay',      op:'add', tier:1, label:'+ to 20',      count:8,  card:'bubbles', enemies:['crab'], time:14 },
+      { name:'Coral Gap',       op:'sub', tier:1, label:'− to 20',      count:8,  card:'coral',   enemies:['crab'], time:14 },
+      { name:'Kelp Forest',     op:'add', tier:2, label:'+ tens',       count:8,  card:'finn',    enemies:['crab','spike'], time:14 },
+      { name:'Sunken Rocket',   op:'sub', tier:2, label:'− tens',       count:8,  card:'anchor',  enemies:['crab','spike'], time:14 },
+      { name:'Jelly Lights',    op:'add', tier:3, label:'+ no carry',   count:8,  card:'marina',  enemies:['crab','spike','shark'], time:14 },
+      { name:'Shipwreck Rise',  op:'sub', tier:3, label:'− no borrow',  count:8,  card:'puffer',  enemies:['crab','spike','shark'], time:14 },
+      { name:'Whale Road',      op:'add', tier:4, label:'+ carry',      count:9,  card:'kelp',    enemies:['crab','spike','shark','squid'], time:18 },
+      { name:'Trench Drop',     op:'sub', tier:4, label:'− borrow',     count:9,  card:'tidal',   enemies:['crab','spike','shark','squid'], time:18 },
+      { name:'Pearl Storm',     op:'add', tier:5, label:'+ to 100',     count:10, card:'octo',    enemies:['crab','spike','shark','squid'], time:18 },
+      { name:'Abyss Showdown',  op:'mix2', tier:5, label:'BOSS · + −',  count:180, card:'pearl', boss:true, bossKind:'sub', enemies:['crab','spike','shark','squid'], time:18 },
     ]},
   // { id:'m3', name:'Mission 3', title:'...', requires:'m2', levels:[...] },   <- next missions go here
 ];
@@ -1112,6 +1127,98 @@ function fleetCardHTML(f, locked, delay=0){
   const pw = HELPER_POWERS[f.id];
   return `<div class="fcard ${f.group}" style="animation-delay:${delay}s"><div class="fa">${fleetSVG(f.id)}</div><div class="ft">${tag}${pw?' · '+pw.tag:''}</div><h4>${f.name}</h4><p>${f.line}</p>${pw?`<div class="pw">★ ${pw.text}</div>`:''}</div>`;
 }
+/* Enemy raids (Mission 2): an enemy flies in during a problem. Tap it before it acts, or it makes mischief. */
+const RAIDS = {
+  crab:  { act:'time',   wait:2600, msg:'Pinchy Crab pinched 4 seconds!' },
+  squid: { act:'sign',   wait:2600, msg:'Squid Jammer inked the sign!' },
+  shark: { act:'digits', wait:2600, msg:'Shark Byte bit the digits!' },
+  spike: { act:'boom',   wait:3800, msg:'Spikey Mine exploded!' },
+};
+const RAID_CHANCE = .45;
+const Raid = {
+  el:null, timer:null, id:null,
+  maybe(){
+    const L = Game.level, en = (L.enemies||[]).filter(e=>RAIDS[e]);
+    if(!Game.mission.raids || !en.length || (Game.idx===0 && !L.boss) || Math.random() > RAID_CHANCE) return;
+    const s = Game.serial, t = Game.run;
+    setTimeout(()=>{ if(s===Game.serial && t===Game.run && !Game.busy && !this.el) this.launch(pick(en), s, t); }, rnd(900,2600));
+  },
+  launch(id, s, t){
+    const f = fleetById(id), cfg = RAIDS[id], W = stage.clientWidth, H = stage.clientHeight, fromLeft = Math.random()<.5;
+    const el = document.createElement('button'); el.className = 'raider ' + (fromLeft?'left':'right') + (cfg.act==='boom'?' boomer':'');
+    el.setAttribute('aria-label', `Stop ${f.name}`); el.innerHTML = fleetSVG(id) + '<span class="tap">TAP!</span>';
+    stage.appendChild(el); this.el = el; this.id = id;
+    const w = el.offsetWidth, x = W/2 - w/2 + (fromLeft?-1:1)*W*.14, y = H*.34;
+    this.pos = { x, y, w };
+    el.animate([{transform:`translate(${fromLeft?-w-10:W+10}px,${y-H*.12}px)`},{transform:`translate(${x}px,${y}px)`}],{duration:1000,easing:'cubic-bezier(.2,.8,.3,1)',fill:'forwards'});
+    Sound.tone(660,0,.12,'square',.05); Sound.tone(520,.14,.12,'square',.05); Sound.flyby(.9,1,.4);
+    el.addEventListener('pointerdown', e => { e.preventDefault(); this.defeat(); });
+    el.addEventListener('click', e => e.preventDefault());
+    setTimeout(()=>{ if(this.el===el){ el.classList.add('warn'); if(cfg.act==='boom') setTimeout(()=>this.el===el && el.classList.add('fast'), cfg.wait*.6); } }, 1000);
+    this.timer = setTimeout(()=>this.act(s, t), 1000 + cfg.wait);
+  },
+  center(){ return this.el ? stagePoint(this.el.getBoundingClientRect()) : { x:0, y:0 }; },
+  defeat(){
+    if(!this.el) return; clearTimeout(this.timer);
+    const pt = this.center(), f = fleetById(this.id), el = this.el; this.el = null;
+    Sound.boom(); Sound.correct(); stageSparks(pt, 20, '#5dff8a');
+    el.getAnimations().forEach(a=>a.cancel());
+    el.style.transform = `translate(${this.pos.x}px,${this.pos.y}px)`;
+    el.animate([{opacity:1,transform:`translate(${this.pos.x}px,${this.pos.y}px) scale(1)`},{opacity:0,transform:`translate(${this.pos.x}px,${this.pos.y+80}px) scale(.3) rotate(300deg)`}],{duration:600,fill:'forwards'}).onfinish=()=>el.remove();
+    Robot.say('Got it!', `${f.name} stopped`, 1400);
+  },
+  retreat(){
+    if(!this.el) return; clearTimeout(this.timer); const el = this.el; this.el = null;
+    el.classList.remove('warn','fast'); el.querySelector('.tap')?.remove();
+    el.getAnimations().forEach(a=>a.cancel());
+    el.animate([{transform:`translate(${this.pos.x}px,${this.pos.y}px)`},{transform:`translate(${this.pos.x}px,${-this.pos.w*1.5}px)`}],{duration:700,easing:'ease-in',fill:'forwards'}).onfinish=()=>el.remove();
+  },
+  clear(){ clearTimeout(this.timer); if(this.el){ this.el.remove(); this.el = null; } },
+  floatText(txt, pt){
+    const d = document.createElement('div'); d.className='floattxt'; d.textContent = txt; d.style.left = pt.x+'px'; d.style.top = pt.y+'px'; stage.appendChild(d);
+    d.animate([{transform:'translate(-50%,0) scale(.6)',opacity:1},{transform:'translate(-50%,-60px) scale(1.2)',opacity:0}],{duration:1300,easing:'ease-out'}).onfinish=()=>d.remove();
+  },
+  act(s, t){
+    if(!this.el) return;
+    if(t !== Game.run || s !== Game.serial){ this.clear(); return; }
+    if(Game.busy){ this.timer = setTimeout(()=>this.act(s,t), 300); return; }
+    const cfg = RAIDS[this.id], p = Game.cur;
+    let act = cfg.act, np = null;
+    if(act === 'sign'){
+      if(p.op==='add' && p.a!==p.b) np = { op:'sub', a:Math.max(p.a,p.b), b:Math.min(p.a,p.b), ans:Math.abs(p.a-p.b) };
+      else if(p.op==='sub' && p.a+p.b<=100) np = { op:'add', a:p.a, b:p.b, ans:p.a+p.b };
+      if(!np) act = 'time';
+    }
+    if(act === 'digits'){
+      const sw = n => (n>=10 && n<100 && n%10!==Math.floor(n/10)) ? (n%10)*10+Math.floor(n/10) : null;
+      const opts = [];
+      const A = sw(p.a), B = sw(p.b);
+      const mk = (a,b) => p.op==='add' ? (a+b<=100 ? { op:'add', a, b, ans:a+b } : null) : (a-b>=1 ? { op:'sub', a, b, ans:a-b } : null);
+      if(A!==null){ const q = mk(A,p.b); if(q) opts.push(q); }
+      if(B!==null){ const q = mk(p.a,B); if(q) opts.push(q); }
+      np = opts.length ? pick(opts) : null; if(!np) act = 'time';
+    }
+    const pt = this.center();
+    if(act === 'time'){
+      Timer.left = Math.max(1, Timer.left - 4); Timer.paint();
+      Sound.tone(900,0,.05,'square',.07); Sound.tone(700,.08,.05,'square',.07); Sound.tone(900,.16,.05,'square',.07);
+      this.floatText('−4s', stagePoint($('#timer').getBoundingClientRect(), .5, 1.1));
+      Robot.say('Hey!', RAIDS.crab.msg, 1800); this.retreat();
+    } else if(act === 'sign' || act === 'digits'){
+      if(act==='sign'){ const ink = document.createElement('div'); ink.className='ink'; const tgt = Game.level.boss ? Boss.q : Ships.els[2]; if(tgt){ const q = stagePoint(tgt.getBoundingClientRect()); ink.style.left = (q.x-40)+'px'; ink.style.top = (q.y-40)+'px'; } stage.appendChild(ink);
+        ink.animate([{transform:'scale(.2)',opacity:1},{transform:'scale(1.2)',opacity:.9,offset:.3},{transform:'scale(1.4)',opacity:0}],{duration:1400}).onfinish=()=>ink.remove(); Sound.noise(0,.4,.15,600,200); }
+      else { Sound.tone(200,0,.08,'sawtooth',.1); Sound.tone(160,.1,.08,'sawtooth',.1); }
+      Game.applyProblem(np);
+      Robot.say('Uh-oh!', cfg.msg, 2000); this.retreat();
+    } else if(act === 'boom'){
+      const el = this.el; this.el = null; el.remove();
+      Sound.boom(); stageSparks(pt, 26); $('#flash').classList.remove('go'); void stage.offsetWidth; $('#flash').classList.add('go');
+      Game.cur = null; Timer.stop(true);
+      if(Game.hurt('Boom!')) { Robot.say('Boom!', cfg.msg + ' New problem.', 2000); Game.replace(); }
+    }
+  },
+};
+
 const Helpers = {
   used:new Set(),
   setup(on){
@@ -1254,24 +1361,39 @@ const Game = {
     if(t !== this.run) return;
     this.next();
   },
+  serial:0,
   async next(){
-    const t = this.run, p = this.probs[this.idx]; this.cur = p; this.busy = true;
+    const t = this.run, p = this.probs[this.idx]; this.cur = p; this.busy = true; this.serial++; Raid.clear();
     this.setAnswers(null);
     if(this.level.boss) await Boss.ask(p); else await Ships.show(p);
     if(this.cur !== p || t !== this.run) return;
     this.setAnswers(makeChoices(p)); this.busy = false;
-    this.armTimer();
+    this.armTimer(); Raid.maybe();
   },
-  async skip(){
-    const t = this.run; Timer.stop(true); this.busy = true; Sound.freeze(); Sound.whoosh(.15,.6);
-    Robot.say('Brrr… smash!', 'New problem, no penalty', 1600);
+  applyProblem(p){
+    this.cur = p; this.probs[this.idx] = p;
+    if(this.level.boss){ Boss.q.textContent = `${p.a} ${sym(p.op)} ${p.b} = ?`; Boss.q.animate([{filter:'brightness(2.5)'},{filter:'none'}],{duration:600}); }
+    else {
+      const [a,b,op] = Ships.els;
+      if(a) a.querySelector('.crate').textContent = p.a; if(b) b.querySelector('.crate').textContent = p.b; if(op) op.textContent = sym(p.op);
+      [a,b,op].forEach(e => e && e.animate([{filter:'brightness(2.5)'},{filter:'none'}],{duration:600}));
+    }
+    if(!this.busy) this.setAnswers(makeChoices(p));
+  },
+  async replace(){
+    const t = this.run; Timer.stop(true); this.busy = true; Raid.clear();
     if(this.level.boss){ Boss.q.animate([{transform:'translateX(-50%) scale(1)'},{transform:'translateX(-50%) scale(1.4)',opacity:0,filter:'brightness(3)'}],{duration:450}); }
-    else { this.cur && Ships.els.slice(0,2).forEach(sh=>{ sh && stageSparks(stagePoint(sh.getBoundingClientRect()), 12, '#bff6ff'); }); await wait(250); if(t!==this.run) return; await Ships.leave(); }
+    else { Ships.els.slice(0,2).forEach(sh=>{ sh && stageSparks(stagePoint(sh.getBoundingClientRect()), 12, '#bff6ff'); }); await wait(250); if(t!==this.run) return; await Ships.leave(); }
     if(t !== this.run) return;
     let np; for(let i=0;i<20;i++){ np = makeProblems({ ...this.level, count:1 })[0]; if(!this.cur || np.a!==this.cur.a || np.b!==this.cur.b) break; }
     this.probs[this.idx] = np; await wait(300); if(t !== this.run) return; this.next();
   },
-  armTimer(){ const p = this.cur; Timer.start(()=>{ if(this.cur===p && !this.busy) this.miss(null); }); },
+  async skip(){
+    Sound.freeze(); Sound.whoosh(.15,.6);
+    Robot.say('Brrr… smash!', 'New problem, no penalty', 1600);
+    return this.replace();
+  },
+  armTimer(){ const t = this.run, s = this.serial; Timer.start(()=>{ if(t===this.run && s===this.serial && !this.busy) this.miss(null); }); },
   setAnswers(choices){
     const colors = ['b-red','b-yellow','b-blue','b-green','b-orange'];
     if(!choices){ answersEl.classList.add('wait'); answersEl.querySelectorAll('.ans').forEach(b=>b.disabled=true); if(answersEl.children.length) return; choices=['?','?','?','?','?']; }
@@ -1282,7 +1404,7 @@ const Game = {
     if(this.busy || btn.disabled) return;
     const v = +btn.dataset.v, p = this.cur, t = this.run, live = () => t === this.run;
     if(v === p.ans){
-      Timer.stop(true); this.busy = true; btn.classList.add('right'); answersEl.querySelectorAll('.ans').forEach(b=>b.disabled=true);
+      Timer.stop(true); this.busy = true; Raid.retreat(); btn.classList.add('right'); answersEl.querySelectorAll('.ans').forEach(b=>b.disabled=true);
       Sound.correct(); Robot.happy(); this.cheerCopilot(); this.idx++;
       if(this.level.boss){
         Boss.solved(p.ans); await Boss.takeHit(); if(!live()) return; this.hud();
@@ -1309,12 +1431,19 @@ const Game = {
       if(this.lives <= 0) return this.burnout();
       Robot.zap(hintFor(p), btn ? null : 'Too slow!');
       await wait(450);
-      if(this.cur !== p) return;
+      if(t !== this.run) return;
       this.busy = false; this.armTimer();
+  },
+  hurt(title){
+    Sound.zap(); this.lives--; this.hitsThisLevel++;
+    const segs = $('#lifebar').querySelectorAll('.seg'); const sg = segs[this.lives]; if(sg){ sg.classList.add('hit'); setTimeout(()=>sg.classList.remove('hit'),500); }
+    Robot.setPower(this.lives);
+    if(this.lives <= 0){ this.burnout(); return false; }
+    Robot.zap(null, title); return true;
   },
   cheerCopilot(){ const el=$('#copilot'); if(el.hidden) return; el.classList.remove('cheer'); void el.offsetWidth; el.classList.add('cheer'); },
   async burnout(){
-    Sound.burnout(); Robot.burnout(); answersEl.querySelectorAll('.ans').forEach(b=>b.disabled=true);
+    Raid.clear(); Sound.burnout(); Robot.burnout(); answersEl.querySelectorAll('.ans').forEach(b=>b.disabled=true);
     const t = this.run; await wait(1900); if(t !== this.run) return;
     showOverlay(`<div class="panel"><h2 class="h2">Zeebot overheated!</h2>
       <p class="sub">Five zaps drained the power cells. A quick recharge and you can try Level ${this.li+1} again.</p>
@@ -1323,7 +1452,7 @@ const Game = {
     $('#oMap').onclick = () => { Robot.reset(); showMap(this.mi); };
   },
   async complete(){
-    Timer.reset(); this.setAnswers(null); const t = this.run;
+    Timer.reset(); Raid.clear(); this.setAnswers(null); const t = this.run;
     await Robot.transformAndFly(); if(t !== this.run) return;
     Sound.fanfare();
     const stars = this.hitsThisLevel===0 ? 3 : this.hitsThisLevel<=2 ? 2 : 1;
@@ -1359,7 +1488,7 @@ const Game = {
 };
 async function introCard(f){
   if(!f) return; const d=document.createElement('div'); d.className='intro-card'+(f.group==='helper'?' good':'');
-  d.innerHTML=`<div class="ia">${fleetSVG(f.id)}</div><div><div class="it">${f.group==='helper'?'NEW HELPER':'NEW ENEMY'}</div><h3>${f.name}</h3><p>${f.line}</p></div>`;
+  d.innerHTML=`<div class="ia">${fleetSVG(f.id)}</div><div><div class="it">${f.group==='helper'?'NEW HELPER':'NEW ENEMY'}</div><h3>${f.name}</h3><p>${f.line}${RAIDS[f.id]?' <b style="color:#ffe95a">Tap it fast to stop it!</b>':''}</p></div>`;
   stage.appendChild(d); Sound.tone(220,0,.25,'sawtooth',.06,440); Sound.tone(330,.25,.3,'sawtooth',.06,220);
   await wait(2800); d.animate([{opacity:1},{opacity:0,transform:'translateX(-50%) translateY(-20px)'}],{duration:300}).onfinish=()=>d.remove(); await wait(250);
 }
@@ -1378,7 +1507,7 @@ function showTitle(){
   $('#oStart').onclick = () => { Sound.init(); Sound.beeps(6); showMap(); };
 }
 function resetStage(){
-  Game.run++; Sound.musicStop();
+  Game.run++; Sound.musicStop(); Raid.clear();
   Ships.clear(); Timer.reset(); stage.classList.remove('bosslvl'); Boss.reset(false); Helpers.setup(false); Robot.reset(); Robot.setPower(5); robotAnim.style.opacity='1'; Game.busy = true; Game.cur = null;
   $('#hudTitle').textContent = "Zeebot's Star Math"; $('#pips').innerHTML=''; Game.setAnswers(null);
 }

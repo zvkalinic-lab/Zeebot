@@ -13,7 +13,8 @@ All content lives at the top of the `<script>` in `index.html`:
   Link a card to a level with that level's `card` field.
 - **OPEN_LEVELS**: how many levels are open from the start (2). Others unlock by clearing the previous level; set to 10 to open all for testing.
 - **Boss levels** (`boss:true`): the level is a boss fight (Boss object). Right answer burns one of 8 boss parts, a miss repairs one; all parts burnt = win.
-- **TIME_LIMIT**: seconds per problem (8). Running out counts as a miss.
+- **TIME_LIMIT**: seconds per problem (8). Running out counts as a miss. A level can override with `time:` (Mission 2: 14s levels 1–6, 18s levels 7–10).
+- **RAIDS** (missions with `raids:true`): enemies from the level's `enemies` list sometimes fly in mid-problem (RAID_CHANCE). Tap to stop them; otherwise crab steals 4s, squid swaps +/−, shark swaps digits, spike explodes (new problem, −1 power).
 - **SHIP_ART**: add new ship designs (SVG drawn facing right). Wrap pieces that can be shot off in `<g class="spart">`.
 
 The map screen currently shows `MISSIONS[0]`; a mission picker is the next step when Mission 2 exists.
