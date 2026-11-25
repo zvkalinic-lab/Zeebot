@@ -97,6 +97,7 @@ button.brick:active{transform:translateY(3px)}
 .hero{position:absolute;left:0;top:0;width:min(34cqw,29cqh);z-index:6;pointer-events:none}
 .hero-art svg{width:100%;height:auto;display:block;overflow:visible}
 .hero-art.flip svg{transform:scaleX(-1)}
+.hero.hover .hero-art{animation:bob 1s ease-in-out infinite}
 .hero .duck-led{animation:tip .8s steps(1) infinite}
 .hero .duck-flame{animation:flick .1s infinite alternate;transform-box:fill-box;transform-origin:100% 50%}
 .hero .quack{position:absolute;left:50%;top:-30%;transform:translateX(-50%) scale(.5);font-family:var(--display);font-size:min(3.4cqw,4.2cqh);color:var(--ink);
@@ -770,17 +771,25 @@ const Hero = {
     this.el.querySelector('.hero-art').classList.toggle('flip', d < 0);
     const y = H * (stage.classList.contains('bosslvl') ? .42 : .34);
     const x0 = d > 0 ? -w-10 : W+10, x1 = d > 0 ? W+10 : -w-10;
+    const xm = W/2 - w/2;
     Sound.quack();
-    const anim = this.el.animate([{transform:`translate(${x0}px,${y}px) rotate(${d*4}deg)`},{transform:`translate(${(x0+x1)/2}px,${y+H*.03}px)`},{transform:`translate(${x1}px,${y-H*.05}px) rotate(${-d*6}deg)`}],{duration:3000,easing:'cubic-bezier(.35,.15,.65,.85)',fill:'forwards'});
-    this.run = anim.finished.catch(()=>{}).then(()=>{ this.el.hidden = true; });
+    const inA = this.el.animate([{transform:`translate(${x0}px,${y-H*.06}px) rotate(${d*6}deg)`},{transform:`translate(${xm}px,${y}px) rotate(0deg)`}],{duration:1500,easing:'cubic-bezier(.2,.7,.3,1)',fill:'forwards'});
+    await inA.finished.catch(()=>{});
+    this.el.classList.add('hover');
+    await wait(350);
     const sorted = hits.map(h => ({ ...h, x: stagePoint(h.el.getBoundingClientRect()).x })).sort((a,b) => d*(a.x-b.x));
-    await Promise.all(sorted.map(async (h, i) => {
-      await wait(950 + i*520);
-      const q = $('#quack'); q.textContent = pick(['PEW!','QUACK!','PEW PEW!']); q.classList.add('show'); setTimeout(()=>q.classList.remove('show'), 380);
+    for(const h of sorted){
+      const q = $('#quack'); q.textContent = pick(['PEW!','QUACK!','PEW PEW!']); q.classList.add('show'); setTimeout(()=>q.classList.remove('show'), 450);
       Sound.pew();
-      await fireBolt(stagePoint(this.el.getBoundingClientRect(), .55, .4), stagePoint(h.el.getBoundingClientRect()), 'duck', 200);
+      await fireBolt(stagePoint(this.el.getBoundingClientRect(), .55, .4), stagePoint(h.el.getBoundingClientRect()), 'duck', 260);
       h.onHit();
-    }));
+      await wait(450);
+    }
+    await wait(300);
+    this.el.classList.remove('hover'); Sound.whoosh(0,.8);
+    const outA = this.el.animate([{transform:`translate(${xm}px,${y}px) rotate(0deg)`},{transform:`translate(${x1}px,${y-H*.08}px) rotate(${-d*8}deg)`}],{duration:1400,easing:'cubic-bezier(.6,0,.9,.6)',fill:'forwards'});
+    inA.cancel();
+    this.run = outA.finished.catch(()=>{}).then(()=>{ this.el.hidden = true; });
   },
 };
 
