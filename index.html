@@ -108,6 +108,13 @@ button.brick:active{transform:translateY(3px)}
 .hitfire{position:absolute;width:26%;aspect-ratio:.7;margin:0;transform:translate(-50%,-80%);border-radius:50% 50% 40% 40%;pointer-events:none;z-index:2;
   background:radial-gradient(ellipse at 50% 78%,#fff6a0 0 14%,#ffc51a 30%,#ff5a1f 52%,rgba(232,65,44,0) 70%);animation:flame .11s infinite alternate}
 @keyframes flame{to{transform:translate(-50%,-80%) scale(1.12,.82)}}
+.hero{position:absolute;left:0;top:0;width:min(26cqw,22cqh);z-index:6;pointer-events:none}
+.hero-art svg{width:100%;height:auto;display:block;overflow:visible}
+.hero-art.flip svg{transform:scaleX(-1)}
+.hero .quack{position:absolute;left:50%;top:-30%;transform:translateX(-50%) scale(.5);font-family:var(--display);font-size:min(3.4cqw,4.2cqh);color:var(--ink);
+  background:var(--yellow);padding:.15em .5em;border-radius:10px;box-shadow:0 3px 0 rgba(0,0,0,.35);opacity:0;transition:opacity .15s,transform .2s cubic-bezier(.3,1.6,.5,1);white-space:nowrap}
+.hero .quack.show{opacity:1;transform:translateX(-50%) scale(1)}
+.bolt.duck{width:3.4cqmin;height:3.4cqmin;background:#fff6a0;box-shadow:0 0 0 3px #ff7ae0,0 0 16px 6px #ffc51a}
 .boss{position:absolute;left:50%;top:2cqh;width:min(68cqw,64cqh);transform:translateX(-50%);z-index:2}
 .boss-in{animation:bob 3s ease-in-out infinite}
 .boss svg{width:100%;height:auto;display:block;overflow:visible}
@@ -327,6 +334,19 @@ button.brick:active{transform:translateY(3px)}
     <div class="bossq" id="bossQ" hidden></div>
     <div class="timer off" id="timer" aria-label="Seconds left"><svg viewBox="0 0 100 100"><circle class="tb" cx="50" cy="50" r="42"/><circle class="tr" id="timerRing" cx="50" cy="50" r="42"/></svg><b id="timerNum">8</b></div>
     <div class="copilot" id="copilot" hidden></div>
+    <div class="hero" id="hero" hidden><div class="hero-art"><svg viewBox="0 0 140 92" aria-label="Duck hero ship" role="img">
+      <path d="M22 50 L0 40 L6 52 L0 64 Z" fill="#ff8a1f"/><path d="M22 51 L8 46 L11 52 L8 58 Z" fill="#ffe95a"/>
+      <path d="M34 40 L14 18 L44 34 Z" fill="#ff8a1f" stroke="#141a3a" stroke-width="3" stroke-linejoin="round"/><path d="M32 46 L10 34 L40 44 Z" fill="#ffb800" stroke="#141a3a" stroke-width="3" stroke-linejoin="round"/>
+      <rect x="66" y="70" width="36" height="9" rx="3" fill="#1fb5c9" stroke="#141a3a" stroke-width="3" stroke-linejoin="round"/><path d="M100 68 L118 60 L118 90 L100 82 Z" fill="#e8412c" stroke="#141a3a" stroke-width="3" stroke-linejoin="round"/><path d="M108 66 L108 84" stroke="#ffc51a" stroke-width="3"/>
+      <ellipse cx="66" cy="52" rx="46" ry="24" fill="#ffd21f" stroke="#141a3a" stroke-width="3" stroke-linejoin="round"/>
+      <ellipse cx="62" cy="60" rx="30" ry="9" fill="#fff" opacity=".45"/>
+      <path d="M46 50 Q62 32 82 48 Q66 64 46 50 Z" fill="#ffb800" stroke="#141a3a" stroke-width="3" stroke-linejoin="round"/>
+      <circle cx="96" cy="34" r="19" fill="#ffd21f" stroke="#141a3a" stroke-width="3" stroke-linejoin="round"/>
+      <path d="M110 36 Q134 34 137 43 Q124 51 108 47 Z" fill="#ff8a1f" stroke="#141a3a" stroke-width="3" stroke-linejoin="round"/><path d="M112 43 Q124 44 134 42" stroke="#141a3a" stroke-width="2" fill="none"/>
+      <circle cx="101" cy="29" r="5.5" fill="#141a3a"/><circle cx="103" cy="27" r="2" fill="#fff"/>
+      <ellipse cx="92" cy="42" rx="5" ry="3" fill="#ff7a9a" opacity=".8"/>
+      <path d="M92 15 Q96 6 102 12" stroke="#ff8a1f" stroke-width="4" fill="none" stroke-linecap="round"/>
+    </svg></div><span class="quack" id="quack">PEW!</span></div>
     <div class="robot-wrap" id="robotWrap">
       <div class="bubble" id="bubble"></div>
       <div class="robot-anim" id="robotAnim">
@@ -503,6 +523,8 @@ const Sound = {
   whoosh(at=0,dur=.6){ this.noise(at,dur,.22,300,3000); },
   transform(){ [392,523,659,784,988,1175].forEach((f,i)=>this.tone(f,i*.07,.12,'square',.07)); this.whoosh(.4,1.1); this.tone(150,.4,1.1,'sawtooth',.08,900); },
   fanfare(){ [[523,0],[659,.14],[784,.28],[1047,.46],[784,.66],[1047,.8]].forEach(([f,t])=>this.tone(f,t,.28,'triangle',.22)); this.tone(1568,.8,.6,'sine',.1); },
+  quack(){ this.tone(520,0,.09,'square',.08,340); this.tone(470,.1,.12,'square',.08,300); },
+  pew(){ this.tone(1300,0,.14,'square',.06,420); this.tone(2600,0,.06,'sine',.05); },
   boom(){ this.noise(0,.6,.4,600,80); this.tone(160,0,.5,'sine',.3,40); },
   laser(){ this.tone(1800,0,.18,'square',.07,500); },
   rumble(){ this.tone(55,0,1.2,'sawtooth',.14,40); this.noise(0,1.2,.15,200,80); },
@@ -691,22 +713,23 @@ const Ships = {
     await wait(250);
   },
   async blast(){
-    const ships = this.els.slice(0,2).filter(Boolean);
-    await Promise.all(ships.map(async (ship, i) => {
-      await wait(i*160);
-      const parts = [...ship.querySelectorAll('.spart')]; if(!parts.length) return;
-      const part = pick(parts), target = stagePoint(part.getBoundingClientRect());
-      Sound.laser();
-      await fireBolt(stagePoint(robotWrap.getBoundingClientRect(), .5, .22), target, 'good', 240);
-      const bob = ship.querySelector('.ship-bob'), br = bob.getBoundingClientRect(), pr = part.getBoundingClientRect();
-      const fire = document.createElement('div'); fire.className = 'hitfire';
-      fire.style.left = ((pr.left+pr.width/2-br.left)/br.width*100)+'%'; fire.style.top = ((pr.top+pr.height/2-br.top)/br.height*100)+'%';
-      bob.appendChild(fire);
-      part.style.setProperty('--fx', rnd(-40,40)+'px'); part.style.setProperty('--fr', rnd(-300,300)+'deg');
-      part.classList.add('fall'); parts.filter(p=>p!==part).forEach(p=>p.classList.add('burnt'));
-      ship.classList.add('hit','damaged'); Sound.boom(); stageSparks(target, 12);
-      setTimeout(()=>ship.classList.remove('hit'), 420);
-    }));
+    const hits = [];
+    for(const ship of this.els.slice(0,2).filter(Boolean)){
+      const parts = [...ship.querySelectorAll('.spart')]; if(!parts.length) continue;
+      const part = pick(parts); hits.push({ el:part, onHit:()=>this.damage(ship, part, parts) });
+    }
+    await Hero.attack(hits);
+  },
+  damage(ship, part, parts){
+    const target = stagePoint(part.getBoundingClientRect());
+    const bob = ship.querySelector('.ship-bob'), br = bob.getBoundingClientRect(), pr = part.getBoundingClientRect();
+    const fire = document.createElement('div'); fire.className = 'hitfire';
+    fire.style.left = ((pr.left+pr.width/2-br.left)/br.width*100)+'%'; fire.style.top = ((pr.top+pr.height/2-br.top)/br.height*100)+'%';
+    bob.appendChild(fire);
+    part.style.setProperty('--fx', rnd(-40,40)+'px'); part.style.setProperty('--fr', rnd(-300,300)+'deg');
+    part.classList.add('fall'); parts.filter(p=>p!==part).forEach(p=>p.classList.add('burnt'));
+    ship.classList.add('hit','damaged'); Sound.boom(); stageSparks(target, 12);
+    setTimeout(()=>ship.classList.remove('hit'), 420);
   },
   solved(ans){ if(this.eq){ this.eq.textContent = '= ' + ans; this.eq.classList.add('solved'); } },
   async leave(){
@@ -745,6 +768,29 @@ function stageSparks(pt, n, color){
     s.animate([{transform:'scale(1.2)',opacity:1},{transform:`translate(${Math.cos(a)*d}px,${Math.sin(a)*d}px) scale(.2)`,opacity:0}],{duration:500+Math.random()*500,easing:'ease-out'}).onfinish=()=>s.remove();
   }
 }
+const Hero = {
+  el: $('#hero'), dir: 1, run: Promise.resolve(),
+  async attack(hits){
+    await this.run;
+    const W = stage.clientWidth, H = stage.clientHeight, d = this.dir; this.dir = -d;
+    this.el.hidden = false; const w = this.el.offsetWidth;
+    this.el.querySelector('.hero-art').classList.toggle('flip', d < 0);
+    const y = H * (stage.classList.contains('bosslvl') ? .43 : .36);
+    const x0 = d > 0 ? -w-10 : W+10, x1 = d > 0 ? W+10 : -w-10;
+    Sound.quack();
+    const anim = this.el.animate([{transform:`translate(${x0}px,${y}px) rotate(${d*4}deg)`},{transform:`translate(${(x0+x1)/2}px,${y+H*.03}px)`},{transform:`translate(${x1}px,${y-H*.05}px) rotate(${-d*6}deg)`}],{duration:1800,easing:'cubic-bezier(.35,.15,.65,.85)',fill:'forwards'});
+    this.run = anim.finished.catch(()=>{}).then(()=>{ this.el.hidden = true; });
+    const sorted = hits.map(h => ({ ...h, x: stagePoint(h.el.getBoundingClientRect()).x })).sort((a,b) => d*(a.x-b.x));
+    await Promise.all(sorted.map(async (h, i) => {
+      await wait(520 + i*330);
+      const q = $('#quack'); q.textContent = pick(['PEW!','QUACK!','PEW PEW!']); q.classList.add('show'); setTimeout(()=>q.classList.remove('show'), 380);
+      Sound.pew();
+      await fireBolt(stagePoint(this.el.getBoundingClientRect(), .55, .4), stagePoint(h.el.getBoundingClientRect()), 'duck', 200);
+      h.onHit();
+    }));
+  },
+};
+
 const Boss = {
   el: $('#boss'), q: $('#bossQ'), parts: [],
   reset(on){
@@ -762,12 +808,12 @@ const Boss = {
   solved(ans){ this.q.textContent = this.q.textContent.replace('?', ans); this.q.classList.add('solved'); },
   async takeHit(){
     const intact = this.parts.filter(p=>!p.classList.contains('burnt')); if(!intact.length) return;
-    const part = pick(intact), target = stagePoint(part.getBoundingClientRect());
-    Sound.laser();
-    await fireBolt(stagePoint(robotWrap.getBoundingClientRect(), .5, .22), target, 'good', 260);
-    part.classList.add('burnt'); Sound.boom(); stageSparks(target, 14);
-    this.el.classList.remove('shake'); void this.el.offsetWidth; this.el.classList.add('shake');
-    setTimeout(()=>this.el.classList.remove('shake'), 460);
+    const part = pick(intact);
+    await Hero.attack([{ el:part, onHit:()=>{
+      part.classList.add('burnt'); Sound.boom(); stageSparks(stagePoint(part.getBoundingClientRect()), 14);
+      this.el.classList.remove('shake'); void this.el.offsetWidth; this.el.classList.add('shake');
+      setTimeout(()=>this.el.classList.remove('shake'), 460);
+    }}]);
   },
   shoot(){
     Sound.tone(300,0,.25,'sawtooth',.08,900);
@@ -859,7 +905,7 @@ const Timer = {
    GAME FLOW
    ===================================================================== */
 const Game = {
-  mission: MISSIONS[0], li:0, probs:[], idx:0, lives:5, busy:true, hitsThisLevel:0,
+  run:0, mission: MISSIONS[0], li:0, probs:[], idx:0, lives:5, busy:true, hitsThisLevel:0,
   get level(){ return this.mission.levels[this.li]; },
   hud(){
     const L = this.level;
@@ -868,20 +914,23 @@ const Game = {
     $('#pips').innerHTML = Array.from({length:n},(_,i)=>`<span class="pip ${i<done?'on':''}"></span>`).join('');
   },
   async start(li, { landing=false }={}){
+    const t = ++this.run;
     overlay.hidden = true; this.li = li; this.probs = makeProblems(this.level); this.idx = 0; this.lives = 5; this.hitsThisLevel = 0;
     Robot.reset(); Robot.setPower(5); robotAnim.style.opacity='1'; Ships.clear(); Timer.reset(); const boss = !!this.level.boss; stage.classList.toggle('bosslvl', boss); Boss.reset(boss); this.hud(); this.setAnswers(null);
     this.busy = true;
     if(landing) await Robot.land();
-    if(boss){ await Boss.enter(); Robot.say('Boss fight!', 'Right answers blast his parts', 1800); await wait(900); }
+    if(t !== this.run) return;
+    if(boss){ await Boss.enter(); if(t !== this.run) return; Robot.say('Boss fight!', 'Right answers call the Duck Wing', 1800); await wait(900); }
     else Robot.say(`Level ${li+1}!`, this.level.op==='mul'?'Multiply ×':this.level.op==='div'?'Divide ÷':'Mixed × and ÷', 1500);
     await wait(700);
+    if(t !== this.run) return;
     this.next();
   },
   async next(){
-    const p = this.probs[this.idx]; this.cur = p; this.busy = true;
+    const t = this.run, p = this.probs[this.idx]; this.cur = p; this.busy = true;
     this.setAnswers(null);
     if(this.level.boss) await Boss.ask(p); else await Ships.show(p);
-    if(this.cur !== p) return;
+    if(this.cur !== p || t !== this.run) return;
     this.setAnswers(makeChoices(p)); this.busy = false;
     this.armTimer();
   },
@@ -894,17 +943,17 @@ const Game = {
   },
   async answer(btn){
     if(this.busy || btn.disabled) return;
-    const v = +btn.dataset.v, p = this.cur;
+    const v = +btn.dataset.v, p = this.cur, t = this.run, live = () => t === this.run;
     if(v === p.ans){
       Timer.stop(true); this.busy = true; btn.classList.add('right'); answersEl.querySelectorAll('.ans').forEach(b=>b.disabled=true);
       Sound.correct(); Robot.happy(); this.cheerCopilot(); this.idx++;
       if(this.level.boss){
-        Boss.solved(p.ans); await Boss.takeHit(); this.hud();
-        if(Boss.allDown()){ await wait(300); await Boss.explode(); return this.complete(); }
-        await wait(700); return this.next();
+        Boss.solved(p.ans); await Boss.takeHit(); if(!live()) return; this.hud();
+        if(Boss.allDown()){ await wait(300); await Boss.explode(); return live() && this.complete(); }
+        await wait(700); return live() && this.next();
       }
       Ships.solved(p.ans); this.hud();
-      await wait(250); await Ships.blast(); await wait(650); await Ships.leave();
+      await wait(250); await Ships.blast(); await wait(650); if(!live()) return; await Ships.leave(); if(!live()) return;
       if(this.idx >= this.probs.length) return this.complete();
       this.next();
     } else {
@@ -913,9 +962,10 @@ const Game = {
     }
   },
   async miss(btn){
-      const p = this.cur;
+      const p = this.cur, t = this.run;
       Timer.stop(true); this.busy = true;
-      if(this.level.boss){ await Boss.shoot(); Boss.repair(); this.hud(); } else await Ships.shoot();
+      if(this.level.boss){ await Boss.shoot(); if(t !== this.run) return; Boss.repair(); this.hud(); } else await Ships.shoot();
+      if(t !== this.run) return;
       Sound.zap(); this.lives--; this.hitsThisLevel++;
       const segs = $('#lifebar').querySelectorAll('.seg'); const s = segs[this.lives]; if(s){ s.classList.add('hit'); setTimeout(()=>s.classList.remove('hit'),500); }
       Robot.setPower(this.lives);
@@ -928,7 +978,7 @@ const Game = {
   cheerCopilot(){ const el=$('#copilot'); if(el.hidden) return; el.classList.remove('cheer'); void el.offsetWidth; el.classList.add('cheer'); },
   async burnout(){
     Sound.burnout(); Robot.burnout(); answersEl.querySelectorAll('.ans').forEach(b=>b.disabled=true);
-    await wait(1900);
+    const t = this.run; await wait(1900); if(t !== this.run) return;
     showOverlay(`<div class="panel"><h2 class="h2">Zeebot overheated!</h2>
       <p class="sub">Five zaps drained the power cells. A quick recharge and you can try Level ${this.li+1} again.</p>
       <div class="row"><button class="brick b-green big-btn" id="oRetry">RECHARGE & RETRY</button><button class="brick b-blue big-btn" id="oMap">MAP</button></div></div>`, 'clear');
@@ -936,8 +986,8 @@ const Game = {
     $('#oMap').onclick = () => { Robot.reset(); showMap(); };
   },
   async complete(){
-    Timer.reset(); this.setAnswers(null);
-    await Robot.transformAndFly();
+    Timer.reset(); this.setAnswers(null); const t = this.run;
+    await Robot.transformAndFly(); if(t !== this.run) return;
     Sound.fanfare();
     const stars = this.hitsThisLevel===0 ? 3 : this.hitsThisLevel<=2 ? 2 : 1;
     const ms = Save.mission(this.mission.id);
@@ -983,6 +1033,7 @@ function showTitle(){
   $('#oStart').onclick = () => { Sound.init(); Sound.beeps(6); showMap(); };
 }
 function showMap(){
+  Game.run++;
   Ships.clear(); Timer.reset(); stage.classList.remove('bosslvl'); Boss.reset(false); Robot.reset(); Robot.setPower(5); robotAnim.style.opacity='1'; Game.busy = true; Game.cur = null;
   $('#hudTitle').textContent = "Zeebot's Star Math"; $('#pips').innerHTML=''; Game.setAnswers(null);
   const m = MISSIONS[0], ms = Save.mission(m.id);
