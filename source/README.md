@@ -54,3 +54,11 @@ It lives on that one device/browser only.
 - Mission 7 "City Rush": liquids (l, dl, cl, ml), city theme, helpers tilly/taxi/tow, raiders honk/cone/pothole, boss `truck`.
 - Mission 8 "Express Time": time (h, min, s, clock times, durations), rail theme, helpers conductor/stclock/signal, raiders smoke/switch/coal, boss `loco`.
 - Mission 9 "Space Station Stories": word problems from `STORY_T[lang]` templates (generators stAdd, stSub, stMul, stDiv, stRem, stUnit, stTime, stTwo, stMix), station theme, helpers astro/drone/sat, raiders ufo/alien/meteor, boss `core`.
+
+## Languages
+After the intro (or SKIP) a picker offers Croatian, English, Italian, German, Spanish, French, Greek, Serbian and Slovenian; the 🌐 button on the name screen opens it again. The choice is saved as `Save.d.lang`.
+- The game code stays in English. `I18N` watches the page and swaps each text node for its translation: exact phrases are in `I18N_DATA.exact` (one row: en, hr, it, de, es, fr, el, sr, sl), phrases with numbers or names are regex patterns in `I18N_DATA.pat`, and raid messages are built per raid type from `I18N_DATA.raid`.
+- Word problems (Mission 9) have their own templates per language in `STORY_T`.
+- The voice reads the translated line with a speech voice for that language if the device has one (Serbian falls back to Croatian/Bosnian, Slovenian to Croatian); otherwise robot beeps.
+- Hints are numbers and symbols only, so they work in every language. Remainders show as "ost." in hr/sr/sl.
+- New text: add a row to the exact list (or a pattern) when you add a new mission. Card names, card descriptions, level names and the fleet lines are not translated.
