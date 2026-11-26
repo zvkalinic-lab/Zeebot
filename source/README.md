@@ -43,3 +43,10 @@ It lives on that one device/browser only.
 - `opProblem(op,a,b,ref)` rebuilds a problem for raids (sign swap × ↔ ÷, digit swap).
 - Helpers teapot (STEAM dims two wrong answers), balloon (+10 s), snail (Timer.rate = .5 for one problem).
 - Raiders bat (time), echo (digits), snore (sign), stalag (boom). Boss `mole` "Burrowbot".
+
+## Measure missions and word problems (Missions 5–9)
+- A level with `gen:[...]` uses the unit engine instead of tables. Each spec is `fn:args`, e.g. `down:m:cm:9`, `compUp:km:m:5:5`, `arith:m:cm:5`, `clockAdd:55`. Functions live in `G` (down, up, compDown, compUp, arith, clockAdd, clockDiff, plus story generators).
+- Problems with `u:true` carry `ta`, `sy`, `tb`, `key` (the answer text) and premade `choices`. `story` problems show a text panel instead of number crates.
+- Themes in `THEMES` get the `.xt` class (and `.bright` for light skies); a canvas painter goes in `THEME_DRAW[theme]` and decor in `.theme-decor.td-<theme>`.
+- New helpers borrow an old power through `HELPER_ALIAS` (e.g. eagle → owl). Raid act `shuffle` mixes up the answer buttons.
+- Mission 5 "Snowy Summit": lengths, snow theme, helpers eagle/sled/yeti, raiders brrbird/goat/snowbot, boss `frost`.
