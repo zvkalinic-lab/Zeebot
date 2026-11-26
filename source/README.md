@@ -30,6 +30,8 @@ The map screen currently shows `MISSIONS[0]`; a mission picker is the next step 
 
 - **Studio opening** (Studio, STUDIO_FONT): a black screen with ▶ / SKIP, then "ZEE PRODUCTIONS" assembles from robot-part plates (with a little catamaran in the Z), a metal smash and the robot voice "Zee Productions… presenting", then a giggling ring of all the robots that slows, spins fast and opens the Zeebot intro. SKIP goes straight to the title. ▶ INTRO on the title replays both.
 
+- **Mission 3 "Sunny Shore"** (theme 'beach', max:1000): beach background (drawBeach), smiling sun top-left, red starfish, sweat drops (.sweat, visible only on .beach), water jets instead of lasers (fireBolt adds .water and a splash on the beach). Helpers: turtle (shield), medic (+1 bar), whale (+8 s). Raiders: hornet (−4 s), magnet (swap + and −), drill (swap digits), toad (snatches the problem, −1 bar). Boss: the robot crab Clawtron (bossKind 'crabboss'). genAddSub1000 handles tiers 1–5 up to 1000.
+
 ## Save data
 Stored in the browser's localStorage under `bleep-star-math-v1`: unlocked levels, stars, crew cards, chosen co-pilot, sound setting.
 It lives on that one device/browser only.
