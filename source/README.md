@@ -35,3 +35,11 @@ The map screen currently shows `MISSIONS[0]`; a mission picker is the next step 
 ## Save data
 Stored in the browser's localStorage under `bleep-star-math-v1`: unlocked levels, stars, crew cards, chosen co-pilot, sound setting.
 It lives on that one device/browser only.
+
+## Mission 4 "Bat Cave Echoes"
+- Theme `cave` (canvas `drawCave`, DOM `.cave-decor` with hanging bats whose eyes blink, a flying bat and glowing crystals).
+- `big:true` missions use `genBig(op, tier)`: multi-digit × one digit (tiers 1–5) and ÷ one digit with remainders (tiers 3–4).
+- Answers are string keys: `ansKey(p)` gives `"39 r 2"` when there is a remainder. Buttons with long keys get `.ans.long`.
+- `opProblem(op,a,b,ref)` rebuilds a problem for raids (sign swap × ↔ ÷, digit swap).
+- Helpers teapot (STEAM dims two wrong answers), balloon (+10 s), snail (Timer.rate = .5 for one problem).
+- Raiders bat (time), echo (digits), snore (sign), stalag (boom). Boss `mole` "Burrowbot".
