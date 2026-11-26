@@ -434,6 +434,20 @@ button.brick:active{transform:translateY(3px)}
 .a-banner{position:absolute;left:50%;top:40%;transform:translate(-50%,-50%);z-index:18;text-align:center;pointer-events:none;font-family:var(--display);color:var(--yellow);font-size:min(11cqw,13cqh);text-shadow:0 0 30px rgba(255,233,90,.8),0 6px 0 #b3243a;line-height:1;white-space:nowrap}
 .a-banner small{display:block;font-size:.32em;color:#fff;text-shadow:0 3px 0 #141a3a;margin-top:12px;white-space:normal;max-width:80cqw;margin-inline:auto}
 .a-warp{position:absolute;inset:0;z-index:17;pointer-events:none;background:radial-gradient(circle,rgba(255,255,255,.95),rgba(255,233,90,.5) 30%,rgba(255,122,224,0) 70%)}
+.studio{position:fixed;inset:0;z-index:200;background:#000;overflow:hidden;display:flex;align-items:center;justify-content:center;touch-action:manipulation}
+.studio .st-skip{position:absolute;top:16px;right:16px;z-index:5;font-size:clamp(15px,2.4vw,20px);padding:10px 18px}
+.studio .st-logo{width:min(92vw,900px,140vh);height:auto;overflow:visible;position:relative;z-index:2}
+.studio .pc,.studio .cat{transform-box:fill-box;transform-origin:center}
+.studio .cat-bob{animation:catbob 1.6s ease-in-out infinite;transform-box:fill-box;transform-origin:50% 100%}
+@keyframes catbob{0%,100%{transform:translateY(0) rotate(-3deg)}50%{transform:translateY(-.12px) rotate(3deg)}}
+.studio .st-glow{position:absolute;inset:0;background:radial-gradient(circle at 50% 50%,rgba(95,242,255,.18),rgba(0,0,0,0) 55%);opacity:0;pointer-events:none}
+.studio .st-flash{position:absolute;inset:0;background:#fff;opacity:0;pointer-events:none;z-index:4}
+.studio .st-pres{position:absolute;left:0;right:0;top:50%;transform:translateY(-50%);text-align:center;font-family:var(--display);color:#fff;font-size:clamp(24px,6vw,60px);letter-spacing:.25em;opacity:0;z-index:3;text-shadow:0 0 24px rgba(95,242,255,.8)}
+.studio .st-ring{position:absolute;inset:0;z-index:3;pointer-events:none}
+.studio .st-bot{position:absolute;left:0;top:0;width:min(15vw,17vh);will-change:transform}
+.studio .st-bot svg{width:100%;height:auto;display:block;overflow:visible}
+.studio .st-hee{position:absolute;left:0;top:0;font-family:var(--display);color:#ffe95a;font-size:clamp(14px,2.6vw,24px);pointer-events:none;text-shadow:0 2px 0 #b3243a;z-index:4;white-space:nowrap}
+.studio .st-play{width:min(30vw,30vh);aspect-ratio:1;border-radius:50%;border:5px solid #fff;background:radial-gradient(circle at 40% 30%,#ffe95a,#ff8a1f);color:#141a3a;font-size:min(12vw,12vh);cursor:pointer;display:grid;place-items:center;padding-left:4%;box-shadow:0 0 50px rgba(255,233,90,.55);animation:hpulse 1.4s ease-in-out infinite}
 .namebox{display:flex;flex-direction:column;align-items:center;gap:8px}
 .namebox label{font-family:var(--display);color:var(--yellow);font-size:clamp(16px,2.6vw,22px)}
 .namein{font-family:var(--display);font-size:clamp(22px,4vw,32px);text-align:center;width:min(360px,80vw);padding:10px 14px;border-radius:14px;border:4px solid #fff;background:#141a3a;color:#fff;outline:none;box-shadow:0 5px 0 rgba(0,0,0,.35)}
@@ -1640,7 +1654,7 @@ function showTitle(){
     <button class="brick b-yellow big-btn" id="oStart">START ▸</button>
     <button class="brick b-teal hud-btn" id="oIntro">▶ INTRO</button>
     <p class="muted">Works with a mouse or a touch screen. Keys 1–5 pick answers too.</p></div>`, 'clear');
-  $('#oIntro').onclick = () => { Sound.init(); overlay.hidden = true; Intro.play(); };
+  $('#oIntro').onclick = () => { Sound.init(); overlay.hidden = true; Studio.play(); };
   const ni = $('#oName');
   const go = () => { const n = ni.value.trim(); if(!n){ ni.classList.remove('shake'); void ni.offsetWidth; ni.classList.add('shake'); ni.focus(); return; }
     Save.d.player = n; Save.write(); Sound.init(); Sound.beeps(6); showMap(); };
@@ -1798,14 +1812,14 @@ const Voice = {
   chatter(){ // quiet robot blips under the voice for a light robotic feel
     const id = setInterval(()=>{ Sound.tone(1400+Math.random()*1600,0,.03,'square',.018); }, 140);
     return () => clearInterval(id); },
-  speak(text){
+  speak(text, opts={}){
     return new Promise(res => {
       const minMs = 1200 + text.length*55;
       const v = Save.d.sound ? this.pickVoice() : null;
       if(!v){ Sound.beeps(Math.min(8, 3 + Math.round(text.length/10))); setTimeout(res, minMs); return; }
       try{
         speechSynthesis.cancel();
-        const u = new SpeechSynthesisUtterance(text); u.voice = v; u.lang = v.lang; u.pitch = 1.9; u.rate = 1.12; u.volume = 1;
+        const u = new SpeechSynthesisUtterance(text); u.voice = v; u.lang = v.lang; u.pitch = opts.pitch ?? 1.9; u.rate = opts.rate ?? 1.12; u.volume = 1;
         let done = false, stopCh = null; const fin = () => { if(!done){ done = true; stopCh && stopCh(); this.chirpOut(); res(); } };
         u.onstart = () => { stopCh = this.chatter(); };
         u.onend = fin; u.onerror = fin; setTimeout(fin, minMs + 4000);
@@ -2010,6 +2024,159 @@ const Arcade = {
   exit(){ if(this.layer){ this.layer.remove(); this.layer = null; } stage.classList.remove('arcade'); },
   stop(){ this.token++; this.exit(); },
 };
+/* =====================================================================
+   STUDIO OPENING: "ZEE PRODUCTIONS" built from robot parts, then "presenting", then a ring of giggling robots
+   ===================================================================== */
+const STUDIO_FONT = {
+  Z:[[0,0,4,0],[4,0,0,6],[0,6,4,6]], E:[[0,0,0,6],[0,0,4,0],[0,3,3,3],[0,6,4,6]],
+  P:[[0,0,0,6],[0,0,4,0],[4,0,4,3],[4,3,0,3]], R:[[0,0,0,6],[0,0,4,0],[4,0,4,3],[4,3,0,3],[1.6,3,4,6]],
+  O:[[0,0,4,0],[4,0,4,6],[4,6,0,6],[0,6,0,0]], D:[[0,0,0,6],[0,0,2.6,0],[2.6,0,4,1.4],[4,1.4,4,4.6],[4,4.6,2.6,6],[2.6,6,0,6]],
+  U:[[0,0,0,6],[0,6,4,6],[4,6,4,0]], C:[[4,0,0,0],[0,0,0,6],[0,6,4,6]], T:[[0,0,4,0],[2,0,2,6]],
+  I:[[2,0,2,6],[1,0,3,0],[1,6,3,6]], N:[[0,6,0,0],[0,0,4,6],[4,6,4,0]], S:[[4,0,0,0],[0,0,0,3],[0,3,4,3],[4,3,4,6],[4,6,0,6]],
+};
+const STUDIO_COLORS = ['#e8412c','#ffc51a','#1f6fe0','#2bb24c','#ff8a1f','#1fb5c9','#8e44d6'];
+function studioPiece(x1,y1,x2,y2,th,col,extra=''){
+  const L = Math.hypot(x2-x1,y2-y1), a = Math.atan2(y2-y1,x2-x1)*180/Math.PI, mx = (x1+x2)/2, my = (y1+y2)/2, w = L+th, h = th;
+  const slots = L > 2 ? [-.25,0,.25].map(k=>`<rect x="${k*L-.05}" y="${-h*.18}" width=".1" height="${h*.36}" rx=".04" fill="#141a3a" opacity=".45"/>`).join('') : '';
+  return `<g class="pc"><g transform="translate(${mx} ${my}) rotate(${a})">
+    <rect x="${-w/2}" y="${-h/2}" width="${w}" height="${h}" rx="${h*.32}" fill="${col}" stroke="#141a3a" stroke-width="${h*.12}"/>
+    <rect x="${-w/2+h*.25}" y="${-h/2+h*.14}" width="${w-h*.5}" height="${h*.16}" rx="${h*.08}" fill="#fff" opacity=".45"/>
+    ${slots}
+    <circle cx="${-L/2}" cy="0" r="${h*.15}" fill="#dfe6f0" stroke="#141a3a" stroke-width="${h*.06}"/><circle cx="${L/2}" cy="0" r="${h*.15}" fill="#dfe6f0" stroke="#141a3a" stroke-width="${h*.06}"/>
+    ${extra}</g></g>`;
+}
+function studioWord(word, ox, oy, sc, th, ci){
+  let out = '', x = ox;
+  for(const ch of word){ const strokes = STUDIO_FONT[ch] || [];
+    for(const [a,b,c,d] of strokes){ out += studioPiece(x+a*sc, oy+b*sc, x+c*sc, oy+d*sc, th, STUDIO_COLORS[ci++ % STUDIO_COLORS.length]); }
+    x += (4 + (sc < 1 ? 2.3 : 2)) * sc; }
+  return out;
+}
+function studioCatamaran(){ // cute little catamaran sailing inside the Z
+  return `<g class="cat"><g class="cat-bob">
+    <path d="M4.55 6.6 q.3 -.12 .6 0 t.6 0 t.6 0 t.6 0" fill="none" stroke="#5ff2ff" stroke-width=".07" stroke-linecap="round"/>
+    <line x1="5.95" y1="5.62" x2="5.95" y2="4.15" stroke="#5d6b84" stroke-width=".09" stroke-linecap="round"/>
+    <path d="M5.95 4.15 l.38 .14 l-.38 .14 z" fill="#e8412c"/>
+    <path d="M6.06 4.4 L6.06 5.5 L6.85 5.5 Z" fill="#ffe95a" stroke="#141a3a" stroke-width=".05" stroke-linejoin="round"/>
+    <path d="M5.84 4.55 L5.84 5.5 L5.2 5.5 Z" fill="#fff" stroke="#141a3a" stroke-width=".05" stroke-linejoin="round"/>
+    <ellipse cx="5.95" cy="6.2" rx="1.0" ry=".2" fill="#c45a10" stroke="#141a3a" stroke-width=".05"/>
+    <rect x="4.95" y="5.86" width="1.75" height=".2" rx=".06" fill="#5d6b84" stroke="#141a3a" stroke-width=".05"/>
+    <rect x="5.35" y="5.5" width=".75" height=".4" rx=".12" fill="#1fb5c9" stroke="#141a3a" stroke-width=".05"/>
+    <circle cx="5.72" cy="5.7" r=".09" fill="#fff"/>
+    <ellipse cx="5.8" cy="6.34" rx="1.1" ry=".26" fill="#ff8a1f" stroke="#141a3a" stroke-width=".06"/>
+    <circle cx="6.42" cy="6.3" r=".11" fill="#fff" stroke="#141a3a" stroke-width=".03"/><circle cx="6.45" cy="6.3" r=".055" fill="#141a3a"/>
+    <circle cx="6.68" cy="6.3" r=".1" fill="#fff" stroke="#141a3a" stroke-width=".03"/><circle cx="6.71" cy="6.3" r=".05" fill="#141a3a"/>
+    <path d="M6.4 6.44 q.15 .1 .3 0" fill="none" stroke="#141a3a" stroke-width=".04" stroke-linecap="round"/>
+    <circle cx="6.25" cy="6.42" r=".05" fill="#ff7ae0" opacity=".8"/>
+  </g></g>`;
+}
+function studioLogoSVG(){
+  const antenna = (x) => `<line x1="${x}" y1=".62" x2="${x}" y2="-.2" stroke="#5d6b84" stroke-width=".12" stroke-linecap="round"/><circle cx="${x}" cy="-.3" r=".2" fill="${x<5?'#ffc51a':'#e8412c'}" stroke="#141a3a" stroke-width=".05"/>`;
+  return `<svg class="st-logo" viewBox="0 -0.8 22 12.6" aria-label="Zee Productions" role="img">
+    <g class="pc">${antenna(3.9)}${antenna(6.1)}</g>
+    ${studioWord('ZEE', 3, 1, 1, .78, 0)}
+    ${studioCatamaran()}
+    ${studioWord('PRODUCTIONS', 1.75, 8.6, .28, .3, 3)}
+  </svg>`;
+}
+const Studio = {
+  token:0, el:null, raf:null,
+  mount(){ this.unmount(); const d = document.createElement('div'); d.className = 'studio'; document.body.appendChild(d); this.el = d; return d; },
+  unmount(){ cancelAnimationFrame(this.raf); if(this.el){ this.el.remove(); this.el = null; } },
+  stop(){ this.token++; Voice.stop(); this.unmount(); },
+  gate(){
+    resetStage(); overlay.hidden = true;
+    const d = this.mount();
+    d.innerHTML = `<button class="st-play" id="stPlay" aria-label="Play">▶</button><button class="brick b-blue st-skip" id="stSkip">SKIP ⏭</button>`;
+    $('#stPlay').onclick = () => { Sound.init(); this.play(); };
+    $('#stSkip').onclick = () => { Sound.init(); this.stop(); showTitle(); };
+  },
+  clang(){ [440,1120,1690,2380,3150].forEach((f,i)=>Sound.tone(f,0,.9-i*.1,'triangle',.07,f*.96)); Sound.noise(0,.3,.45,5200,700); Sound.tone(110,0,.5,'square',.12,55); },
+  clink(){ const f = 1800+Math.random()*1400; Sound.tone(f,0,.12,'triangle',.035,f*.9); },
+  giggle(){ const b = 900+Math.random()*500; for(let i=0;i<5;i++) Sound.tone(b+(i%2)*260, i*.075, .06, 'sine', .05, b+(i%2)*260+180); },
+  async play(){
+    const t = ++this.token, d = this.mount(), live = () => t === this.token;
+    resetStage(); overlay.hidden = true;
+    d.innerHTML = `<div class="st-glow"></div>${studioLogoSVG()}<div class="st-pres">PRESENTING…</div><div class="st-ring"></div><div class="st-flash"></div><button class="brick b-blue st-skip">SKIP ⏭</button>`;
+    d.querySelector('.st-skip').onclick = () => { Sound.click(); this.stop(); showTitle(); };
+    const svg = d.querySelector('.st-logo'), glow = d.querySelector('.st-glow'), flash = d.querySelector('.st-flash');
+    const pieces = [...svg.querySelectorAll('.pc')], cat = svg.querySelector('.cat');
+    pieces.forEach(p => p.style.opacity = 0); cat.style.opacity = 0;
+    // 1) robot parts fly out of the dark and click together
+    Sound.tone(55,0,2.4,'sawtooth',.05,110);
+    const BIG = 1 + 'ZEE'.split('').reduce((k,ch)=>k+STUDIO_FONT[ch].length,0);
+    pieces.forEach((p,i) => {
+      const small = i >= BIG, delay = small ? 1450 + (i-BIG)*24 : 150 + i*100;
+      const ang = Math.random()*Math.PI*2, dist = 18 + Math.random()*14;
+      p.animate([{opacity:0, transform:`translate(${Math.cos(ang)*dist}px,${Math.sin(ang)*dist}px) rotate(${(Math.random()-.5)*720}deg) scale(.3)`, filter:'blur(.3px) brightness(.2)'},
+                 {opacity:1, transform:'translate(0,0) rotate(0) scale(1)', filter:'blur(0) brightness(1)'}],
+                {duration: small ? 520 : 760, delay, easing:'cubic-bezier(.2,.9,.3,1.15)', fill:'forwards'});
+      setTimeout(()=>live() && this.clink(), delay + (small?480:700));
+    });
+    cat.animate([{opacity:0, transform:'translateX(-6px) scale(.4)'},{opacity:1, transform:'none'}],{duration:900, delay:1300, easing:'cubic-bezier(.2,.9,.3,1.2)', fill:'forwards'});
+    await wait(2550); if(!live()) return;
+    // 2) SMASH! everything pops into place, metal clang, sparks, shake
+    this.clang();
+    svg.animate([{transform:'scale(1)'},{transform:'scale(1.1)'},{transform:'scale(.97)'},{transform:'scale(1)'}],{duration:520,easing:'ease-out'});
+    d.animate([{transform:'translate(0,0)'},{transform:'translate(-8px,5px)'},{transform:'translate(7px,-6px)'},{transform:'translate(-4px,3px)'},{transform:'translate(0,0)'}],{duration:420});
+    glow.animate([{opacity:0},{opacity:1},{opacity:.6}],{duration:700,fill:'forwards'});
+    flash.animate([{opacity:.7},{opacity:0}],{duration:350});
+    const sr = svg.getBoundingClientRect();
+    for(let i=0;i<34;i++){ const sp = document.createElement('div'); sp.className = 'spark'; sp.style.position='absolute'; sp.style.left = (sr.left + Math.random()*sr.width)+'px'; sp.style.top = (sr.top + sr.height*(.1+Math.random()*.6))+'px'; sp.style.zIndex = 4; d.appendChild(sp);
+      const a = Math.random()*Math.PI*2, dd = 40+Math.random()*120; sp.animate([{transform:'scale(1.3)',opacity:1},{transform:`translate(${Math.cos(a)*dd}px,${Math.sin(a)*dd}px) scale(.2)`,opacity:0}],{duration:500+Math.random()*600,easing:'ease-out'}).onfinish = () => sp.remove(); }
+    await wait(250); if(!live()) return;
+    Voice.speak('Zee Productions!', { pitch:.6, rate:.82 });
+    await wait(2600); if(!live()) return;
+    // 3) "presenting…"
+    svg.animate([{opacity:1, transform:'scale(1)'},{opacity:0, transform:'scale(.85) translateY(-30px)'}],{duration:600, fill:'forwards'});
+    glow.animate([{opacity:.6},{opacity:.2}],{duration:600,fill:'forwards'});
+    const pres = d.querySelector('.st-pres');
+    pres.animate([{opacity:0, letterSpacing:'.8em'},{opacity:1, letterSpacing:'.25em'}],{duration:800, fill:'forwards', easing:'ease-out'});
+    Voice.speak('presenting…', { pitch:.7, rate:.8 });
+    await wait(1900); if(!live()) return;
+    pres.animate([{opacity:1},{opacity:0}],{duration:400, fill:'forwards'});
+    // 4) all the robots fly in together in a ring, giggling
+    await this.ring(d, t);
+    if(!live()) return;
+    this.unmount(); Intro.play();
+  },
+  ring(d, t){
+    return new Promise(res => {
+      const ring = d.querySelector('.st-ring'), flash = d.querySelector('.st-flash');
+      const robot = robotSvg.cloneNode(true); robot.removeAttribute('id'); robot.dataset.mood = 'happy';
+      const bots = [];
+      const add = html => { const b = document.createElement('div'); b.className = 'st-bot'; if(typeof html === 'string') b.innerHTML = html; else b.appendChild(html); ring.appendChild(b); bots.push(b); return b; };
+      add(robot);
+      add(`<div class="hero-art">${$('#hero .hero-art').innerHTML}</div>`);
+      for(const id of ['rivet','pip','oona','quill','bubbles','octo','finn','puffer']){ const c = CREW.find(x=>x.id===id); if(c) add(crewArt(c)); }
+      for(const id of ['owl','penguin','firefly']) add(fleetSVG(id));
+      const N = bots.length, T0 = performance.now(); let ang = 0, last = T0, nextG = 0;
+      const tick = now => {
+        if(t !== this.token){ res(); return; }
+        const el = (now - T0)/1000, dt = Math.min(.05,(now-last)/1000); last = now;
+        const W = innerWidth, H = innerHeight, cx = W/2, cy = H/2, R = Math.min(W*.38, H*.36);
+        let speed, rad = R, sc = 1;
+        if(el < 1) { speed = 2.2; rad = R*(3 - 2*Math.min(1, el)) ; }        // fly in together
+        else if(el < 3.4) speed = 1.6;                                        // happy ring dance
+        else if(el < 4.4) speed = 1.6 - 1.5*(el-3.4);                         // slow... down...
+        else if(el < 4.8) speed = .1;                                         // almost stop
+        else { const k = Math.min(1, (el-4.8)/.9); speed = .1 + 34*k*k; rad = R*(1-k*.95); sc = 1 - k*.8; } // sudden spin!
+        ang += speed*dt;
+        bots.forEach((b,i) => { const a = ang + i*2*Math.PI/N, z = (Math.sin(a)+1)/2, hop = Math.abs(Math.sin(now/180 + i))*R*.06*(el<4.4?1:0);
+          b.style.transform = `translate(${cx + Math.cos(a)*rad - b.offsetWidth/2}px,${cy + Math.sin(a)*rad*.55 - b.offsetHeight/2 - hop}px) scale(${sc*(.75+.4*z)}) rotate(${Math.sin(now/220+i)*10}deg)`;
+          b.style.zIndex = Math.round(z*10); });
+        if(el > .6 && el < 4.4 && now > nextG){ nextG = now + 260 + Math.random()*260; this.giggle();
+          const b = bots[Math.floor(Math.random()*N)], rr = b.getBoundingClientRect(), h = document.createElement('div'); h.className = 'st-hee';
+          h.textContent = pick(['hee hee!','hihi!','giggle!','teehee!','hehe!']); h.style.transform = `translate(${rr.left + rr.width*.5}px,${rr.top - 10}px)`; d.appendChild(h);
+          h.animate([{opacity:0, transform:h.style.transform+' scale(.5)'},{opacity:1, transform:h.style.transform+' translateY(-14px) scale(1)', offset:.3},{opacity:0, transform:h.style.transform+' translateY(-34px)'}],{duration:900}).onfinish = () => h.remove(); }
+        if(el > 4.8 && !this._wh){ this._wh = true; Sound.whoosh(0,.9); Sound.tone(200,0,.9,'sawtooth',.06,2400); }
+        if(el > 5.7){ this._wh = false; flash.animate([{opacity:0},{opacity:1},{opacity:0}],{duration:500}); setTimeout(res, 260); return; }
+        this.raf = requestAnimationFrame(tick);
+      };
+      this.raf = requestAnimationFrame(tick);
+    });
+  },
+};
 function setsHTML(){
   return `<div><div class="mission-tag">CARD SETS</div><h2 class="h2">Collect a set, win bonus minutes</h2></div>
     <div class="score">${CARD_SETS.map(st=>{ const h = Sets.have(st), state = Save.d.sets[st.id];
@@ -2097,7 +2264,7 @@ let last = performance.now();
 function loop(now){ const dt = Math.min(.05,(now-last)/1000); last = now; drawStars(dt); Robot.updateEyes(); requestAnimationFrame(loop); }
 new ResizeObserver(sizeStars).observe(stage); sizeStars(); requestAnimationFrame(loop);
 
-renderCopilot(); Game.setAnswers(null); Intro.showGate();
+renderCopilot(); Game.setAnswers(null); Studio.gate();
 window.__bleep = { Game, Save, MISSIONS, CREW, FLEET, Helpers };
 </script>
 

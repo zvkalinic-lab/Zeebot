@@ -28,6 +28,8 @@ The map screen currently shows `MISSIONS[0]`; a mission picker is the next step 
 
 - **ARCADE** (bonus level): after levels 3, 6 and 9 the NEXT button opens a surprise shooter. Duck Wing follows the pointer/finger on the left; tap enemies before they touch it. Waves: 3, 6, then a 12-ship swarm. Winning gives bonus cards (m1: zipzap, nova, comet; m2: glim, sonar, abyss), or +2 min if already owned. A touch ends the bonus with no card.
 
+- **Studio opening** (Studio, STUDIO_FONT): a black screen with ▶ / SKIP, then "ZEE PRODUCTIONS" assembles from robot-part plates (with a little catamaran in the Z), a metal smash and the robot voice "Zee Productions… presenting", then a giggling ring of all the robots that slows, spins fast and opens the Zeebot intro. SKIP goes straight to the title. ▶ INTRO on the title replays both.
+
 ## Save data
 Stored in the browser's localStorage under `bleep-star-math-v1`: unlocked levels, stars, crew cards, chosen co-pilot, sound setting.
 It lives on that one device/browser only.
