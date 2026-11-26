@@ -50,3 +50,4 @@ It lives on that one device/browser only.
 - Themes in `THEMES` get the `.xt` class (and `.bright` for light skies); a canvas painter goes in `THEME_DRAW[theme]` and decor in `.theme-decor.td-<theme>`.
 - New helpers borrow an old power through `HELPER_ALIAS` (e.g. eagle → owl). Raid act `shuffle` mixes up the answer buttons.
 - Mission 5 "Snowy Summit": lengths, snow theme, helpers eagle/sled/yeti, raiders brrbird/goat/snowbot, boss `frost`.
+- Mission 6 "Sailing Seas": mass (g, dag, kg, t), sail theme, helpers gull/buoy/dolphin, raiders parrot/octo/mine, boss `ironclad`.
