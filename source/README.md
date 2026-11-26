@@ -65,3 +65,8 @@ After the intro (or SKIP) a picker offers Croatian, English, Italian, German, Sp
 
 ## Bonus levels
 Every bonus level (after levels 3, 6 and 9) lasts 6 minutes (`ARCADE.duration`) and Duck Wing has 3 lives (`ARCADE.lives`). A new, slightly faster wave starts every 30 seconds (`ARCADE.waveLen`). A bonk costs a life and gives a short blink with no damage. Reaching the end wins the bonus card; lives left give stars and extra minutes (3 lives: +2 min, 2 lives: +1 min, 1 life: card only). Losing all 3 lives ends the level with no card.
+
+## Pilots and saved minutes
+- The name screen lists every pilot on this device; tap one to continue, or type a new name for a new pilot (typing an existing name opens that pilot). Each pilot has a separate save (levels, cards, minutes). The list and the language are in `zeebot-profiles-v1`; the first pilot keeps the old save key, so old progress carries over.
+- CLAIM MY REWARD (after I'M DONE) adds the minutes to `Save.d.bank`, so they add up across days. The 👤 button on the map shows the saved total and a short log.
+- From that screen, RESET MINUTES TO 0 (with a YES/NO check) sets only the saved minutes back to 0; levels, stars and cards stay. SWITCH PILOT goes back to the name screen.
