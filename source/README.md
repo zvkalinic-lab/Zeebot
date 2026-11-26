@@ -64,9 +64,14 @@ After the intro (or SKIP) a picker offers Croatian, English, Italian, German, Sp
 - New text: add a row to the exact list (or a pattern) when you add a new mission. Card names, card descriptions, level names and the fleet lines are not translated.
 
 ## Bonus levels
-Every bonus level (after levels 3, 6 and 9) lasts 6 minutes (`ARCADE.duration`) and Duck Wing has 3 lives (`ARCADE.lives`). A new, slightly faster wave starts every 30 seconds (`ARCADE.waveLen`). A bonk costs a life and gives a short blink with no damage. Reaching the end wins the bonus card; lives left give stars and extra minutes (3 lives: +2 min, 2 lives: +1 min, 1 life: card only). Losing all 3 lives ends the level with no card.
+Every bonus level (after levels 3, 6 and 9) lasts 4 minutes (`ARCADE.duration`) and Duck Wing has 3 lives (`ARCADE.lives`). A new, slightly faster wave starts every 30 seconds (`ARCADE.waveLen`). A bonk costs a life and gives a short blink with no damage. Reaching the end wins the bonus card; lives left give stars and extra minutes (3 lives: +2 min, 2 lives: +1 min, 1 life: card only). Losing all 3 lives ends the level with no card.
 
 ## Pilots and saved minutes
 - The name screen lists every pilot on this device; tap one to continue, or type a new name for a new pilot (typing an existing name opens that pilot). Each pilot has a separate save (levels, cards, minutes). The list and the language are in `zeebot-profiles-v1`; the first pilot keeps the old save key, so old progress carries over.
 - CLAIM MY REWARD (after I'M DONE) adds the minutes to `Save.d.bank`, so they add up across days. The 👤 button on the map shows the saved total and a short log.
 - From that screen, RESET MINUTES TO 0 (with a YES/NO check) sets only the saved minutes back to 0; levels, stars and cards stay. SWITCH PILOT goes back to the name screen.
+
+## Points and weapons (bonus levels)
+- Every hit scores the weapon's power in ⭐ points. Points are saved per pilot (`Save.d.pts`) and carry over between bonus levels.
+- From wave 2 some enemies are tough (glow, health bar) and need 2 hits; from wave 3 some need 3.
+- After each bonus level the weapon shop opens (also from the 👤 screen on the map): the starter Duck Blaster, 3 cheaper weapons and 3 stronger ones. Edit `WEAPONS` for names, power (`dmg`), time between shots (`cd`, ms) and price. Bought weapons stay owned (`Save.d.weapons`); the equipped one (`Save.d.weapon`) is used in every bonus level after that.
