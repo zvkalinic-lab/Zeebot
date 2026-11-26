@@ -58,7 +58,7 @@ It lives on that one device/browser only.
 ## Languages
 After the intro (or SKIP) a picker offers Croatian, English, Italian, German, Spanish, French, Greek, Serbian and Slovenian; the 🌐 button on the name screen opens it again. The choice is saved as `Save.d.lang`.
 - The game code stays in English. `I18N` watches the page and swaps each text node for its translation: exact phrases are in `I18N_DATA.exact` (one row: en, hr, it, de, es, fr, el, sr, sl), phrases with numbers or names are regex patterns in `I18N_DATA.pat`, and raid messages are built per raid type from `I18N_DATA.raid`.
-- Word problems (Mission 9) have their own templates per language in `STORY_T`.
+- Word problems (Mission 9) have their own templates per language in `STORY_T`. Croatian and Serbian templates use `slN(n, one, few, many)` so nouns agree with the number (1 brod, 3 broda, 5 brodova).
 - The voice reads the translated line with a speech voice for that language if the device has one (Serbian falls back to Croatian/Bosnian, Slovenian to Croatian); otherwise robot beeps.
 - Hints are numbers and symbols only, so they work in every language. Remainders show as "ost." in hr/sr/sl.
 - New text: add a row to the exact list (or a pattern) when you add a new mission. Card names, card descriptions, level names and the fleet lines are not translated.
@@ -75,3 +75,7 @@ Every bonus level (after levels 3, 6 and 9) lasts 4 minutes (`ARCADE.duration`) 
 - Every hit scores the weapon's power in ⭐ points. Points are saved per pilot (`Save.d.pts`) and carry over between bonus levels.
 - From wave 2 some enemies are tough (glow, health bar) and need 2 hits; from wave 3 some need 3.
 - After each bonus level the weapon shop opens (also from the 👤 screen on the map): the starter Duck Blaster, 3 cheaper weapons and 3 stronger ones. Edit `WEAPONS` for names, power (`dmg`), time between shots (`cd`, ms) and price. Bought weapons stay owned (`Save.d.weapons`); the equipped one (`Save.d.weapon`) is used in every bonus level after that.
+
+## Display notes
+- The display font (Bungee) draws ÷ almost like +, so the operator ball uses the body font and boss questions wrap ÷ in `<span class="dv">` (`setQ`).
+- Answer buttons pick their size class from the translated text, so "292 ost. 2" still fits five buttons on a small phone.
