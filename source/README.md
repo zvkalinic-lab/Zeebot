@@ -24,6 +24,8 @@ The map screen currently shows `MISSIONS[0]`; a mission picker is the next step 
 - **SQUAD**: before a level the child picks up to 3 crew cards. Speed: +1 s per 4 points (max +6). Battery: +1 bar at 8, +2 at 20. Strength: chance of a 2-part power hit on bosses (strength/40, max 50%).
 - **CARD_SETS**: completing a set gives a one-time bonus of minutes on top of the daily cap.
 
+- **Intro** (INTRO_LINES, Intro, Voice): opening gate with ▶ and SKIP, then a ~20 s story. Zeebot speaks the Croatian lines with a device voice (hr/bs/sr, high pitch) and shows captions. Without such a voice it plays robot beeps. The title screen has ▶ INTRO to replay it.
+
 ## Save data
 Stored in the browser's localStorage under `bleep-star-math-v1`: unlocked levels, stars, crew cards, chosen co-pilot, sound setting.
 It lives on that one device/browser only.

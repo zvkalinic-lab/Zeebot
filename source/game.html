@@ -382,6 +382,29 @@ button.brick:active{transform:translateY(3px)}
 .pnum{position:absolute;top:-12px;left:-10px;z-index:3;width:34px;height:34px;border-radius:50%;background:var(--yellow);color:var(--ink);font-family:var(--display);display:grid;place-items:center;font-size:20px;box-shadow:0 3px 0 rgba(0,0,0,.4)}
 .chips{display:flex;gap:10px;flex-wrap:wrap;justify-content:center}
 .chip{font-family:var(--display);background:#141a3a;border:3px solid #5ff2ff;color:#fff;border-radius:999px;padding:6px 14px;font-size:clamp(14px,2.2vw,18px)}
+.intro-layer{position:absolute;inset:0;z-index:12;pointer-events:none;overflow:hidden}
+.i-skip{position:absolute;top:2.5cqh;right:2.5cqw;z-index:30;pointer-events:auto;font-size:clamp(16px,2.6vw,22px);padding:10px 20px}
+.i-duck{position:absolute;left:0;top:0;width:min(26cqw,24cqh);z-index:13}
+.i-duck svg{width:100%;height:auto;display:block;overflow:visible}
+.i-duck.flip svg{transform:scaleX(-1)}
+.i-duck .hero-art{animation:bob 1s ease-in-out infinite}
+.i-card{position:absolute;left:0;top:0;width:150px;transform-origin:50% 50%;will-change:transform}
+.i-card .card{width:100%;pointer-events:none}
+.i-ship{position:absolute;width:min(20cqw,22cqh);z-index:12}
+.i-ship svg{width:100%;height:auto;display:block;overflow:visible}
+.i-ship .crate{position:absolute;left:50%;top:92%;transform:translateX(-50%);font-family:var(--display);font-size:min(6cqw,7cqh);background:var(--yellow);color:var(--ink);padding:0 .35em;border-radius:10px;box-shadow:0 4px 0 rgba(0,0,0,.35)}
+.i-big{position:absolute;left:50%;transform:translateX(-50%);display:flex;gap:min(3cqw,22px);align-items:center;justify-content:center;z-index:12;flex-wrap:nowrap}
+.i-stars{top:16cqh;font-size:min(14cqw,16cqh);color:var(--yellow);text-shadow:0 0 24px var(--yellow),0 5px 0 #b3243a}
+.i-stars span{display:inline-block;animation:starIn .5s cubic-bezier(.3,1.6,.5,1) backwards}
+.i-min{top:44cqh;font-family:var(--display);font-size:min(7cqw,8cqh);color:#fff}
+.i-min b{color:var(--yellow);font-weight:400;text-shadow:0 0 18px rgba(255,233,90,.7)}
+.i-games{top:16cqh}
+.i-game{font-family:var(--display);font-size:min(5.5cqw,7cqh);padding:.45em .8em;border-radius:16px;color:#fff;border:4px solid #fff;box-shadow:0 6px 0 rgba(0,0,0,.35),0 0 30px rgba(255,233,90,.5);animation:panelIn .6s cubic-bezier(.3,1.6,.5,1) backwards;white-space:nowrap;text-align:center}
+.i-game small{display:block;font-size:.55em;color:var(--yellow)}
+.i-cap{position:absolute;left:50%;bottom:3cqh;transform:translateX(-50%);z-index:20;max-width:92%;width:max-content;text-align:center;font-family:var(--display);font-size:clamp(18px,4.4cqw,34px);line-height:1.2;color:var(--ink);background:#fff;border-radius:18px;padding:.45em .9em;box-shadow:0 6px 0 rgba(0,0,0,.35),0 0 0 4px var(--yellow);box-sizing:border-box}
+.i-cap.pop{animation:panelIn .4s cubic-bezier(.3,1.6,.5,1)}
+.i-gate{position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:22px;z-index:25;background:rgba(10,14,44,.55);pointer-events:auto}
+.i-play{width:min(34cqw,30cqh);aspect-ratio:1;border-radius:50%;border:6px solid #fff;background:radial-gradient(circle at 40% 30%,#ffe95a,#ff8a1f);color:var(--ink);font-size:min(14cqw,12cqh);cursor:pointer;box-shadow:0 8px 0 rgba(0,0,0,.35),0 0 40px rgba(255,233,90,.7);animation:hpulse 1.4s ease-in-out infinite;display:grid;place-items:center;padding-left:4%}
 .namebox{display:flex;flex-direction:column;align-items:center;gap:8px}
 .namebox label{font-family:var(--display);color:var(--yellow);font-size:clamp(16px,2.6vw,22px)}
 .namein{font-family:var(--display);font-size:clamp(22px,4vw,32px);text-align:center;width:min(360px,80vw);padding:10px 14px;border-radius:14px;border:4px solid #fff;background:#141a3a;color:#fff;outline:none;box-shadow:0 5px 0 rgba(0,0,0,.35)}
@@ -1575,13 +1598,16 @@ function showTitle(){
     <div class="namebox"><label for="oName">What's your name, pilot?</label>
       <input class="namein" id="oName" maxlength="16" autocomplete="off" placeholder="Type your name" value="${esc(Save.d.player||'')}"></div>
     <button class="brick b-yellow big-btn" id="oStart">START ▸</button>
+    <button class="brick b-teal hud-btn" id="oIntro">▶ INTRO</button>
     <p class="muted">Works with a mouse or a touch screen. Keys 1–5 pick answers too.</p></div>`, 'clear');
+  $('#oIntro').onclick = () => { Sound.init(); overlay.hidden = true; Intro.play(); };
   const ni = $('#oName');
   const go = () => { const n = ni.value.trim(); if(!n){ ni.classList.remove('shake'); void ni.offsetWidth; ni.classList.add('shake'); ni.focus(); return; }
     Save.d.player = n; Save.write(); Sound.init(); Sound.beeps(6); showMap(); };
   $('#oStart').onclick = go; ni.addEventListener('keydown', e => { if(e.key==='Enter') go(); });
 }
 function resetStage(){
+  if(typeof Intro!=='undefined' && Intro.layer){ Intro.token++; Voice.stop(); Intro.unmount(); }
   Game.run++; Sound.musicStop(); Raid.clear();
   Ships.clear(); Timer.reset(); stage.classList.remove('bosslvl'); Boss.reset(false); Helpers.setup(false); Robot.reset(); Robot.setPower(5,5); robotAnim.style.opacity='1'; Game.busy = true; Game.cur = null;
   $('#hudTitle').textContent = "Zeebot's Star Math"; $('#pips').innerHTML=''; Game.setAnswers(null);
@@ -1706,6 +1732,113 @@ function showReward(rec){
   Sound.fanfare(); stageSparks({ x:stage.clientWidth/2, y:stage.clientHeight*.3 }, 30, '#ffe95a');
   $('#oBack').onclick = () => { Sound.click(); showMap(); };
 }
+/* =====================================================================
+   OPENING INTRO: Zeebot tells the story (speech in Croatian if the device has a voice, robot beeps otherwise)
+   ===================================================================== */
+const INTRO_LINES = [
+  { scene:'hello', text:'Bip-bup! Ja sam Zeebot!' },
+  { scene:'ships', text:'Rješavaj zadatke, a moja patkica ruši brodove!' },
+  { scene:'cards', text:'Skupljaj kartice i složi svoju ekipu!' },
+  { scene:'stars', text:'Što više zvjezdica, to više minuta!' },
+  { scene:'games', text:'Minute dobiješ za Minecraft i Roblox!' },
+  { scene:'go',    text:'Spreman? Krenimo!' },
+];
+const Voice = {
+  pickVoice(){ try{ const vs = speechSynthesis.getVoices(); for(const l of ['hr','bs','sr']){ const v = vs.find(v=>v.lang && v.lang.toLowerCase().startsWith(l)); if(v) return v; } }catch(e){} return null; },
+  speak(text){
+    return new Promise(res => {
+      const minMs = 1200 + text.length*55;
+      const v = Save.d.sound ? this.pickVoice() : null;
+      if(!v){ Sound.beeps(Math.min(8, 3 + Math.round(text.length/10))); setTimeout(res, minMs); return; }
+      try{
+        speechSynthesis.cancel();
+        const u = new SpeechSynthesisUtterance(text); u.voice = v; u.lang = v.lang; u.pitch = 1.7; u.rate = .95; u.volume = 1;
+        let done = false; const fin = () => { if(!done){ done = true; res(); } };
+        u.onend = fin; u.onerror = fin; setTimeout(fin, minMs + 4000);
+        Sound.beeps(2); setTimeout(()=>speechSynthesis.speak(u), 220);
+      }catch(e){ setTimeout(res, minMs); }
+    });
+  },
+  stop(){ try{ speechSynthesis.cancel(); }catch(e){} },
+};
+try{ speechSynthesis.getVoices(); speechSynthesis.onvoiceschanged = () => {}; }catch(e){}
+const Intro = {
+  token:0, layer:null, raf:null,
+  showGate(){
+    resetStage(); overlay.hidden = true;
+    const L = this.mount();
+    L.innerHTML = `<div class="i-gate"><h1 class="logo">ZEEBOT'S<span>STAR MATH</span></h1>
+      <button class="i-play" id="iPlay" aria-label="Play the intro">▶</button>
+      <button class="brick b-blue big-btn" id="iSkip0">SKIP ⏭</button></div>`;
+    $('#iPlay').onclick = () => { Sound.init(); this.play(); };
+    $('#iSkip0').onclick = () => { Sound.init(); this.end(); };
+  },
+  mount(){
+    this.unmount(); const L = document.createElement('div'); L.className = 'intro-layer'; stage.appendChild(L); this.layer = L; return L;
+  },
+  unmount(){ cancelAnimationFrame(this.raf); this.raf = null; if(this.layer){ this.layer.remove(); this.layer = null; } stage.querySelectorAll('.i-skip').forEach(b=>b.remove()); },
+  end(){ this.token++; Voice.stop(); this.unmount(); Robot.mood('idle'); showTitle(); },
+  async play(){
+    const t = ++this.token, L = this.mount();
+    const skip = document.createElement('button'); skip.className = 'brick b-blue i-skip'; skip.textContent = 'SKIP ⏭'; stage.appendChild(skip);
+    skip.onclick = () => { Sound.click(); this.end(); };
+    const duck = document.createElement('div'); duck.className = 'i-duck'; duck.innerHTML = `<div class="hero-art">${$('#hero .hero-art').innerHTML}</div>`; L.appendChild(duck);
+    const W = () => stage.clientWidth, H = () => stage.clientHeight;
+    // duck patrols above Zeebot, turning at each side
+    let dx = 0, dir = 1, last = performance.now(); const sc = document.createElement('div'); sc.className = 'i-scene'; L.appendChild(sc);
+    const cap = document.createElement('div'); cap.className = 'i-cap'; cap.hidden = true; L.appendChild(cap);
+    const robotC = () => { const p = stagePoint(robotSvg.getBoundingClientRect()); return p; };
+    let cards = [], ang = 0;
+    const tick = now => {
+      const dt = Math.min(.05, (now-last)/1000); last = now;
+      const w = duck.offsetWidth, span = W()*.62, x0 = W()/2 - w/2 - span/2;
+      dx += dir*dt*(span/2.6); if(dx > span){ dx = span; dir = -1; } if(dx < 0){ dx = 0; dir = 1; }
+      duck.classList.toggle('flip', dir < 0);
+      duck.style.transform = `translate(${x0+dx}px,${H()*.05 + Math.sin(now/400)*6}px)`;
+      if(cards.length){ ang += dt*.9; const c = robotC(), rx = W()*.36, ry = H()*.2, k = Math.max(.42, Math.min(1, W()*.15/150, H()*.3/230));
+        cards.forEach((el,i) => { const a = ang + i*2*Math.PI/cards.length, z = (Math.sin(a)+1)/2;
+          el.style.transform = `translate(${c.x + Math.cos(a)*rx - el.offsetWidth/2}px,${c.y + Math.sin(a)*ry - el.offsetHeight/2}px) scale(${k*(.7+.35*z)})`; el.style.zIndex = z>.5 ? 14 : 11; el.style.opacity = .55 + .45*z; }); }
+      this.raf = requestAnimationFrame(tick);
+    };
+    this.raf = requestAnimationFrame(tick);
+    const talk = () => { let on = true; const id = setInterval(()=>{ Robot.mood(on?'happy':'idle'); on = !on; }, 260); return () => clearInterval(id); };
+    for(const line of INTRO_LINES){
+      if(t !== this.token) return;
+      sc.innerHTML = ''; cards = [];
+      if(line.scene==='hello'){ Robot.play('jump', 650); stageSparks(robotC(), 18, '#5ff2ff'); }
+      if(line.scene==='ships') this.ships(sc, duck, t);
+      if(line.scene==='cards'){ const ids = (Save.d.crew.length>=4 ? Save.d.crew : ['oona','pip','quill','bubbles','octo','sola']).slice(0,6);
+        cards = ids.map(id => { const c = CREW.find(x=>x.id===id); const el = document.createElement('div'); el.className = 'i-card'; el.innerHTML = cardHTML(c); sc.appendChild(el); return el; }); }
+      if(line.scene==='stars'){ sc.innerHTML = `<div class="i-big i-stars">${[0,1,2].map(i=>`<span style="animation-delay:${i*.25}s">★</span>`).join('')}</div><div class="i-big i-min">⏱ <b>+ MIN</b></div>`; [0,1,2].forEach(i=>setTimeout(()=>t===this.token && Sound.tone(660+i*220,0,.18,'triangle',.12),i*250)); }
+      if(line.scene==='games'){ sc.innerHTML = `<div class="i-big i-games"><div class="i-game" style="background:#2bb24c">MINECRAFT<small>+ minute</small></div><div class="i-game" style="background:#e8412c;animation-delay:.35s">ROBLOX<small>+ minute</small></div></div>`; Sound.fanfare(); }
+      if(line.scene==='go'){ Robot.play('jump', 650); stageSparks(robotC(), 24, '#ffe95a'); }
+      cap.hidden = false; cap.textContent = line.text; cap.classList.remove('pop'); void cap.offsetWidth; cap.classList.add('pop');
+      const stopTalk = talk();
+      await Voice.speak(line.text);
+      stopTalk(); Robot.mood(line.scene==='go'||line.scene==='games' ? 'happy' : 'idle');
+      if(t !== this.token) return;
+      await wait(500);
+    }
+    if(t !== this.token) return;
+    this.end();
+  },
+  async ships(sc, duck, t){
+    const mk = (id, num, side) => { const el = document.createElement('div'); el.className = 'i-ship'; el.innerHTML = fleetSVG(id) + `<span class="crate">${num}</span>`; sc.appendChild(el);
+      const W = stage.clientWidth, H = stage.clientHeight, w = el.offsetWidth, x = side<0 ? W*.12 : W*.88 - w, y = H*.3;
+      el.animate([{transform:`translate(${side<0?-w-20:W+20}px,${y}px)`},{transform:`translate(${x}px,${y}px)`}],{duration:800,easing:'cubic-bezier(.2,.8,.3,1)',fill:'forwards'}); return el; };
+    const a = mk('crab', 7, -1), b = mk('shark', 8, 1);
+    await wait(1300);
+    for(const el of [a,b]){
+      if(t !== this.token) return;
+      Sound.pew(); await fireBolt(stagePoint(duck.getBoundingClientRect(), .55, .5), stagePoint(el.getBoundingClientRect()), 'duck', 260);
+      if(t !== this.token) return;
+      Sound.boom(); stageSparks(stagePoint(el.getBoundingClientRect()), 16);
+      el.getAnimations().forEach(x=>x.commitStyles?.()); el.getAnimations().forEach(x=>x.cancel());
+      el.animate([{opacity:1},{opacity:0,transform:el.style.transform+' translateY(60px) rotate(40deg)'}],{duration:700,fill:'forwards'});
+      await wait(350);
+    }
+  },
+};
 function setsHTML(){
   return `<div><div class="mission-tag">CARD SETS</div><h2 class="h2">Collect a set, win bonus minutes</h2></div>
     <div class="score">${CARD_SETS.map(st=>{ const h = Sets.have(st), state = Save.d.sets[st.id];
@@ -1792,6 +1925,6 @@ let last = performance.now();
 function loop(now){ const dt = Math.min(.05,(now-last)/1000); last = now; drawStars(dt); Robot.updateEyes(); requestAnimationFrame(loop); }
 new ResizeObserver(sizeStars).observe(stage); sizeStars(); requestAnimationFrame(loop);
 
-renderCopilot(); Game.setAnswers(null); showTitle();
+renderCopilot(); Game.setAnswers(null); Intro.showGate();
 window.__bleep = { Game, Save, MISSIONS, CREW, FLEET, Helpers };
 </script>
