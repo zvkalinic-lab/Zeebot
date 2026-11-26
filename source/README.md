@@ -52,3 +52,4 @@ It lives on that one device/browser only.
 - Mission 5 "Snowy Summit": lengths, snow theme, helpers eagle/sled/yeti, raiders brrbird/goat/snowbot, boss `frost`.
 - Mission 6 "Sailing Seas": mass (g, dag, kg, t), sail theme, helpers gull/buoy/dolphin, raiders parrot/octo/mine, boss `ironclad`.
 - Mission 7 "City Rush": liquids (l, dl, cl, ml), city theme, helpers tilly/taxi/tow, raiders honk/cone/pothole, boss `truck`.
+- Mission 8 "Express Time": time (h, min, s, clock times, durations), rail theme, helpers conductor/stclock/signal, raiders smoke/switch/coal, boss `loco`.
