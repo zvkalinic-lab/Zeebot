@@ -62,3 +62,6 @@ After the intro (or SKIP) a picker offers Croatian, English, Italian, German, Sp
 - The voice reads the translated line with a speech voice for that language if the device has one (Serbian falls back to Croatian/Bosnian, Slovenian to Croatian); otherwise robot beeps.
 - Hints are numbers and symbols only, so they work in every language. Remainders show as "ost." in hr/sr/sl.
 - New text: add a row to the exact list (or a pattern) when you add a new mission. Card names, card descriptions, level names and the fleet lines are not translated.
+
+## Bonus levels
+Every bonus level (after levels 3, 6 and 9) lasts 6 minutes (`ARCADE.duration`) and Duck Wing has 3 lives (`ARCADE.lives`). A new, slightly faster wave starts every 30 seconds (`ARCADE.waveLen`). A bonk costs a life and gives a short blink with no damage. Reaching the end wins the bonus card; lives left give stars and extra minutes (3 lives: +2 min, 2 lives: +1 min, 1 life: card only). Losing all 3 lives ends the level with no card.
