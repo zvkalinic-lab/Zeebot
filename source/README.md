@@ -26,6 +26,8 @@ The map screen currently shows `MISSIONS[0]`; a mission picker is the next step 
 
 - **Intro** (INTRO_LINES, Intro, Voice): opening gate with ▶ and SKIP, then a ~20 s story. Zeebot speaks the English lines with a device voice (high pitch) and shows captions. Without such a voice it plays robot beeps. The title screen has ▶ INTRO to replay it.
 
+- **ARCADE** (bonus level): after levels 3, 6 and 9 the NEXT button opens a surprise shooter. Duck Wing follows the pointer/finger on the left; tap enemies before they touch it. Waves: 3, 6, then a 12-ship swarm. Winning gives bonus cards (m1: zipzap, nova, comet; m2: glim, sonar, abyss), or +2 min if already owned. A touch ends the bonus with no card.
+
 ## Save data
 Stored in the browser's localStorage under `bleep-star-math-v1`: unlocked levels, stars, crew cards, chosen co-pilot, sound setting.
 It lives on that one device/browser only.

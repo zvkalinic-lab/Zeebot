@@ -419,6 +419,21 @@ button.brick:active{transform:translateY(3px)}
 .i-cap.pop{animation:panelIn .4s cubic-bezier(.3,1.6,.5,1)}
 .i-gate{position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:22px;z-index:25;background:rgba(10,14,44,.55);pointer-events:auto}
 .i-play{width:min(34cqw,30cqh);aspect-ratio:1;border-radius:50%;border:6px solid #fff;background:radial-gradient(circle at 40% 30%,#ffe95a,#ff8a1f);color:var(--ink);font-size:min(14cqw,12cqh);cursor:pointer;box-shadow:0 8px 0 rgba(0,0,0,.35),0 0 40px rgba(255,233,90,.7);animation:hpulse 1.4s ease-in-out infinite;display:grid;place-items:center;padding-left:4%}
+.stage.arcade{touch-action:none;cursor:crosshair}
+.stage.arcade .robot-wrap,.stage.arcade .lifebar,.stage.arcade .copilot{opacity:0;pointer-events:none}
+.a-layer{position:absolute;inset:0;z-index:12;overflow:hidden}
+.a-duck{position:absolute;left:0;top:0;width:min(20cqw,22cqh);z-index:14;pointer-events:none;will-change:transform}
+.a-duck svg{width:100%;height:auto;display:block;overflow:visible}
+.a-duck .hero-art{animation:bob 1s ease-in-out infinite}
+.a-duck.bonk{filter:drop-shadow(0 0 14px #ff3b3b) brightness(1.4)}
+.a-en{position:absolute;left:0;top:0;width:max(56px,min(13cqw,15cqh));z-index:13;cursor:pointer;will-change:transform;padding:0;border:0;background:none;touch-action:none}
+.a-en.small{width:max(50px,min(10cqw,12cqh))}
+.stage.arcade #timer{opacity:0}
+.a-en svg{width:100%;height:auto;display:block;overflow:visible;transform:scaleX(-1);filter:drop-shadow(0 0 6px rgba(255,59,59,.7))}
+.a-hud{position:absolute;top:2.5cqh;left:50%;transform:translateX(-50%);z-index:16;font-family:var(--display);font-size:min(4.6cqw,5.4cqh);color:#fff;background:rgba(20,26,58,.8);border:3px solid var(--yellow);border-radius:14px;padding:.2em .8em;white-space:nowrap;pointer-events:none}
+.a-banner{position:absolute;left:50%;top:40%;transform:translate(-50%,-50%);z-index:18;text-align:center;pointer-events:none;font-family:var(--display);color:var(--yellow);font-size:min(11cqw,13cqh);text-shadow:0 0 30px rgba(255,233,90,.8),0 6px 0 #b3243a;line-height:1;white-space:nowrap}
+.a-banner small{display:block;font-size:.32em;color:#fff;text-shadow:0 3px 0 #141a3a;margin-top:12px;white-space:normal;max-width:80cqw;margin-inline:auto}
+.a-warp{position:absolute;inset:0;z-index:17;pointer-events:none;background:radial-gradient(circle,rgba(255,255,255,.95),rgba(255,233,90,.5) 30%,rgba(255,122,224,0) 70%)}
 .namebox{display:flex;flex-direction:column;align-items:center;gap:8px}
 .namebox label{font-family:var(--display);color:var(--yellow);font-size:clamp(16px,2.6vw,22px)}
 .namein{font-family:var(--display);font-size:clamp(22px,4vw,32px);text-align:center;width:min(360px,80vw);padding:10px 14px;border-radius:14px;border:4px solid #fff;background:#141a3a;color:#fff;outline:none;box-shadow:0 5px 0 rgba(0,0,0,.35)}
@@ -676,6 +691,12 @@ const CREW = [
   { id:'kelp',   name:'Kelpie',         kind:'tall',    rarity:'rare',      colors:['#2bb24c','#7fe9ff','#ffe95a'], role:'Garden droid',        stats:{strength:4,battery:9,speed:4},  special:'Grows kelp ladders ten steps at a time.' },
   { id:'tidal',  name:'Tidal Tess',     kind:'pilot',   rarity:'rare',      colors:['#1f6fe0','#ff7ae0','#c98a62'], role:'Wave racer',          stats:{strength:4,battery:5,speed:10}, special:'Surfs sonic waves faster than torpedoes.' },
   { id:'octo',   name:'Octo-Max',       kind:'box',     rarity:'rare',      colors:['#8e44d6','#ff7ae0','#5ff2ff'], role:'Eight-arm mechanic',  stats:{strength:8,battery:8,speed:6},  special:'Adds and takes away with eight arms at once.' },
+  { id:'zipzap', name:'Zip-Zap',        kind:'orb',     rarity:'rare',      colors:['#ffe95a','#1f6fe0','#ffffff'], role:'Arcade spark drone',  stats:{strength:5,battery:6,speed:9},  special:'Bonus card: zips between enemy ships faster than a blink.' },
+  { id:'nova',   name:'Nova Knight',    kind:'pilot',   rarity:'rare',      colors:['#8e44d6','#ffe95a','#f2c29b'], role:'Bonus-round ace',     stats:{strength:8,battery:7,speed:8},  special:'Bonus card: never misses a target in a swarm.' },
+  { id:'comet',  name:'Comet Crown',    kind:'crystal', rarity:'legendary', colors:['#ff8a1f','#ffe95a','#ffffff'], role:'Legendary swarm breaker', stats:{strength:10,battery:9,speed:10}, special:'Bonus card: clears a whole swarm with one shining tail.' },
+  { id:'glim',   name:'Glim Ray',       kind:'orb',     rarity:'rare',      colors:['#7fe9ff','#ff7ae0','#ffffff'], role:'Glow ray drone',      stats:{strength:5,battery:8,speed:8},  special:'Bonus card: lights up the deep so no enemy can hide.' },
+  { id:'sonar',  name:'Sonar Sal',      kind:'pilot',   rarity:'rare',      colors:['#1fb5c9','#ff8a1f','#c98a62'], role:'Bonus-round diver',   stats:{strength:7,battery:8,speed:8},  special:'Bonus card: hears every swarm coming from far away.' },
+  { id:'abyss',  name:'Abyss Prime',    kind:'crystal', rarity:'legendary', colors:['#1f6fe0','#5ff2ff','#ffffff'], role:'Legendary deep guardian', stats:{strength:10,battery:10,speed:9}, special:'Bonus card: the brightest light in the darkest sea.' },
   { id:'pearl',  name:'Pearl Prime',    kind:'crystal', rarity:'legendary', colors:['#ffffff','#7fe9ff','#ff7ae0'], role:'Legendary ocean guardian', stats:{strength:9,battery:10,speed:9}, special:'Shines like a pearl at the bottom of the sea.' },
 ];
 
@@ -713,7 +734,8 @@ const REWARD = {
 };
 const todayKey = () => { const d = new Date(); return d.getFullYear()+'-'+String(d.getMonth()+1).padStart(2,'0')+'-'+String(d.getDate()).padStart(2,'0'); };
 const Session = {
-  get(){ const s = Save.d.session || (Save.d.session = { start:Date.now(), levels:[], right:0, wrong:0, secs:0, cards:[] }); s.cards = s.cards || []; return s; },
+  get(){ const s = Save.d.session || (Save.d.session = { start:Date.now(), levels:[], right:0, wrong:0, secs:0, cards:[], extra:0 }); s.cards = s.cards || []; s.extra = s.extra || 0; return s; },
+  extra(min){ this.get().extra += min; Save.write(); },
   card(id){ this.get().cards.push(id); Save.write(); },
   right(){ this.get().right++; Save.write(); },
   wrong(){ this.get().wrong++; Save.write(); },
@@ -721,7 +743,7 @@ const Session = {
   calc(){
     const s = this.get(), total = s.right + s.wrong, acc = total ? s.right/total : 0;
     let raw = 0; for(const L of s.levels) raw += REWARD.perLevel + REWARD.perStar*L.stars + (L.boss ? REWARD.bossBonus : 0);
-    const accBonus = s.levels.length && acc >= REWARD.accuracyMin ? REWARD.accuracyBonus : 0; raw += accBonus;
+    const accBonus = s.levels.length && acc >= REWARD.accuracyMin ? REWARD.accuracyBonus : 0; raw += accBonus + s.extra;
     const used = Save.d.claims[todayKey()] || 0, left = Math.max(0, REWARD.dailyCap - used);
     const sets = Sets.pending(), setBonus = sets.reduce((a,st)=>a+st.bonus,0);
     return { s, total, acc, raw, accBonus, sets, setBonus, minutes:Math.min(raw, left) + setBonus, capped: raw > left, used, left,
@@ -735,7 +757,8 @@ const CARD_SETS = [
   { id:'sea',     name:'Deep Sea Crew', cards:['bubbles','coral','finn','anchor','marina','puffer','kelp','tidal','octo','pearl'], bonus:10 },
   { id:'pilots',  name:'Ace Pilots',    cards:['oona','sola','zanka','coral','marina','tidal'], bonus:5 },
   { id:'drones',  name:'Orb Drones',    cards:['pip','whirr','bubbles','puffer'], bonus:3 },
-  { id:'legends', name:'Legends',       cards:['prism','pearl'], bonus:5 },
+  { id:'legends', name:'Legends',       cards:['prism','pearl','comet','abyss'], bonus:5 },
+  { id:'arcade',  name:'Arcade Aces',   cards:['zipzap','nova','comet','glim','sonar','abyss'], bonus:8 },
 ];
 const Sets = {
   have(set){ return set.cards.filter(id=>Save.d.crew.includes(id)).length; },
@@ -1590,7 +1613,8 @@ const Game = {
         $('#doneBtns').hidden = false;
       };
     }
-    const nb = $('#oNext'); if(nb) nb.onclick = () => { Sound.init(); launchLevel(this.li+1, this.mi, true); };
+    const nb = $('#oNext'); if(nb){ const mi = this.mi, li = this.li, M = this.mission; nb.onclick = () => { Sound.init();
+      if(Arcade.isBonusAfter(M, li)) Arcade.start(mi, li, () => launchLevel(li+1, mi, true)); else launchLevel(li+1, mi, true); }; }
     if(last && UNLOCK_AFTER[this.mission.id]) Save.unlockFleet(UNLOCK_AFTER[this.mission.id]);
     $('#oMap').onclick = () => { showMap(this.mi); };
   },
@@ -1623,6 +1647,7 @@ function showTitle(){
   $('#oStart').onclick = go; ni.addEventListener('keydown', e => { if(e.key==='Enter') go(); });
 }
 function resetStage(){
+  if(typeof Arcade!=='undefined' && Arcade.layer) Arcade.stop();
   if(typeof Intro!=='undefined' && Intro.layer){ Intro.token++; Voice.stop(); Intro.unmount(); }
   Game.run++; Sound.musicStop(); Raid.clear();
   Ships.clear(); Timer.reset(); stage.classList.remove('bosslvl'); Boss.reset(false); Helpers.setup(false); Robot.reset(); Robot.setPower(5,5); robotAnim.style.opacity='1'; Game.busy = true; Game.cur = null;
@@ -1868,6 +1893,123 @@ const Intro = {
     }
   },
 };
+/* =====================================================================
+   BONUS ARCADE: appears by surprise after every 3rd level. Duck Wing on the left follows the pointer/finger,
+   tap the enemies before they touch it. Clear the wave = bonus card. Waves grow: 3, 6, then a swarm.
+   ===================================================================== */
+const ARCADE = {
+  waves: [ { count:3, gap:1300, speed:.16, size:'' }, { count:6, gap:950, speed:.2, size:'' }, { count:12, gap:650, speed:.22, size:'small' } ],
+  rewards: { m1:['zipzap','nova','comet'], m2:['glim','sonar','abyss'] },
+  dupMinutes: 2,   // if the reward card is already owned, give minutes instead
+};
+const Arcade = {
+  token:0,
+  isBonusAfter(mission, li){ return (li+1) % 3 === 0 && li < mission.levels.length-1; },
+  async start(mi, li, then){
+    const t = ++this.token; resetStage(); overlay.hidden = true;
+    const M = MISSIONS[mi], wi = Math.min(ARCADE.waves.length-1, Math.floor(li/3)), wave = ARCADE.waves[wi];
+    const sea = M.theme === 'sea', speedK = sea ? 1.12 : 1;
+    stage.classList.toggle('sea', sea); stage.classList.add('arcade'); Game.busy = true; Game.setAnswers(null);
+    $('#hudTitle').textContent = 'BONUS LEVEL!'; $('#pips').innerHTML = '';
+    const L = document.createElement('div'); L.className = 'a-layer'; stage.appendChild(L); this.layer = L;
+    const W = () => stage.clientWidth, H = () => stage.clientHeight;
+    // surprise warp
+    Sound.whoosh(0,.8); Sound.tone(300,0,.5,'sawtooth',.08,1600);
+    const warp = document.createElement('div'); warp.className = 'a-warp'; L.appendChild(warp);
+    warp.animate([{opacity:0,transform:'scale(.2)'},{opacity:1,transform:'scale(1.4)',offset:.5},{opacity:0,transform:'scale(2)'}],{duration:900}).onfinish = () => warp.remove();
+    const ban = document.createElement('div'); ban.className = 'a-banner'; ban.innerHTML = `BONUS LEVEL!<small>${wi===2?'A SWARM is coming! ':''}Tap the enemies before they touch Duck Wing. Move with your mouse or finger.</small>`; L.appendChild(ban);
+    ban.animate([{transform:'translate(-50%,-50%) scale(.3)',opacity:0},{transform:'translate(-50%,-50%) scale(1.1)',opacity:1,offset:.7},{transform:'translate(-50%,-50%) scale(1)'}],{duration:600,easing:'ease-out'});
+    Sound.fanfare();
+    const duck = document.createElement('div'); duck.className = 'a-duck'; duck.innerHTML = `<div class="hero-art">${$('#hero .hero-art').innerHTML}</div>`; L.appendChild(duck);
+    const hud = document.createElement('div'); hud.className = 'a-hud'; L.appendChild(hud);
+    let dx = W()*.08, dy = H()*.45, tx = dx, ty = dy;
+    const onMove = e => { const p = stagePoint({ left:e.clientX, top:e.clientY, width:0, height:0 }); const w = duck.offsetWidth, h = duck.offsetHeight;
+      tx = Math.max(4, Math.min(W()*.32, p.x - w/2)); ty = Math.max(H()*.1, Math.min(H() - h - 4, p.y - h/2)); };
+    stage.addEventListener('pointermove', onMove); stage.addEventListener('pointerdown', onMove);
+    const enemies = []; let left = wave.count, spawned = 0, over = false, last = performance.now(), raf, spawnId = null;
+    const paintHud = () => hud.textContent = `Enemies left: ${left}`; paintHud();
+    const pool = FLEET.filter(f => f.group === 'enemy').map(f => f.id);
+    const cleanup = () => { cancelAnimationFrame(raf); clearInterval(spawnId); stage.removeEventListener('pointermove', onMove); stage.removeEventListener('pointerdown', onMove); };
+    const finish = async win => {
+      if(over) return; over = true; cleanup(); if(t !== this.token) return;
+      await wait(win ? 500 : 900); if(t !== this.token) return;
+      this.result(win, mi, li, then);
+    };
+    const shoot = en => {
+      if(en.dead || over) return; en.dead = true; left--; paintHud();
+      Sound.pew(); const q = $('#quack'); q.textContent = pick(['PEW!','QUACK!','PEW PEW!']); q.classList.add('show'); setTimeout(()=>q.classList.remove('show'), 300);
+      fireBolt(stagePoint(duck.getBoundingClientRect(), .8, .45), stagePoint(en.el.getBoundingClientRect()), 'duck', 140).then(() => {
+        Sound.boom(); stageSparks(stagePoint(en.el.getBoundingClientRect()), 12);
+        en.el.animate([{opacity:1,transform:en.el.style.transform},{opacity:0,transform:en.el.style.transform+' scale(.3) rotate(200deg)'}],{duration:350,fill:'forwards'}).onfinish = () => en.el.remove();
+        if(left <= 0) finish(true);
+      });
+    };
+    const spawn = () => {
+      if(over || spawned >= wave.count) return; spawned++;
+      const id = pick(pool), el = document.createElement('button'); el.className = 'a-en ' + wave.size; el.setAttribute('aria-label','Enemy ship'); el.innerHTML = fleetSVG(id); L.appendChild(el);
+      const fromTop = Math.random() < .45, w = el.offsetWidth;
+      const en = { el, x: fromTop ? W()*(.45 + Math.random()*.5) : W() + 10, y: fromTop ? -w : H()*(.1 + Math.random()*.7), dead:false, ph:Math.random()*6 };
+      el.style.transform = `translate(${en.x}px,${en.y}px)`;
+      el.addEventListener('pointerdown', e => { e.stopPropagation(); e.preventDefault(); shoot(en); });
+      enemies.push(en);
+    };
+    // countdown, then play
+    await wait(2200); if(t !== this.token) return cleanup();
+    ban.animate([{opacity:1},{opacity:0}],{duration:300,fill:'forwards'});
+    for(const n of ['3','2','1']){ ban.innerHTML = n; ban.getAnimations().forEach(a=>a.cancel()); Sound.tone(520,0,.12,'square',.08); await wait(550); if(t !== this.token) return cleanup(); }
+    ban.innerHTML = 'GO!'; Sound.tone(880,0,.2,'square',.08); setTimeout(()=>ban.remove(), 500);
+    spawn(); spawnId = setInterval(spawn, wave.gap);
+    const tick = now => {
+      if(t !== this.token){ cleanup(); return; }
+      const dt = Math.min(.05, (now-last)/1000); last = now;
+      dx += (tx-dx)*Math.min(1, dt*10); dy += (ty-dy)*Math.min(1, dt*10);
+      duck.style.transform = `translate(${dx}px,${dy}px)`;
+      const dw = duck.offsetWidth, dh = duck.offsetHeight, dcx = dx + dw/2, dcy = dy + dh/2;
+      const sp = Math.max(W(), H()) * wave.speed * speedK * .8;
+      for(const en of enemies){ if(en.dead) continue;
+        const w = en.el.offsetWidth, h = en.el.offsetHeight, ex = en.x + w/2, ey = en.y + h/2;
+        const vx = -sp, vy = Math.max(-sp*.4, Math.min(sp*.4, (dcy - ey)*.6)) + Math.sin(now/300 + en.ph)*sp*.2;
+        en.x += vx*dt; en.y += vy*dt; en.el.style.transform = `translate(${en.x}px,${en.y}px)`;
+        if(Math.abs(ex - dcx) < (w + dw)*.36 && Math.abs(ey - dcy) < (h + dh)*.32){ // bonk
+          en.dead = true; duck.classList.add('bonk'); Sound.zap(); stageSparks({x:dcx,y:dcy}, 18, '#ff3b3b');
+          duck.animate([{transform:duck.style.transform},{transform:duck.style.transform+' rotate(-25deg)'},{transform:duck.style.transform}],{duration:500});
+          finish(false); return;
+        }
+        if(en.x < -w*1.5){ en.x = W() + 10; } // wraps back around if it slips past
+      }
+      raf = requestAnimationFrame(tick);
+    };
+    raf = requestAnimationFrame(tick);
+  },
+  result(win, mi, li, then){
+    const M = MISSIONS[mi], wi = Math.min(2, Math.floor(li/3)), id = (ARCADE.rewards[M.id] || ARCADE.rewards.m1)[wi], card = CREW.find(c=>c.id===id);
+    this.exit();
+    const nextBtn = `<div class="row" id="aBtns" ${win?'hidden':''}><button class="brick b-green big-btn" id="aNext">NEXT LEVEL ▸</button><button class="brick b-blue big-btn" id="aMap">MAP</button></div>`;
+    if(!win){
+      showOverlay(`<div class="panel"><h2 class="h2">Bonk!</h2><p class="sub">An enemy touched Duck Wing. No bonus card this time, but the next bonus level will come!</p>${nextBtn}</div>`, 'clear');
+    } else {
+      const owned = Save.hasCrew(id);
+      showOverlay(`<div class="panel"><div class="mission-tag">BONUS LEVEL CLEARED!</div><h2 class="h2">All enemies down!</h2>
+        <div id="giftZone"><button class="gift" id="gift" aria-label="Open your bonus gift"><div class="box"></div><div class="rib"></div><div class="lid"></div><div class="bow"></div></button><p class="muted">A bonus gift! Tap to open.</p></div>${nextBtn}</div>`, 'clear');
+      Sound.fanfare();
+      $('#gift').onclick = async () => {
+        const g = $('#gift'); if(g.classList.contains('open')) return; g.classList.add('open'); Sound.pop(); await wait(450);
+        if(owned){ Session.extra(ARCADE.dupMinutes); $('#giftZone').innerHTML = `<p class="mission-tag">YOU ALREADY HAVE ${esc(card.name.toUpperCase())}</p><div class="earned">+${ARCADE.dupMinutes} min<small>bonus play time instead</small></div>`; }
+        else {
+          const got = Save.addCrew(id); Session.card(id);
+          $('#giftZone').innerHTML = `<p class="mission-tag">NEW BONUS CARD!</p><div class="reveal" style="display:flex;justify-content:center">${cardHTML(card,{big:true})}</div>`;
+          if(Array.isArray(got)) $('#giftZone').insertAdjacentHTML('beforeend', got.map(st=>`<p class="mission-tag" style="color:#5dff8a">SET COMPLETE: ${st.name}! +${st.bonus} min bonus</p>`).join(''));
+          tiltable($('#giftZone .card'));
+        }
+        Sound.fanfare(); $('#aBtns').hidden = false;
+      };
+    }
+    $('#aNext').onclick = () => { Sound.init(); Sound.click(); then(); };
+    $('#aMap').onclick = () => { Sound.click(); showMap(mi); };
+  },
+  exit(){ if(this.layer){ this.layer.remove(); this.layer = null; } stage.classList.remove('arcade'); },
+  stop(){ this.token++; this.exit(); },
+};
 function setsHTML(){
   return `<div><div class="mission-tag">CARD SETS</div><h2 class="h2">Collect a set, win bonus minutes</h2></div>
     <div class="score">${CARD_SETS.map(st=>{ const h = Sets.have(st), state = Save.d.sets[st.id];
@@ -1879,7 +2021,7 @@ function showScore(){
   let game = REWARD.games.includes(Save.d.rewardGame) ? Save.d.rewardGame : REWARD.games[0];
   const date = new Date().toLocaleDateString('hr-HR', { day:'numeric', month:'numeric', year:'numeric' });
   const lvlRows = s.levels.map(L => `<div class="ln"><span>${esc(L.m)} · ${L.li+1}. ${esc(L.name)}</span><b>${'★'.repeat(L.stars)}${'☆'.repeat(3-L.stars)}</b></div>`).join('');
-  const none = !s.levels.length && !c.setBonus;
+  const none = !s.levels.length && !c.setBonus && !s.extra;
   showOverlay(`<div class="panel"><div class="mission-tag">MISSION REPORT</div><h2 class="h2">${none?'See you soon':'Great flying'}, ${esc(name)}!</h2>
     <div class="earned">${c.minutes} min<small>${none?'Clear a level to earn play time':'of play time earned'}</small></div>
     ${none?'':`<div class="gpick">${REWARD.games.map(g=>`<button class="brick b-green big-btn ${g===game?'sel':''}" data-g="${esc(g)}">${g==='Mom or Dad'?'PLAY WITH MOM OR DAD':esc(g)}</button>`).join('')}</div>`}
@@ -1891,6 +2033,7 @@ function showScore(){
       <div class="ln"><span>Time on cleared levels</span><b>${fmtTime(s.secs)}</b></div>
       ${lvlRows}
       ${c.accBonus?`<div class="ln"><span>Sharp-shooter bonus (90%+ right)</span><b>+${c.accBonus} min</b></div>`:''}
+      ${s.extra?`<div class="ln"><span>Bonus arcade wins</span><b>+${s.extra} min</b></div>`:''}
       ${c.capped?`<div class="ln"><span>Daily limit reached (${REWARD.dailyCap} min a day)</span><b>${c.raw} → ${c.minutes - c.setBonus} min</b></div>`:''}
       ${c.sets.map(st=>`<div class="ln"><span>Card set complete: ${esc(st.name)}</span><b>+${st.bonus} min</b></div>`).join('')}
     </div>
