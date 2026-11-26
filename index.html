@@ -1760,7 +1760,19 @@ const INTRO_LINES = [
   { scene:'go',    text:'Ready? Let\'s go!' },
 ];
 const Voice = {
-  pickVoice(){ try{ const vs = speechSynthesis.getVoices(); for(const l of ['en-us','en-gb','en']){ const v = vs.find(v=>v.lang && v.lang.toLowerCase().replace('_','-').startsWith(l)); if(v) return v; } }catch(e){} return null; },
+  // bright, clear voices first (names differ per device); then any English voice
+  BRIGHT: ['google us english','samantha','aria','jenny','ana','zira','karen','moira','tessa','google uk english female','natural','online'],
+  pickVoice(){ try{
+    const vs = speechSynthesis.getVoices().filter(v => v.lang && v.lang.toLowerCase().replace('_','-').startsWith('en')); if(!vs.length) return null;
+    const score = v => { const n = v.name.toLowerCase(); let sc = 0; this.BRIGHT.forEach((b,i) => { if(n.includes(b)) sc = Math.max(sc, 100 - i); });
+      if(/en-us/i.test(v.lang.replace('_','-'))) sc += 5; if(/male/.test(n) && !/female/.test(n)) sc -= 30; return sc; };
+    return vs.slice().sort((a,b) => score(b) - score(a))[0];
+  }catch(e){} return null; },
+  chirpIn(){ [880,1320,1760].forEach((f,i)=>Sound.tone(f,i*.07,.07,'square',.05)); },
+  chirpOut(){ Sound.tone(1200,0,.12,'triangle',.07,2400); Sound.tone(1800,.1,.08,'square',.04); },
+  chatter(){ // quiet robot blips under the voice for a light robotic feel
+    const id = setInterval(()=>{ Sound.tone(1400+Math.random()*1600,0,.03,'square',.018); }, 140);
+    return () => clearInterval(id); },
   speak(text){
     return new Promise(res => {
       const minMs = 1200 + text.length*55;
@@ -1768,10 +1780,11 @@ const Voice = {
       if(!v){ Sound.beeps(Math.min(8, 3 + Math.round(text.length/10))); setTimeout(res, minMs); return; }
       try{
         speechSynthesis.cancel();
-        const u = new SpeechSynthesisUtterance(text); u.voice = v; u.lang = v.lang; u.pitch = 1.7; u.rate = .95; u.volume = 1;
-        let done = false; const fin = () => { if(!done){ done = true; res(); } };
+        const u = new SpeechSynthesisUtterance(text); u.voice = v; u.lang = v.lang; u.pitch = 1.9; u.rate = 1.12; u.volume = 1;
+        let done = false, stopCh = null; const fin = () => { if(!done){ done = true; stopCh && stopCh(); this.chirpOut(); res(); } };
+        u.onstart = () => { stopCh = this.chatter(); };
         u.onend = fin; u.onerror = fin; setTimeout(fin, minMs + 4000);
-        Sound.beeps(2); setTimeout(()=>speechSynthesis.speak(u), 220);
+        this.chirpIn(); setTimeout(()=>speechSynthesis.speak(u), 260);
       }catch(e){ setTimeout(res, minMs); }
     });
   },
