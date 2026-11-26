@@ -20,11 +20,11 @@ All content lives at the top of the `<script>` in `index.html`:
 The map screen currently shows `MISSIONS[0]`; a mission picker is the next step when Mission 2 exists.
 
 - **Player name**: asked on the title screen (saved as `player`).
-- **REWARD**: session reward formula (minutes per level, per star, boss bonus, 90%-accuracy bonus, daily cap 60). "I'M DONE" on the map shows the report; "CLAIM MY REWARD" saves it and shows a reward ticket to show a parent. No email is sent.
+- **REWARD**: session reward formula (minutes per level, per star, boss bonus, 90%-accuracy bonus, daily cap 60). REWARD.games: Minecraft, Roblox, Mom or Dad. "I'M DONE" on the map shows the report; "CLAIM MY REWARD" saves it and shows a reward ticket to show a parent. No email is sent.
 - **SQUAD**: before a level the child picks up to 3 crew cards. Speed: +1 s per 4 points (max +6). Battery: +1 bar at 8, +2 at 20. Strength: chance of a 2-part power hit on bosses (strength/40, max 50%).
 - **CARD_SETS**: completing a set gives a one-time bonus of minutes on top of the daily cap.
 
-- **Intro** (INTRO_LINES, Intro, Voice): opening gate with ▶ and SKIP, then a ~20 s story. Zeebot speaks the Croatian lines with a device voice (hr/bs/sr, high pitch) and shows captions. Without such a voice it plays robot beeps. The title screen has ▶ INTRO to replay it.
+- **Intro** (INTRO_LINES, Intro, Voice): opening gate with ▶ and SKIP, then a ~20 s story. Zeebot speaks the English lines with a device voice (high pitch) and shows captions. Without such a voice it plays robot beeps. The title screen has ▶ INTRO to replay it.
 
 ## Save data
 Stored in the browser's localStorage under `bleep-star-math-v1`: unlocked levels, stars, crew cards, chosen co-pilot, sound setting.

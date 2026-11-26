@@ -398,7 +398,7 @@ button.brick:active{transform:translateY(3px)}
 .i-stars span{display:inline-block;animation:starIn .5s cubic-bezier(.3,1.6,.5,1) backwards}
 .i-min{top:44cqh;font-family:var(--display);font-size:min(7cqw,8cqh);color:#fff}
 .i-min b{color:var(--yellow);font-weight:400;text-shadow:0 0 18px rgba(255,233,90,.7)}
-.i-games{top:16cqh}
+.i-games{top:14cqh;flex-wrap:wrap;width:94%}
 .i-game{font-family:var(--display);font-size:min(5.5cqw,7cqh);padding:.45em .8em;border-radius:16px;color:#fff;border:4px solid #fff;box-shadow:0 6px 0 rgba(0,0,0,.35),0 0 30px rgba(255,233,90,.5);animation:panelIn .6s cubic-bezier(.3,1.6,.5,1) backwards;white-space:nowrap;text-align:center}
 .i-game small{display:block;font-size:.55em;color:var(--yellow)}
 .i-cap{position:absolute;left:50%;bottom:3cqh;transform:translateX(-50%);z-index:20;max-width:92%;width:max-content;text-align:center;font-family:var(--display);font-size:clamp(18px,4.4cqw,34px);line-height:1.2;color:var(--ink);background:#fff;border-radius:18px;padding:.45em .9em;box-shadow:0 6px 0 rgba(0,0,0,.35),0 0 0 4px var(--yellow);box-sizing:border-box}
@@ -693,7 +693,7 @@ const REWARD = {
   accuracyMin: .9,    // if 90% or more answers were right this session...
   accuracyBonus: 3,   // ...add these minutes
   dailyCap: 60,       // most minutes that can be earned in one day
-  games: ['Minecraft','Roblox'],
+  games: ['Minecraft','Roblox','Mom or Dad'],   // 'Mom or Dad' = play time together with a parent
 };
 const todayKey = () => { const d = new Date(); return d.getFullYear()+'-'+String(d.getMonth()+1).padStart(2,'0')+'-'+String(d.getDate()).padStart(2,'0'); };
 const Session = {
@@ -1718,7 +1718,7 @@ function showReward(rec){
   showOverlay(`<div class="panel"><div class="ticket">
       <div class="mission-tag">REWARD TICKET</div>
       <h2 class="h2">${esc(rec.name)}</h2>
-      <div class="earned">${rec.minutes} min<small>of ${esc(rec.game)} play time</small></div>
+      <div class="earned">${rec.minutes} min<small>${rec.game==='Mom or Dad'?'of play time with Mom or Dad':`of ${esc(rec.game)} play time`}</small></div>
       <div class="score">
         <div class="ln"><span>Date</span><b>${rec.date}</b></div>
         <div class="ln"><span>Levels cleared</span><b>${rec.levels}</b></div>
@@ -1733,18 +1733,18 @@ function showReward(rec){
   $('#oBack').onclick = () => { Sound.click(); showMap(); };
 }
 /* =====================================================================
-   OPENING INTRO: Zeebot tells the story (speech in Croatian if the device has a voice, robot beeps otherwise)
+   OPENING INTRO: Zeebot tells the story (English device voice if there is one, robot beeps otherwise)
    ===================================================================== */
 const INTRO_LINES = [
-  { scene:'hello', text:'Bip-bup! Ja sam Zeebot!' },
-  { scene:'ships', text:'Rješavaj zadatke, a moja patkica ruši brodove!' },
-  { scene:'cards', text:'Skupljaj kartice i složi svoju ekipu!' },
-  { scene:'stars', text:'Što više zvjezdica, to više minuta!' },
-  { scene:'games', text:'Minute dobiješ za Minecraft i Roblox!' },
-  { scene:'go',    text:'Spreman? Krenimo!' },
+  { scene:'hello', text:'Beep boop! I am Zeebot!' },
+  { scene:'ships', text:'Solve the problems, and my Duck Wing blasts the ships!' },
+  { scene:'cards', text:'Collect cards and build your crew!' },
+  { scene:'stars', text:'More stars, more minutes!' },
+  { scene:'games', text:'Spend them on Minecraft, Roblox, or play time with Mom or Dad!' },
+  { scene:'go',    text:'Ready? Let\'s go!' },
 ];
 const Voice = {
-  pickVoice(){ try{ const vs = speechSynthesis.getVoices(); for(const l of ['hr','bs','sr']){ const v = vs.find(v=>v.lang && v.lang.toLowerCase().startsWith(l)); if(v) return v; } }catch(e){} return null; },
+  pickVoice(){ try{ const vs = speechSynthesis.getVoices(); for(const l of ['en-us','en-gb','en']){ const v = vs.find(v=>v.lang && v.lang.toLowerCase().replace('_','-').startsWith(l)); if(v) return v; } }catch(e){} return null; },
   speak(text){
     return new Promise(res => {
       const minMs = 1200 + text.length*55;
@@ -1810,7 +1810,7 @@ const Intro = {
       if(line.scene==='cards'){ const ids = (Save.d.crew.length>=4 ? Save.d.crew : ['oona','pip','quill','bubbles','octo','sola']).slice(0,6);
         cards = ids.map(id => { const c = CREW.find(x=>x.id===id); const el = document.createElement('div'); el.className = 'i-card'; el.innerHTML = cardHTML(c); sc.appendChild(el); return el; }); }
       if(line.scene==='stars'){ sc.innerHTML = `<div class="i-big i-stars">${[0,1,2].map(i=>`<span style="animation-delay:${i*.25}s">★</span>`).join('')}</div><div class="i-big i-min">⏱ <b>+ MIN</b></div>`; [0,1,2].forEach(i=>setTimeout(()=>t===this.token && Sound.tone(660+i*220,0,.18,'triangle',.12),i*250)); }
-      if(line.scene==='games'){ sc.innerHTML = `<div class="i-big i-games"><div class="i-game" style="background:#2bb24c">MINECRAFT<small>+ minute</small></div><div class="i-game" style="background:#e8412c;animation-delay:.35s">ROBLOX<small>+ minute</small></div></div>`; Sound.fanfare(); }
+      if(line.scene==='games'){ sc.innerHTML = `<div class="i-big i-games"><div class="i-game" style="background:#2bb24c">MINECRAFT<small>+ minutes</small></div><div class="i-game" style="background:#e8412c;animation-delay:.35s">ROBLOX<small>+ minutes</small></div><div class="i-game" style="background:#8e44d6;animation-delay:.7s">MOM OR DAD<small>+ play time</small></div></div>`; Sound.fanfare(); }
       if(line.scene==='go'){ Robot.play('jump', 650); stageSparks(robotC(), 24, '#ffe95a'); }
       cap.hidden = false; cap.textContent = line.text; cap.classList.remove('pop'); void cap.offsetWidth; cap.classList.add('pop');
       const stopTalk = talk();
@@ -1853,7 +1853,7 @@ function showScore(){
   const none = !s.levels.length && !c.setBonus;
   showOverlay(`<div class="panel"><div class="mission-tag">MISSION REPORT</div><h2 class="h2">${none?'See you soon':'Great flying'}, ${esc(name)}!</h2>
     <div class="earned">${c.minutes} min<small>${none?'Clear a level to earn play time':'of play time earned'}</small></div>
-    ${none?'':`<div class="gpick">${REWARD.games.map(g=>`<button class="brick b-green big-btn ${g===game?'sel':''}" data-g="${esc(g)}">${esc(g)}</button>`).join('')}</div>`}
+    ${none?'':`<div class="gpick">${REWARD.games.map(g=>`<button class="brick b-green big-btn ${g===game?'sel':''}" data-g="${esc(g)}">${g==='Mom or Dad'?'PLAY WITH MOM OR DAD':esc(g)}</button>`).join('')}</div>`}
     <div class="score">
       <div class="ln"><span>Date</span><b>${date}</b></div>
       <div class="ln"><span>Levels cleared</span><b>${s.levels.length}</b></div>
