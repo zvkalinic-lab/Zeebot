@@ -53,3 +53,4 @@ It lives on that one device/browser only.
 - Mission 6 "Sailing Seas": mass (g, dag, kg, t), sail theme, helpers gull/buoy/dolphin, raiders parrot/octo/mine, boss `ironclad`.
 - Mission 7 "City Rush": liquids (l, dl, cl, ml), city theme, helpers tilly/taxi/tow, raiders honk/cone/pothole, boss `truck`.
 - Mission 8 "Express Time": time (h, min, s, clock times, durations), rail theme, helpers conductor/stclock/signal, raiders smoke/switch/coal, boss `loco`.
+- Mission 9 "Space Station Stories": word problems from `STORY_T[lang]` templates (generators stAdd, stSub, stMul, stDiv, stRem, stUnit, stTime, stTwo, stMix), station theme, helpers astro/drone/sat, raiders ufo/alien/meteor, boss `core`.
