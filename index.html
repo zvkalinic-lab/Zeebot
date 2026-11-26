@@ -293,6 +293,7 @@ button.brick:active{transform:translateY(3px)}
 @keyframes cheer{50%{transform:translateY(-30%) rotate(360deg)}}
 
 .lifebar{position:absolute;left:50%;bottom:2.5cqh;transform:translateX(-50%);display:flex;align-items:center;gap:min(1.2cqw,8px);z-index:3}
+.lifebar .seg.extra:not(.off){background:#5ff2ff;box-shadow:inset 0 -3px 0 rgba(0,0,0,.25),0 0 12px rgba(95,242,255,.8)}
 .lifebar .lbl{font-family:var(--display);font-size:min(2.6cqw,3.4cqh);color:var(--muted);margin-right:4px}
 .seg{width:min(7cqw,9cqh);height:min(3cqw,4.2cqh);border-radius:5px;background:var(--green);box-shadow:inset 0 -3px 0 rgba(0,0,0,.25),0 0 10px rgba(43,178,76,.6);transition:background .3s,box-shadow .3s}
 .lifebar.mid .seg{background:var(--yellow);box-shadow:inset 0 -3px 0 rgba(0,0,0,.25),0 0 10px rgba(255,197,26,.6)}
@@ -387,6 +388,29 @@ button.brick:active{transform:translateY(3px)}
 .stars-row i:nth-child(2){animation-delay:.2s}.stars-row i:nth-child(3){animation-delay:.4s}
 @keyframes starIn{from{transform:scale(0) rotate(-90deg)}}
 .muted{color:var(--muted);font-size:14px}
+.cards.pick{grid-template-columns:repeat(auto-fill,minmax(128px,1fr));gap:12px}
+.pickwrap{position:relative;width:100%;cursor:pointer;border-radius:20px;transition:transform .15s}
+.pickwrap .card{width:100%;pointer-events:none}
+.pickwrap:not(.picked){opacity:.6;filter:saturate(.6)}
+.pickwrap.picked{outline:5px solid var(--yellow);outline-offset:3px;transform:translateY(-4px)}
+.pnum{position:absolute;top:-12px;left:-10px;z-index:3;width:34px;height:34px;border-radius:50%;background:var(--yellow);color:var(--ink);font-family:var(--display);display:grid;place-items:center;font-size:20px;box-shadow:0 3px 0 rgba(0,0,0,.4)}
+.chips{display:flex;gap:10px;flex-wrap:wrap;justify-content:center}
+.chip{font-family:var(--display);background:#141a3a;border:3px solid #5ff2ff;color:#fff;border-radius:999px;padding:6px 14px;font-size:clamp(14px,2.2vw,18px)}
+.namebox{display:flex;flex-direction:column;align-items:center;gap:8px}
+.namebox label{font-family:var(--display);color:var(--yellow);font-size:clamp(16px,2.6vw,22px)}
+.namein{font-family:var(--display);font-size:clamp(22px,4vw,32px);text-align:center;width:min(360px,80vw);padding:10px 14px;border-radius:14px;border:4px solid #fff;background:#141a3a;color:#fff;outline:none;box-shadow:0 5px 0 rgba(0,0,0,.35)}
+.namein:focus{border-color:var(--yellow)}
+.namein.shake{animation:nshake .35s}
+@keyframes nshake{25%{transform:translateX(-8px)}75%{transform:translateX(8px)}}
+.score{width:min(520px,100%);background:rgba(20,26,58,.85);border:3px solid #fff;border-radius:18px;padding:14px 18px;text-align:left;box-sizing:border-box}
+.score .ln{display:flex;justify-content:space-between;gap:10px;padding:6px 0;border-bottom:1px dashed rgba(255,255,255,.18);color:#fff;font-size:clamp(14px,2.2vw,18px)}
+.score .ln:last-child{border-bottom:0}
+.score .ln b{font-family:var(--display);font-weight:400;color:var(--yellow);white-space:nowrap}
+.ticket{display:flex;flex-direction:column;align-items:center;gap:14px;padding:22px 18px;border-radius:24px;border:4px dashed var(--yellow);background:radial-gradient(circle at 50% 0,rgba(255,233,90,.18),rgba(20,26,58,.6) 70%);width:min(560px,100%);box-sizing:border-box;animation:panelIn .6s cubic-bezier(.3,1.6,.5,1)}
+.earned{font-family:var(--display);font-size:clamp(46px,10vw,84px);color:var(--yellow);text-shadow:0 0 24px rgba(255,233,90,.6),0 5px 0 #b3243a;line-height:1}
+.earned small{display:block;font-size:.3em;color:#fff;text-shadow:none;margin-top:6px}
+.gpick{display:flex;gap:12px;justify-content:center;flex-wrap:wrap}
+.gpick .brick{opacity:.55}.gpick .brick.sel{opacity:1;outline:4px solid #fff;outline-offset:3px}
 
 @media (prefers-reduced-motion:reduce){
   .ship-bob,.copilot,.gift{animation:none}
@@ -640,7 +664,7 @@ const OUCH   = ['Bzzzt!','Yikes!','Zap! Ouch!','Fzzt!'];
    ===================================================================== */
 const SAVE_KEY = 'bleep-star-math-v1';
 const Save = {
-  d: { missions:{}, crew:[], copilot:null, sound:true, seen:[], fleet:[], lastMission:0 },
+  d: { missions:{}, crew:[], copilot:null, sound:true, seen:[], fleet:[], lastMission:0, player:'', rewardGame:'Minecraft', claims:{}, session:null, squad:[], sets:{}, history:[] },
   load(){ try{ const raw = localStorage.getItem(SAVE_KEY); if(raw) Object.assign(this.d, JSON.parse(raw)); }catch(e){} },
   write(){ try{ localStorage.setItem(SAVE_KEY, JSON.stringify(this.d)); }catch(e){} },
   mission(id){ return this.d.missions[id] || (this.d.missions[id] = { unlocked:1, stars:{} }); },
@@ -648,9 +672,66 @@ const Save = {
   unlockFleet(ids){ for(const id of ids) if(!this.d.fleet.includes(id)) this.d.fleet.push(id); this.write(); },
   missionOpen(m){ return TEST || !m.requires || !!(this.d.missions[m.requires] && this.d.missions[m.requires].done); },
   hasCrew(id){ return this.d.crew.includes(id); },
-  addCrew(id){ if(!this.hasCrew(id)){ this.d.crew.push(id); this.write(); return true; } return false; },
+  addCrew(id){ if(!this.hasCrew(id)){ this.d.crew.push(id); const done = Sets.check(); this.write(); return done.length ? done : true; } return false; },
 };
 Save.load();
+
+/* =====================================================================
+   SESSION REWARDS: levels cleared this session turn into screen-time minutes
+   ===================================================================== */
+const REWARD = {
+  perLevel: 2,        // minutes for each level cleared
+  perStar: 1,         // + minutes per star earned on that level (1–3)
+  bossBonus: 5,       // extra minutes for a boss level
+  accuracyMin: .9,    // if 90% or more answers were right this session...
+  accuracyBonus: 3,   // ...add these minutes
+  dailyCap: 60,       // most minutes that can be earned in one day
+  games: ['Minecraft','Roblox'],
+};
+const todayKey = () => { const d = new Date(); return d.getFullYear()+'-'+String(d.getMonth()+1).padStart(2,'0')+'-'+String(d.getDate()).padStart(2,'0'); };
+const Session = {
+  get(){ const s = Save.d.session || (Save.d.session = { start:Date.now(), levels:[], right:0, wrong:0, secs:0, cards:[] }); s.cards = s.cards || []; return s; },
+  card(id){ this.get().cards.push(id); Save.write(); },
+  right(){ this.get().right++; Save.write(); },
+  wrong(){ this.get().wrong++; Save.write(); },
+  level(entry){ const s = this.get(); s.levels.push(entry); s.secs += entry.secs; Save.write(); },
+  calc(){
+    const s = this.get(), total = s.right + s.wrong, acc = total ? s.right/total : 0;
+    let raw = 0; for(const L of s.levels) raw += REWARD.perLevel + REWARD.perStar*L.stars + (L.boss ? REWARD.bossBonus : 0);
+    const accBonus = s.levels.length && acc >= REWARD.accuracyMin ? REWARD.accuracyBonus : 0; raw += accBonus;
+    const used = Save.d.claims[todayKey()] || 0, left = Math.max(0, REWARD.dailyCap - used);
+    const sets = Sets.pending(), setBonus = sets.reduce((a,st)=>a+st.bonus,0);
+    return { s, total, acc, raw, accBonus, sets, setBonus, minutes:Math.min(raw, left) + setBonus, capped: raw > left, used, left,
+      stars: s.levels.reduce((a,L)=>a+L.stars,0) };
+  },
+  claim(c){ const k = todayKey(); Save.d.claims[k] = (Save.d.claims[k]||0) + (c.minutes - c.setBonus); Sets.claimAll(); Save.d.session = null; Save.write(); },
+};
+/* CARD SETS: collect a whole set for a one-time bonus of play minutes (on top of the daily limit) */
+const CARD_SETS = [
+  { id:'star',    name:'Star Crew',     cards:['rivet','pip','oona','gizmo','brakka','sola','whirr','quill','zanka','prism'], bonus:10 },
+  { id:'sea',     name:'Deep Sea Crew', cards:['bubbles','coral','finn','anchor','marina','puffer','kelp','tidal','octo','pearl'], bonus:10 },
+  { id:'pilots',  name:'Ace Pilots',    cards:['oona','sola','zanka','coral','marina','tidal'], bonus:5 },
+  { id:'drones',  name:'Orb Drones',    cards:['pip','whirr','bubbles','puffer'], bonus:3 },
+  { id:'legends', name:'Legends',       cards:['prism','pearl'], bonus:5 },
+];
+const Sets = {
+  have(set){ return set.cards.filter(id=>Save.d.crew.includes(id)).length; },
+  check(){ const fresh = []; for(const st of CARD_SETS) if(!Save.d.sets[st.id] && this.have(st)===st.cards.length){ Save.d.sets[st.id] = 'pending'; fresh.push(st); } return fresh; },
+  pending(){ return CARD_SETS.filter(st => Save.d.sets[st.id]==='pending'); },
+  claimAll(){ for(const st of this.pending()) Save.d.sets[st.id] = 'claimed'; },
+};
+Sets.check(); Save.write();
+
+/* MISSION SQUAD: up to 3 crew cards fly along. Strength = power hits on bosses, Battery = extra power bars, Speed = extra seconds */
+const SQUAD_MAX = 3;
+const Squad = {
+  ids(){ return (Save.d.squad||[]).filter(id=>Save.hasCrew(id)).slice(0,SQUAD_MAX); },
+  sum(){ const t = { strength:0, battery:0, speed:0 }; for(const id of this.ids()){ const c = CREW.find(x=>x.id===id); for(const k in t) t[k] += c.stats[k]; } return t; },
+  bonus(){ const t = this.sum();
+    return { secs: Math.min(6, Math.floor(t.speed/4)), bars: t.battery>=20 ? 2 : t.battery>=8 ? 1 : 0, power: Math.min(.5, t.strength/40), t }; },
+};
+const esc = t => String(t).replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+const fmtTime = sec => { const m = Math.floor(sec/60), x = Math.round(sec%60); return m ? `${m} min ${x} s` : `${x} s`; };
 
 /* =====================================================================
    SOUND (synthesised, no files)
@@ -902,8 +983,10 @@ const Robot = {
     robotSvg.classList.remove('shipmode'); this.mood('happy'); Sound.beeps(4);
     await wait(500); this.mood('idle');
   },
-  setPower(lives){
-    const bar = $('#lifebar'); bar.querySelectorAll('.seg').forEach((s,i)=>s.classList.toggle('off', i>=lives));
+  setPower(lives, max){
+    const bar = $('#lifebar');
+    if(max){ bar.querySelectorAll('.seg').forEach(x=>x.remove()); for(let i=0;i<max;i++){ const sg=document.createElement('div'); sg.className='seg'+(i>=5?' extra':''); bar.appendChild(sg); } }
+    bar.querySelectorAll('.seg').forEach((s,i)=>s.classList.toggle('off', i>=lives));
     bar.classList.toggle('mid', lives<=3 && lives>1); bar.classList.toggle('low', lives<=1);
     const col = lives>3 ? ['#2bb24c','#0d5a22'] : lives>1 ? ['#ffc51a','#8a5a00'] : ['#e8412c','#5a0d0d'];
     $('#coreMid').setAttribute('stop-color', col[0]); $('#coreEdge').setAttribute('stop-color', col[1]);
@@ -1084,14 +1167,14 @@ const Boss = {
     await wait(380);
   },
   solved(ans){ this.q.textContent = this.q.textContent.replace('?', ans); this.q.classList.add('solved'); },
-  async takeHit(){
+  async takeHit(n=1){
     const intact = this.parts.filter(p=>!p.classList.contains('burnt')); if(!intact.length) return;
-    const part = pick(intact);
-    await Hero.attack([{ el:part, onHit:()=>{
+    const targets = intact.sort(()=>Math.random()-.5).slice(0, n);
+    await Hero.attack(targets.map(part => ({ el:part, onHit:()=>{
       part.classList.add('burnt'); Sound.boom(); stageSparks(stagePoint(part.getBoundingClientRect()), 14);
       this.el.classList.remove('shake'); void this.el.offsetWidth; this.el.classList.add('shake');
       setTimeout(()=>this.el.classList.remove('shake'), 460);
-    }}]);
+    }})));
   },
   shoot(){
     Sound.tone(300,0,.25,'sawtooth',.08,900);
@@ -1346,9 +1429,10 @@ const Game = {
   async start(li, { landing=false, mi }={}){
     const t = ++this.run;
     if(mi !== undefined) this.mi = mi; Save.d.lastMission = this.mi; Save.write();
-    overlay.hidden = true; this.li = li; this.probs = makeProblems(this.level); this.idx = 0; this.lives = 5; this.hitsThisLevel = 0;
-    Robot.reset(); Robot.setPower(5); robotAnim.style.opacity='1'; Ships.clear(); Timer.reset(); const boss = !!this.level.boss; stage.classList.toggle('bosslvl', boss); stage.classList.toggle('sea', this.mission.theme==='sea'); Boss.reset(boss, this.level.bossKind||'scraptor', this.level.enemies||[]);
-    Timer.limit = this.level.time || TIME_LIMIT; Timer.reset(); Helpers.setup(!!this.mission.helpers); this.hud(); this.setAnswers(null);
+    overlay.hidden = true; this.li = li; this.probs = makeProblems(this.level); this.idx = 0; this.hitsThisLevel = 0; this.levelStart = Date.now();
+    this.bonus = Squad.bonus(); this.lives = 5 + this.bonus.bars;
+    Robot.reset(); Robot.setPower(this.lives, this.lives); robotAnim.style.opacity='1'; Ships.clear(); Timer.reset(); const boss = !!this.level.boss; stage.classList.toggle('bosslvl', boss); stage.classList.toggle('sea', this.mission.theme==='sea'); Boss.reset(boss, this.level.bossKind||'scraptor', this.level.enemies||[]);
+    Timer.limit = (this.level.time || TIME_LIMIT) + this.bonus.secs; Timer.reset(); Helpers.setup(!!this.mission.helpers); this.hud(); this.setAnswers(null);
     this.busy = true;
     if(landing) await Robot.land();
     if(t !== this.run) return;
@@ -1404,10 +1488,10 @@ const Game = {
     if(this.busy || btn.disabled) return;
     const v = +btn.dataset.v, p = this.cur, t = this.run, live = () => t === this.run;
     if(v === p.ans){
-      Timer.stop(true); this.busy = true; Raid.retreat(); btn.classList.add('right'); answersEl.querySelectorAll('.ans').forEach(b=>b.disabled=true);
+      Timer.stop(true); this.busy = true; Raid.retreat(); Session.right(); btn.classList.add('right'); answersEl.querySelectorAll('.ans').forEach(b=>b.disabled=true);
       Sound.correct(); Robot.happy(); this.cheerCopilot(); this.idx++;
       if(this.level.boss){
-        Boss.solved(p.ans); await Boss.takeHit(); if(!live()) return; this.hud();
+        Boss.solved(p.ans); const pw = Math.random() < (this.bonus?.power||0); if(pw) Robot.say('POWER HIT!', 'Your crew\'s strength burns 2 parts', 1400); await Boss.takeHit(pw?2:1); if(!live()) return; this.hud();
         if(Boss.allDown()){ await wait(300); await Boss.explode(); return live() && this.complete(); }
         await wait(700); return live() && this.next();
       }
@@ -1422,7 +1506,7 @@ const Game = {
   },
   async miss(btn){
       const p = this.cur, t = this.run;
-      Timer.stop(true); this.busy = true;
+      Timer.stop(true); this.busy = true; Session.wrong();
       if(this.level.boss){ await Boss.shoot(); if(t !== this.run) return; Boss.repair(); this.hud(); } else await Ships.shoot();
       if(t !== this.run) return;
       Sound.zap(); this.lives--; this.hitsThisLevel++;
@@ -1461,6 +1545,7 @@ const Game = {
     ms.unlocked = Math.max(ms.unlocked, Math.min(this.mission.levels.length, this.li+2));
     if(this.li === this.mission.levels.length-1) ms.done = true;
     Save.write();
+    Session.level({ m:this.mission.name, li:this.li, name:this.level.name, stars, boss:!!this.level.boss, secs:Math.round((Date.now()-(this.levelStart||Date.now()))/1000) });
     const cardId = this.level.card, card = CREW.find(c=>c.id===cardId);
     const isNew = card && !Save.hasCrew(cardId);
     const last = this.li === this.mission.levels.length-1;
@@ -1474,14 +1559,15 @@ const Game = {
     if(isNew){
       $('#gift').onclick = async () => {
         const g = $('#gift'); if(g.classList.contains('open')) return; g.classList.add('open'); Sound.pop();
-        Save.addCrew(cardId); if(!Save.d.copilot){ Save.d.copilot = cardId; Save.write(); renderCopilot(); }
+        const got = Save.addCrew(cardId); Session.card(cardId); if(!Save.d.copilot){ Save.d.copilot = cardId; Save.write(); renderCopilot(); }
         await wait(450);
         $('#giftZone').innerHTML = `<p class="mission-tag">NEW CREW MEMBER!</p><div class="reveal" style="display:flex;justify-content:center">${cardHTML(card,{big:true})}</div>`;
+        if(Array.isArray(got)) $('#giftZone').insertAdjacentHTML('beforeend', got.map(st=>`<p class="mission-tag" style="color:#5dff8a">SET COMPLETE: ${st.name}! +${st.bonus} min bonus</p>`).join(''));
         Sound.fanfare(); tiltable($('#giftZone .card'));
         $('#doneBtns').hidden = false;
       };
     }
-    const nb = $('#oNext'); if(nb) nb.onclick = () => { Sound.init(); this.start(this.li+1, { landing:true }); };
+    const nb = $('#oNext'); if(nb) nb.onclick = () => { Sound.init(); launchLevel(this.li+1, this.mi, true); };
     if(last && UNLOCK_AFTER[this.mission.id]) Save.unlockFleet(UNLOCK_AFTER[this.mission.id]);
     $('#oMap').onclick = () => { showMap(this.mi); };
   },
@@ -1502,13 +1588,18 @@ function showOverlay(html, cls=''){ overlay.className = 'overlay ' + cls; overla
 function showTitle(){
   showOverlay(`<div class="panel"><h1 class="logo">ZEEBOT'S<span>STAR MATH</span></h1>
     <p class="sub">Zeebot the robot needs a co-pilot! Ships are flying in with number crates. Pick the right answer within 8 seconds to power up, and dodge the zaps.</p>
+    <div class="namebox"><label for="oName">What's your name, pilot?</label>
+      <input class="namein" id="oName" maxlength="16" autocomplete="off" placeholder="Type your name" value="${esc(Save.d.player||'')}"></div>
     <button class="brick b-yellow big-btn" id="oStart">START ▸</button>
     <p class="muted">Works with a mouse or a touch screen. Keys 1–5 pick answers too.</p></div>`, 'clear');
-  $('#oStart').onclick = () => { Sound.init(); Sound.beeps(6); showMap(); };
+  const ni = $('#oName');
+  const go = () => { const n = ni.value.trim(); if(!n){ ni.classList.remove('shake'); void ni.offsetWidth; ni.classList.add('shake'); ni.focus(); return; }
+    Save.d.player = n; Save.write(); Sound.init(); Sound.beeps(6); showMap(); };
+  $('#oStart').onclick = go; ni.addEventListener('keydown', e => { if(e.key==='Enter') go(); });
 }
 function resetStage(){
   Game.run++; Sound.musicStop(); Raid.clear();
-  Ships.clear(); Timer.reset(); stage.classList.remove('bosslvl'); Boss.reset(false); Helpers.setup(false); Robot.reset(); Robot.setPower(5); robotAnim.style.opacity='1'; Game.busy = true; Game.cur = null;
+  Ships.clear(); Timer.reset(); stage.classList.remove('bosslvl'); Boss.reset(false); Helpers.setup(false); Robot.reset(); Robot.setPower(5,5); robotAnim.style.opacity='1'; Game.busy = true; Game.cur = null;
   $('#hudTitle').textContent = "Zeebot's Star Math"; $('#pips').innerHTML=''; Game.setAnswers(null);
 }
 function showMap(mi){
@@ -1528,9 +1619,10 @@ function showMap(mi){
       return `<button class="brick lv ${col} ${open?'':'locked'}" data-li="${i}" ${open?'':'aria-disabled="true"'}>
         <span class="n">${open? i+1 : '🔒'}</span><span class="nm">${L.name}</span><span class="opl">${opLabel(L)}</span>
         <span class="st">${open ? '★'.repeat(st)+'☆'.repeat(3-st) : ''}</span></button>`; }).join('')}</div>
-    <div class="row"><button class="brick b-purple big-btn" id="oCrew">CREW & FLEET</button>${Save.d.fleet.length?`<button class="brick b-green big-btn" id="oUnl">UNLOCKED SHIPS</button>`:''}</div>
+    <div class="row"><button class="brick b-purple big-btn" id="oCrew">CREW & FLEET</button>${Save.d.fleet.length?`<button class="brick b-green big-btn" id="oUnl">UNLOCKED SHIPS</button>`:''}<button class="brick b-red big-btn" id="oDone">I'M DONE ✓</button></div>
     <div class="coming">${mi===MISSIONS.length-1 ? 'Mission '+(MISSIONS.length+1)+' is coming soon. Your crew and helpers will fly with you.' : 'Finish this mission to unlock the next one.'}</div></div>`);
-  overlay.querySelectorAll('.lv').forEach(b => b.onclick = () => { const i=+b.dataset.li; if(isOpen(i)){ Sound.init(); Sound.click(); Game.start(i, { mi }); } else { Sound.tone(200,0,.15,'square',.06); Robot.say('Locked!', 'Finish the level before it', 1400); } });
+  overlay.querySelectorAll('.lv').forEach(b => b.onclick = () => { const i=+b.dataset.li; if(isOpen(i)){ Sound.init(); Sound.click(); launchLevel(i, mi); } else { Sound.tone(200,0,.15,'square',.06); Robot.say('Locked!', 'Finish the level before it', 1400); } });
+  $('#oDone').onclick = () => { Sound.init(); Sound.click(); showScore(); };
   overlay.querySelectorAll('.mtab').forEach(b => b.onclick = () => {
     const k=+b.dataset.mi, M=MISSIONS[k]; Sound.init(); Sound.click();
     if(!Save.missionOpen(M)){ Robot.say('Locked!', `Finish ${MISSIONS.findIndex(x=>x.id===M.requires)>=0 ? MISSIONS.find(x=>x.id===M.requires).name : 'the mission before'} first`, 1600); return; }
@@ -1568,6 +1660,7 @@ function showCrew(){
   showOverlay(`<div class="panel"><div><div class="mission-tag">YOUR CREW</div><h2 class="h2">Crew cards ${Save.d.crew.length}/${CREW.length}</h2></div>
     <p class="sub">Win a card by clearing a level for the first time. Tap a card to see it up close and pick your co-pilot.</p>
     <div class="cards">${CREW.map(c=>cardHTML(c,{locked:!Save.hasCrew(c.id)})).join('')}</div>
+    ${setsHTML()}
     <div><div class="mission-tag">THE FLEET</div><h2 class="h2">Ships ${Save.d.fleet.length}/${FLEET.length}</h2></div>
     <div class="fcards">${FLEET.filter(f=>Save.hasFleet(f.id)).map(f=>fleetCardHTML(f,false)).join('')}</div>
     <div class="fcards small">${FLEET.filter(f=>!Save.hasFleet(f.id)).map(f=>fleetCardHTML(f,true)).join('')}</div>
@@ -1587,6 +1680,87 @@ function showCard(id){
 }
 $('#btnMap').onclick = () => { Sound.init(); Sound.click(); showMap(); };
 function showMapDefault(){ showMap(); }
+function launchLevel(li, mi, landing=false){ if(Save.d.crew.length) showSquad(li, mi, landing); else Game.start(li, { mi, landing }); }
+function squadChips(){ const b = Squad.bonus();
+  return `<div class="chips"><span class="chip">⚡ Speed +${b.secs} s</span><span class="chip">🔋 Battery +${b.bars} bar${b.bars===1?'':'s'}</span><span class="chip">💪 Power hit ${Math.round(b.power*100)}%</span></div>`; }
+function showSquad(li, mi, landing){
+  resetStage();
+  const M = MISSIONS[mi], L = M.levels[li];
+  const draw = () => {
+    const sel = Squad.ids();
+    showOverlay(`<div class="panel"><div><div class="mission-tag">LEVEL ${li+1} · ${esc(L.name.toUpperCase())}</div><h2 class="h2">Pick your squad</h2></div>
+      <p class="sub">Choose up to ${SQUAD_MAX} crew cards to fly with you. Speed adds seconds, Battery adds power bars, Strength gives power hits on bosses.</p>
+      ${squadChips()}
+      <div class="row"><button class="brick b-green big-btn" id="oGo">LAUNCH ▸</button><button class="brick b-blue big-btn" id="oBack">◂ MAP</button></div>
+      <div class="cards pick">${CREW.filter(c=>Save.hasCrew(c.id)).map(c=>{ const k = sel.indexOf(c.id); return `<div class="pickwrap ${k>=0?'picked':''}" data-id="${c.id}">${k>=0?`<span class="pnum">${k+1}</span>`:''}${cardHTML(c)}</div>`; }).join('')}</div>
+      </div>`);
+    overlay.querySelectorAll('.pickwrap').forEach(w => w.onclick = () => {
+      const id = w.dataset.id; let q = Squad.ids();
+      if(q.includes(id)) q = q.filter(x=>x!==id); else if(q.length < SQUAD_MAX) q.push(id); else { Sound.tone(200,0,.15,'square',.06); Robot.say('Squad full!', `Tap a card to take it out first`, 1400); return; }
+      Save.d.squad = q; Save.write(); Sound.click(); const st = overlay.scrollTop; draw(); overlay.scrollTop = st; });
+    $('#oGo').onclick = () => { Sound.init(); Sound.click(); Game.start(li, { mi, landing }); };
+    $('#oBack').onclick = () => { Sound.click(); showMap(mi); };
+  };
+  draw();
+}
+function showReward(rec){
+  const todayTotal = Save.d.claims[todayKey()] || 0;
+  showOverlay(`<div class="panel"><div class="ticket">
+      <div class="mission-tag">REWARD TICKET</div>
+      <h2 class="h2">${esc(rec.name)}</h2>
+      <div class="earned">${rec.minutes} min<small>of ${esc(rec.game)} play time</small></div>
+      <div class="score">
+        <div class="ln"><span>Date</span><b>${rec.date}</b></div>
+        <div class="ln"><span>Levels cleared</span><b>${rec.levels}</b></div>
+        <div class="ln"><span>Stars</span><b>${rec.stars} ★</b></div>
+        ${rec.cards.length?`<div class="ln"><span>New crew cards</span><b>${rec.cards.map(id=>esc((CREW.find(x=>x.id===id)||{}).name||id)).join(', ')}</b></div>`:''}
+        ${rec.sets.map(n=>`<div class="ln"><span>Card set bonus</span><b>${esc(n)}</b></div>`).join('')}
+      </div>
+      <p class="sub">Show this screen to Mom or Dad to get your play time!</p>
+    </div>
+    <div class="row"><button class="brick b-blue big-btn" id="oBack">◂ MAP</button></div></div>`);
+  Sound.fanfare(); stageSparks({ x:stage.clientWidth/2, y:stage.clientHeight*.3 }, 30, '#ffe95a');
+  $('#oBack').onclick = () => { Sound.click(); showMap(); };
+}
+function setsHTML(){
+  return `<div><div class="mission-tag">CARD SETS</div><h2 class="h2">Collect a set, win bonus minutes</h2></div>
+    <div class="score">${CARD_SETS.map(st=>{ const h = Sets.have(st), state = Save.d.sets[st.id];
+      return `<div class="ln"><span>${esc(st.name)} <span class="muted">(${h}/${st.cards.length})</span></span><b>${state==='claimed'?'✓ claimed':state==='pending'?`+${st.bonus} min ready!`:`+${st.bonus} min`}</b></div>`; }).join('')}</div>`;
+}
+function showScore(){
+  resetStage();
+  const c = Session.calc(), s = c.s, name = Save.d.player || 'Pilot';
+  let game = REWARD.games.includes(Save.d.rewardGame) ? Save.d.rewardGame : REWARD.games[0];
+  const date = new Date().toLocaleDateString('hr-HR', { day:'numeric', month:'numeric', year:'numeric' });
+  const lvlRows = s.levels.map(L => `<div class="ln"><span>${esc(L.m)} · ${L.li+1}. ${esc(L.name)}</span><b>${'★'.repeat(L.stars)}${'☆'.repeat(3-L.stars)}</b></div>`).join('');
+  const none = !s.levels.length && !c.setBonus;
+  showOverlay(`<div class="panel"><div class="mission-tag">MISSION REPORT</div><h2 class="h2">${none?'See you soon':'Great flying'}, ${esc(name)}!</h2>
+    <div class="earned">${c.minutes} min<small>${none?'Clear a level to earn play time':'of play time earned'}</small></div>
+    ${none?'':`<div class="gpick">${REWARD.games.map(g=>`<button class="brick b-green big-btn ${g===game?'sel':''}" data-g="${esc(g)}">${esc(g)}</button>`).join('')}</div>`}
+    <div class="score">
+      <div class="ln"><span>Date</span><b>${date}</b></div>
+      <div class="ln"><span>Levels cleared</span><b>${s.levels.length}</b></div>
+      <div class="ln"><span>Stars</span><b>${c.stars} ★</b></div>
+      <div class="ln"><span>Right answers</span><b>${s.right} / ${c.total}${c.total?` (${Math.round(c.acc*100)}%)`:''}</b></div>
+      <div class="ln"><span>Time on cleared levels</span><b>${fmtTime(s.secs)}</b></div>
+      ${lvlRows}
+      ${c.accBonus?`<div class="ln"><span>Sharp-shooter bonus (90%+ right)</span><b>+${c.accBonus} min</b></div>`:''}
+      ${c.capped?`<div class="ln"><span>Daily limit reached (${REWARD.dailyCap} min a day)</span><b>${c.raw} → ${c.minutes - c.setBonus} min</b></div>`:''}
+      ${c.sets.map(st=>`<div class="ln"><span>Card set complete: ${esc(st.name)}</span><b>+${st.bonus} min</b></div>`).join('')}
+    </div>
+    ${s.cards.length?`<div class="mission-tag">NEW CREW CARDS TODAY</div><div class="cards pick">${s.cards.map(id=>CREW.find(x=>x.id===id)).filter(Boolean).map(c=>cardHTML(c)).join('')}</div>`:''}
+    <div class="row">${none?'':`<button class="brick b-yellow big-btn" id="oClaim">CLAIM MY REWARD ★</button>`}<button class="brick b-blue big-btn" id="oBack">◂ KEEP PLAYING</button></div></div>`);
+  overlay.querySelectorAll('.gpick .brick').forEach(b => b.onclick = () => { game = b.dataset.g; Save.d.rewardGame = game; Save.write(); Sound.click();
+    overlay.querySelectorAll('.gpick .brick').forEach(x => x.classList.toggle('sel', x===b)); });
+  $('#oBack').onclick = () => { Sound.click(); showMap(); };
+  const cb = $('#oClaim'); if(!cb) return;
+  cb.onclick = () => {
+    Session.claim(c); Sound.fanfare();
+    const rec = { date, name, game, minutes:c.minutes, levels:s.levels.length, stars:c.stars, cards:s.cards.slice(), sets:c.sets.map(st=>st.name) };
+    Save.d.history = [rec, ...(Save.d.history||[])].slice(0,30); Save.write();
+    showReward(rec);
+  };
+}
 $('#btnCards').onclick = () => { Sound.init(); showCrew(); };
 const sb = $('#btnSound'); const paintSound = () => { sb.textContent = Save.d.sound ? '♪' : '✕'; sb.setAttribute('aria-pressed', Save.d.sound); };
 sb.onclick = () => { Save.d.sound = !Save.d.sound; Save.write(); paintSound(); Sound.init(); Sound.click(); }; paintSound();
