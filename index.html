@@ -289,9 +289,13 @@ button.brick:active{transform:translateY(3px)}
 .puff{position:absolute;width:18%;aspect-ratio:1;border-radius:50%;background:radial-gradient(circle,#9aa0b8 0,#5a6078 55%,transparent 70%);pointer-events:none}
 .spark{position:absolute;width:2.2cqmin;height:2.2cqmin;border-radius:50%;background:#fff6a0;box-shadow:0 0 8px 3px #ffcc33;pointer-events:none}
 
-.copilot{position:absolute;left:calc(50% - 31cqh);bottom:32cqh;width:15cqh;z-index:2;animation:bob 2s ease-in-out infinite;pointer-events:none}
+.copilot{position:absolute;inset:0;z-index:2;pointer-events:none}
+.copilot .cp{position:absolute;width:15cqh;animation:bob 2s ease-in-out infinite}
+.copilot .cp0{left:calc(50% - 31cqh);bottom:32cqh}
+.copilot .cp1{left:calc(50% + 16cqh);bottom:32cqh;animation-delay:-.7s}
+.copilot .cp2{left:min(calc(50% + 21cqh),calc(100% - 16cqh));bottom:13cqh;animation-delay:-1.3s}
 .copilot svg{width:100%;height:auto;display:block}
-.copilot.cheer{animation:cheer .7s}
+.copilot.cheer .cp{animation:cheer .7s}
 @keyframes cheer{50%{transform:translateY(-30%) rotate(360deg)}}
 
 .lifebar{position:absolute;left:50%;bottom:2.5cqh;transform:translateX(-50%);display:flex;align-items:center;gap:min(1.2cqw,8px);z-index:3}
@@ -2614,9 +2618,11 @@ function tiltable(el){
   el.addEventListener('pointermove', move); el.addEventListener('pointerdown', move);
   el.addEventListener('pointerleave', ()=> el.style.transform='');
 }
-function renderCopilot(){
-  const el = $('#copilot'), c = CREW.find(x=>x.id===Save.d.copilot);
-  if(c && Save.hasCrew(c.id)){ el.innerHTML = crewArt(c); el.hidden = false; } else { el.hidden = true; }
+/* Beside Zeebot: in a level the chosen squad (up to 3 cards) flies along; elsewhere the co-pilot. */
+function renderCopilot(squad){
+  const el = $('#copilot'), ids = squad && squad.length ? squad : [Save.d.copilot];
+  const cs = ids.map(id => CREW.find(x => x.id === id)).filter(c => c && Save.hasCrew(c.id)).slice(0, SQUAD_MAX);
+  el.innerHTML = cs.map((c,i) => `<div class="cp cp${i}">${crewArt(c)}</div>`).join(''); el.hidden = !cs.length;
 }
 
 /* =====================================================================
@@ -2664,7 +2670,7 @@ const Game = {
     const t = ++this.run;
     if(mi !== undefined) this.mi = mi; Save.d.lastMission = this.mi; Save.write();
     overlay.hidden = true; this.li = li; this.probs = makeProblems(this.level); this.idx = 0; this.hitsThisLevel = 0; this.levelStart = Date.now();
-    this.bonus = Squad.bonus(); this.lives = 5 + this.bonus.bars; this.maxLives = this.lives;
+    this.bonus = Squad.bonus(); renderCopilot(Squad.ids()); this.lives = 5 + this.bonus.bars; this.maxLives = this.lives;
     Robot.reset(); Robot.setPower(this.lives, this.lives); robotAnim.style.opacity='1'; Ships.clear(); Timer.reset(); const boss = !!this.level.boss; stage.classList.toggle('bosslvl', boss); applyTheme(this.mission.theme); Boss.reset(boss, this.level.bossKind||'scraptor', this.level.enemies||[]);
     Timer.limit = (this.level.time || TIME_LIMIT) + this.bonus.secs; Timer.reset(); LevelClock.setup(this.level, this.probs.length); Helpers.setup(!!this.mission.helpers); this.shield = false; Robot.shield(false); this.hud(); this.setAnswers(null);
     this.busy = true;
@@ -2706,6 +2712,17 @@ const Game = {
     if(t !== this.run) return;
     let np; for(let i=0;i<20;i++){ np = makeProblems({ ...this.level, count:1 })[0]; if(!this.cur || (np.u ? np.key!==this.cur.key : (np.a!==this.cur.a || np.b!==this.cur.b))) break; }
     this.probs[this.idx] = np; await wait(300); if(t !== this.run) return; this.next();
+  },
+  /* Test cheat (only with #test): Ctrl+C or the ⏭ button jumps to the last problem of the level. */
+  cheatLast(){
+    if(!TEST || !overlay.hidden || this.busy || document.querySelector('.stage.arcade')) return;
+    if(this.level.boss){
+      const left = Boss.parts.filter(x=>!x.classList.contains('burnt'));
+      left.slice(0,-1).forEach(x=>{ x.classList.remove('fixed'); x.classList.add('burnt'); });
+      this.hud(); Robot.say('TEST', 'Last boss part', 1200); return;
+    }
+    if(this.idx >= this.probs.length-1) return;
+    this.idx = this.probs.length-1; this.hud(); Robot.say('TEST', 'Last problem', 1200); this.replace();
   },
   async skip(){
     Sound.freeze(); Sound.whoosh(.15,.6);
@@ -2833,7 +2850,10 @@ async function introCard(f){
   await wait(2800); d.animate([{opacity:1},{opacity:0,transform:'translateX(-50%) translateY(-20px)'}],{duration:300}).onfinish=()=>d.remove(); await wait(250);
 }
 answersEl.addEventListener('click', e => { const b = e.target.closest('.ans'); if(b) Game.answer(b); });
-addEventListener('keydown', e => { if(overlay.hidden && /^[1-5]$/.test(e.key)){ const b = answersEl.children[+e.key-1]; if(b) Game.answer(b); } });
+addEventListener('keydown', e => { if(TEST && (e.ctrlKey||e.metaKey) && e.key.toLowerCase()==='c'){ e.preventDefault(); return Game.cheatLast(); } if(overlay.hidden && /^[1-5]$/.test(e.key)){ const b = answersEl.children[+e.key-1]; if(b) Game.answer(b); } });
+if(TEST){ const cb = document.createElement('button'); cb.id = 'cheatBtn'; cb.textContent = '⏭'; cb.title = 'TEST: last problem (Ctrl+C)';
+  cb.style.cssText = 'position:absolute;right:6px;bottom:6px;z-index:40;width:34px;height:34px;border-radius:50%;border:2px solid #fff8;background:#0008;color:#fff;font-size:16px;cursor:pointer;opacity:.7';
+  cb.onclick = () => Game.cheatLast(); $('#stage').appendChild(cb); }
 
 /* =====================================================================
    SCREENS
@@ -2860,7 +2880,7 @@ function showTitle(){
 function resetStage(){
   if(typeof Arcade!=='undefined' && Arcade.layer) Arcade.stop();
   if(typeof Intro!=='undefined' && Intro.layer){ Intro.token++; Voice.stop(); Intro.unmount(); }
-  Game.run++; Sound.musicStop(); Raid.clear();
+  Game.run++; Sound.musicStop(); Raid.clear(); renderCopilot();
   LevelClock.hide(); Ships.clear(); Timer.reset(); stage.classList.remove('bosslvl'); Boss.reset(false); Helpers.setup(false); Robot.reset(); Robot.setPower(5,5); robotAnim.style.opacity='1'; Game.busy = true; Game.cur = null;
   $('#hudTitle').textContent = "Zeebot's Star Math"; $('#pips').innerHTML=''; Game.setAnswers(null);
 }
