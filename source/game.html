@@ -417,6 +417,13 @@ button.brick:active{transform:translateY(3px)}
 .i-cap.pop{animation:panelIn .4s cubic-bezier(.3,1.6,.5,1)}
 .i-gate{position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:22px;z-index:25;background:rgba(10,14,44,.55);pointer-events:auto}
 .i-play{width:min(34cqw,30cqh);aspect-ratio:1;border-radius:50%;border:6px solid #fff;background:radial-gradient(circle at 40% 30%,#ffe95a,#ff8a1f);color:var(--ink);font-size:min(14cqw,12cqh);cursor:pointer;box-shadow:0 8px 0 rgba(0,0,0,.35),0 0 40px rgba(255,233,90,.7);animation:hpulse 1.4s ease-in-out infinite;display:grid;place-items:center;padding-left:4%}
+.about-big{width:100%;min-height:max(96px,19vh);display:flex;align-items:center;gap:16px;padding:12px 20px;border-radius:22px;border:4px solid #fff;background:linear-gradient(135deg,#ff8a1f,#ffc51a);color:var(--ink);box-shadow:0 7px 0 rgba(0,0,0,.35),0 0 30px rgba(255,197,26,.45);text-align:left;cursor:pointer;animation:abPulse 2.6s ease-in-out infinite}
+@keyframes abPulse{50%{scale:1.025}}
+.about-big .ab-ic{font-size:clamp(38px,8vh,64px)}
+.about-big .ab-tx{flex:1;display:flex;flex-direction:column;gap:4px}
+.about-big b{font-family:var(--display);font-weight:400;font-size:clamp(20px,4.2vw,34px);line-height:1.05}
+.about-big small{font-size:clamp(14px,2.2vw,18px);font-weight:800}
+.about-big .ab-play{width:clamp(52px,9vh,72px);aspect-ratio:1;border-radius:50%;background:#fff;display:grid;place-items:center;font-size:clamp(24px,4vh,34px);padding-left:4px}
 /* About tour ("What is Zeebot?") */
 #app.touring>.hud,#app.touring>.answers{display:none}
 #app.touring{grid-template-rows:minmax(0,1fr)}
@@ -3365,12 +3372,13 @@ function fitTitles(){ overlay.querySelectorAll('.unlocked-title,.h2,.logo').forE
 function showTitle(){
   showOverlay(`<div class="panel"><h1 class="logo">ZEEBOT'S<span>STAR MATH</span></h1>
     <p class="sub">Zeebot the robot needs a co-pilot! Ships are flying in with number crates. Pick the right answer within 8 seconds to power up, and dodge the zaps.</p>
+    <button class="about-big" id="oAbout"><span class="ab-ic">🤖</span><span class="ab-tx"><b>❓ ${tl(TOUR_UI.head)}</b><small>${tl(TOUR_UI.sub)}</small></span><span class="ab-play">▶</span></button>
     ${Profiles.m.list.length ? `<div class="namebox"><label>Who is flying today?</label>
       <div class="profs">${Profiles.m.list.map(p=>`<button class="brick ${p.id===Profiles.m.cur?'b-yellow':'b-blue'} prof" data-pid="${p.id}">👤 ${esc(p.name)} ▸</button>`).join('')}</div></div>` : ''}
     <div class="namebox"><label for="oName">${Profiles.m.list.length ? 'New pilot? Type a new name' : "What's your name, pilot?"}</label>
       <input class="namein" id="oName" maxlength="16" autocomplete="off" placeholder="Type your name" value=""></div>
     <button class="brick ${Profiles.m.list.length?'b-green':'b-yellow'} big-btn" id="oStart">${Profiles.m.list.length ? '＋ NEW PILOT ▸' : 'START ▸'}</button>
-    <div class="row"><button class="brick b-teal hud-btn" id="oIntro">▶ INTRO</button><button class="brick b-orange hud-btn" id="oAbout">❓ ${tl(TOUR_UI.head)}</button><button class="brick b-purple hud-btn" id="oLang" aria-label="Language">🌐 ${(LANGS.find(L=>L.id===LANG)||{}).name||''}</button></div>
+    <div class="row"><button class="brick b-teal hud-btn" id="oIntro">▶ INTRO</button><button class="brick b-purple hud-btn" id="oLang" aria-label="Language">🌐 ${(LANGS.find(L=>L.id===LANG)||{}).name||''}</button></div>
     <p class="muted">Works with a mouse or a touch screen. Keys 1–5 pick answers too.</p></div>`, 'clear');
   $('#oIntro').onclick = () => { Sound.init(); overlay.hidden = true; Studio.play(); };
   $('#oAbout').onclick = () => { Sound.init(); Sound.click(); overlay.hidden = true; Tour.onEnd = null; Tour.play(); };
@@ -3665,7 +3673,7 @@ const Intro = {
 /* =====================================================================
    ABOUT TOUR ("What is Zeebot?"): the game's characters explain the whole game in a ~2 minute animated,
    narrated show. Lines are written per language in TOUR_LINES (not through I18N). The title screen has
-   ❓ WHAT IS ZEEBOT?, and the link ending in #about opens it directly. window.__tourVoice(i, text) can
+   a big ❓ WHAT IS ZEEBOT? banner (it never plays by itself). window.__tourVoice(i, text) can
    replace the device voice (used to record the video with prepared voice clips).
    ===================================================================== */
 const TOUR_SPK = {
@@ -3678,6 +3686,7 @@ const TOUR_SPK = {
 const tl = o => typeof o === 'string' ? o : (o[LANG] || o.en);
 const TOUR_UI = {
   head:  { en:'WHAT IS ZEEBOT?', hr:'ŠTO JE ZEEBOT?', it:"COS'È ZEEBOT?", de:'WAS IST ZEEBOT?', es:'¿QUÉ ES ZEEBOT?', fr:"C'EST QUOI ZEEBOT ?", el:'ΤΙ ΕΙΝΑΙ ΤΟ ZEEBOT;', sr:'ŠTA JE ZEEBOT?', sl:'KAJ JE ZEEBOT?' },
+  sub:   { en:'Watch what the game is and everything inside it (2 min)', hr:'Pogledaj što je ova igra i što sve ima u njoj (2 min)', it:'Guarda cos\'è il gioco e tutto quello che contiene (2 min)', de:'Schau, was das Spiel ist und was alles drin steckt (2 Min.)', es:'Mira qué es el juego y todo lo que tiene (2 min)', fr:'Découvre le jeu et tout ce qu\'il contient (2 min)', el:'Δες τι είναι το παιχνίδι και τι περιέχει (2 λεπτά)', sr:'Pogledaj šta je ova igra i šta sve ima u njoj (2 min)', sl:'Poglej, kaj je ta igra in kaj vse vsebuje (2 min)' },
   grade: { en:'2nd & 3rd GRADE', hr:'2. I 3. RAZRED', it:'2ª E 3ª ELEMENTARE', de:'2. UND 3. KLASSE', es:'2.º Y 3.º DE PRIMARIA', fr:'CE1 ET CE2', el:'Β΄ ΚΑΙ Γ΄ ΔΗΜΟΤΙΚΟΥ', sr:'2. I 3. RAZRED', sl:'2. IN 3. RAZRED' },
   count: { en:'9 MISSIONS · 90 LEVELS', hr:'9 MISIJA · 90 RAZINA', it:'9 MISSIONI · 90 LIVELLI', de:'9 MISSIONEN · 90 LEVEL', es:'9 MISIONES · 90 NIVELES', fr:'9 MISSIONS · 90 NIVEAUX', el:'9 ΑΠΟΣΤΟΛΕΣ · 90 ΕΠΙΠΕΔΑ', sr:'9 MISIJA · 90 NIVOA', sl:'9 MISIJ · 90 STOPENJ' },
   cap:   { en:'MAX 60 MIN A DAY', hr:'NAJVIŠE 60 MIN DNEVNO', it:'MAX 60 MIN AL GIORNO', de:'MAX. 60 MIN PRO TAG', es:'MÁX. 60 MIN AL DÍA', fr:'60 MIN MAX PAR JOUR', el:'ΕΩΣ 60 ΛΕΠΤΑ ΤΗ ΜΕΡΑ', sr:'NAJVIŠE 60 MIN DNEVNO', sl:'NAJVEČ 60 MIN NA DAN' },
@@ -4949,6 +4958,6 @@ new ResizeObserver(sizeStars).observe(stage); sizeStars(); requestAnimationFrame
 
 applyLook(); renderCopilot(); Game.setAnswers(null);
 /* Every start: pick the language first (the last choice is highlighted), then the intro plays in that language. */
-showLangPick(() => location.hash === '#about' ? Tour.play() : Studio.play());
+showLangPick(() => Studio.play());
 window.__bleep = { Game, Save, MISSIONS, CREW, FLEET, Helpers, Online };
 </script>
