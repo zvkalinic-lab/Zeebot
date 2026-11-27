@@ -89,3 +89,12 @@ Every bonus level (after levels 3, 6 and 9) lasts 4 minutes (`ARCADE.duration`) 
 ## Helpers
 - Helpers are dimmed while they cannot be used (ships flying in, animations). A tap then makes Zeebot say what the helper does.
 - The first time a helper appears, `helperIntro` shows its card, makes the button bounce and Zeebot reads its power aloud (seen flags `helper-<id>` in `Save.d.seen`).
+
+## My Class (online leaderboard and card swaps)
+- Optional and off until `CLOUD = { url, key }` (near the top of the script, after `Save.load()`) holds a Supabase Project URL and publishable/anon key. While it is empty the 🏆 MY CLASS button is hidden and nothing leaves the device.
+- Database: run `online/zeebot-online.sql` (in the Zeebot repo) once in Supabase > SQL Editor, then `select zb_new_class('CODE','PIN');` for each class. Tables are closed (RLS, no policies); the game only calls the `zb_` functions over `/rest/v1/rpc/`.
+- A pilot joins with a class code and a nickname; `Save.d.online` keeps `{ code, id, secret, nick, applied, done }`. Each pilot on a device is a separate class player.
+- Sent to the server: nickname, score, total stars, card ids and best time per level (`Save.d.bests`, key `m1:0`, seconds; not recorded in #test). Score = 100 per best star + 50 per card + all ⭐ ever scored in bonus levels (`Save.d.ptsAll`).
+- Screens: TOP 10 (whole class, your row added when you are below 10), FASTEST (per mission, class record + your best), SWAP CARDS (offers for you with YES/NO, your offers with TAKE BACK, pick a classmate → their card → your card → SEND OFFER), TEACHER (class code + PIN: rename or remove players). No chat.
+- Swaps: the server swaps both card lists on YES and cancels other offers that used those cards. Each device applies its side on the next sync (`Online.sync`, on the map at most every 20 s and after each level) and acknowledges it with `p_applied`, so a swap is never applied twice or lost.
+- `Save.d.earned` lists every card won on this device; a level or bonus gift is not given again for a card that was swapped away.
