@@ -301,6 +301,9 @@ button.brick:active{transform:translateY(3px)}
 .timer.slow{filter:hue-rotate(160deg) drop-shadow(0 0 8px #5ff2ff)}
 .ans.xlong{font-size:clamp(12px,2.7vw,26px);white-space:normal;overflow-wrap:anywhere;line-height:1.05;padding-left:2px;padding-right:2px}
 .ans.long{font-size:clamp(14px,3.3vw,32px);white-space:nowrap}
+.ans.units{display:flex;align-items:center;justify-content:center;gap:.25em;white-space:nowrap;line-height:1;padding-left:2px;padding-right:2px}
+.ans .uq{display:flex;flex-direction:column;align-items:center}
+.ans .uq small{font-size:.5em;margin-top:.12em;opacity:.9;letter-spacing:.04em}
 .ans{font-size:clamp(22px,5vw,44px);padding:clamp(10px,2vh,20px) 0;min-height:56px;font-variant-numeric:tabular-nums}
 .ans:disabled{cursor:default}
 .answers.wait .ans{opacity:.35;transform:translateY(6px)}
@@ -1891,6 +1894,16 @@ const q2 = (b, big, s, small) => [b ? `${b} ${big}` : '', s ? `${s} ${small}` : 
 const cmpU = (n, big, small) => { const R = uR(big, small); return q2(Math.floor(n/R), big, n%R, small); };
 const okN = x => Number.isInteger(x) && x > 0;
 const fmtN = (x, u) => u ? `${x} ${u}` : String(x);
+/* Answers with units ("210 min", "1 h 30 min", "3 kg 200 g"): number on top, unit smaller underneath, so they fit their brick. */
+const UNIT_RX = /^(?:km|m|dm|cm|mm|kg|dag|g|t|l|dl|cl|ml|h|min|s|sek|sec|d)$/;
+function unitLabel(t){
+  const rm = String(t).trim().match(/^(\d+) (r|R|ost\.|υπ\.) (\d+)$/);   // remainder: "292 r 2" -> 292 on top, "r 2" under it
+  if(rm) return { n: rm[1].length, html: `<span class="uq"><b>${rm[1]}</b><small>${rm[2]} ${rm[3]}</small></span>` };
+  const tok = String(t).trim().split(/\s+/); if(tok.length < 2 || tok.length % 2) return null;
+  const parts = []; for(let i=0;i<tok.length;i+=2){ if(!/^\d+$/.test(tok[i]) || !UNIT_RX.test(tok[i+1])) return null; parts.push([tok[i], tok[i+1]]); }
+  const n = Math.max(...parts.map(p=>p[0].length)) + (parts.length>1 ? 2 : 0);
+  return { n, html: parts.map(([a,b])=>`<span class="uq"><b>${a}</b><small>${b}</small></span>`).join('') };
+}
 const clk = t => `${Math.floor(t/60)}:${String(t%60).padStart(2,'0')}`;
 const badCompound = w => { const m = /^(\d+) ([a-z]+) (\d+) ([a-z]+)$/.exec(w); return !!(m && uSys(m[2]) && uSys(m[2])===uSys(m[4]) && +m[3] >= uR(m[2], m[4])); };
 const badChoice = w => typeof w !== 'string' || badCompound(w) || /-|NaN|Infinity|\.\d|undefined/.test(w) || /(^|\s)0(\s|$)/.test(w);
@@ -3007,7 +3020,9 @@ const Game = {
     $('#helpers').classList.toggle('idle', !choices);
     if(!choices){ answersEl.classList.add('wait'); answersEl.querySelectorAll('.ans').forEach(b=>b.disabled=true); if(answersEl.children.length) return; choices=['?','?','?','?','?']; }
     else answersEl.classList.remove('wait');
-    answersEl.innerHTML = choices.map((v,i)=>{ const tv = T(String(v)); return `<button class="brick ans ${colors[i]} ${tv.length>=9?'xlong':(tv.length>=6 || (tv.length>=4 && /\s/.test(tv)))?'long':''}" data-v="${v}" ${v==='?'?'disabled':''} aria-label="Answer ${v}">${v}</button>`; }).join('');
+    answersEl.innerHTML = choices.map((v,i)=>{ const tv = T(String(v)), u = unitLabel(tv);
+      const cls = u ? 'units' + (u.n>=5 ? ' xlong' : u.n>=4 ? ' long' : '') : tv.length>=9?'xlong':(tv.length>=6 || (tv.length>=5 && /:/.test(tv)) || (tv.length>=4 && /\s/.test(tv)))?'long':'';
+      return `<button class="brick ans ${colors[i]} ${cls}" data-v="${v}" ${v==='?'?'disabled':''} aria-label="Answer ${v}">${u ? u.html : v}</button>`; }).join('');
   },
   async answer(btn){
     if(this.busy || btn.disabled) return;
