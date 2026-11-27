@@ -74,7 +74,7 @@ Every bonus level (after levels 3, 6 and 9) lasts 4 minutes (`ARCADE.duration`) 
 ## Points and weapons (bonus levels)
 - Every hit scores the weapon's power in ⭐ points. Points are saved per pilot (`Save.d.pts`) and carry over between bonus levels.
 - From wave 2 some enemies are tough (glow, health bar) and need 2 hits; from wave 3 some need 3.
-- After each bonus level the weapon shop opens (also from the 👤 screen on the map): the starter Duck Blaster, 3 cheaper weapons and 3 stronger ones. Edit `WEAPONS` for names, power (`dmg`), time between shots (`cd`, ms) and price. Bought weapons stay owned (`Save.d.weapons`); the equipped one (`Save.d.weapon`) is used in every bonus level after that.
+- After each bonus level the weapon shop opens (also from the 👤 screen on the map): the starter Duck Blaster, 8 cheaper weapons and 8 stronger ones (sorted by price). Edit `WEAPONS` for names, power (`dmg`), time between shots (`cd`, ms) and price. Bought weapons stay owned (`Save.d.weapons`); the equipped one (`Save.d.weapon`) is used in every bonus level after that.
 
 ## Display notes
 - The display font (Bungee) draws ÷ almost like +, so the operator ball uses the body font and boss questions wrap ÷ in `<span class="dv">` (`setQ`).
@@ -90,11 +90,10 @@ Every bonus level (after levels 3, 6 and 9) lasts 4 minutes (`ARCADE.duration`) 
 - Helpers are dimmed while they cannot be used (ships flying in, animations). A tap then makes Zeebot say what the helper does.
 - The first time a helper appears, `helperIntro` shows its card, makes the button bounce and Zeebot reads its power aloud (seen flags `helper-<id>` in `Save.d.seen`).
 
-## My Class (online leaderboard and card swaps)
-- Optional and off until `CLOUD = { url, key }` (near the top of the script, after `Save.load()`) holds a Supabase Project URL and publishable/anon key. While it is empty the 🏆 MY CLASS button is hidden and nothing leaves the device.
-- Database: run `online/zeebot-online.sql` (in the Zeebot repo) once in Supabase > SQL Editor, then `select zb_new_class('CODE','PIN');` for each class. Tables are closed (RLS, no policies); the game only calls the `zb_` functions over `/rest/v1/rpc/`.
-- A pilot joins with a class code and a nickname; `Save.d.online` keeps `{ code, id, secret, nick, applied, done }`. Each pilot on a device is a separate class player.
-- Sent to the server: nickname, score, total stars, card ids and best time per level (`Save.d.bests`, key `m1:0`, seconds; not recorded in #test). Score = 100 per best star + 50 per card + all ⭐ ever scored in bonus levels (`Save.d.ptsAll`).
-- Screens: TOP 10 (whole class, your row added when you are below 10), FASTEST (per mission, class record + your best), SWAP CARDS (offers for you with YES/NO, your offers with TAKE BACK, pick a classmate → their card → your card → SEND OFFER), TEACHER (class code + PIN: rename or remove players). No chat.
-- Swaps: the server swaps both card lists on YES and cancels other offers that used those cards. Each device applies its side on the next sync (`Online.sync`, on the map at most every 20 s and after each level) and acknowledges it with `p_applied`, so a swap is never applied twice or lost.
-- `Save.d.earned` lists every card won on this device; a level or bonus gift is not given again for a card that was swapped away.
+## My Class (online: players, gifts and card swaps)
+- Optional and off until `CLOUD = { url, key }` (after `Save.load()`) holds a Supabase Project URL and publishable/anon key. While it is empty the 👥 MY CLASS button is hidden and nothing leaves the device.
+- Database: run `online/zeebot-online.sql` (Zeebot repo) in Supabase > SQL Editor (safe to re-run; it upgrades), then `select zb_new_class('CODE','PIN');` per class. Tables are closed (RLS, no policies); the game only calls `zb_` functions over `/rest/v1/rpc/`.
+- A pilot joins with a class code and a nickname; `Save.d.online` keeps `{ code, id, secret, nick, applied, done, gifted, giftDone }`.
+- Screens: 👥 PLAYERS (everyone in the class, card count, weapon icons) → a player (their cards, glow = you lack it, their weapons) → 🎁 GIFT A CARD / 🎁 GIFT A WEAPON / 🔁 SWAP. 🔁 SWAP CARDS tab (offers for you YES/NO, your offers TAKE BACK). 🎁 GIFTS tab (last 30 days, in/out with nickname). TEACHER (class code + PIN: rename/remove). No chat, no score list (Zee dropped TOP 10/FASTEST on 2026-11-27; score and best times are still uploaded but not shown).
+- A gift moves at once on the server (`zb_gift`); the giver loses it (the Duck Blaster cannot be given). The receiver's device gets it on the next sync and shows "A GIFT FOR YOU! From <nick>". Swaps and gifts are applied once per device and acknowledged with `p_applied` / `p_gifted`.
+- `Save.d.earned` lists every card won on this device; a level or bonus gift is not given again for a card that was swapped or given away.
