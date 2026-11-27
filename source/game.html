@@ -1501,7 +1501,9 @@ Profiles.load(); Save.load();
    Only a nickname, card ids, weapon ids, the score and best level times leave the device. No chat, no real names.
    Everything else (levels, minutes, bolts) stays offline on this device. See online/README.md.
    ===================================================================== */
-const CLOUD = { url:'', key:'' };   // Supabase Project URL + publishable (anon) key. Empty = MY CLASS is hidden.
+const CLOUD = { url:'', key:'', classCode:'ZEEBOT' };   // Supabase Project URL + publishable (anon) key. Empty = MY CLASS is hidden.
+// classCode: one shared class for everyone, so players only type a nickname. Set it to '' to ask for a class code instead.
+const ADMIN = /admin/i.test(location.hash);   // the 🔑 tools (rename/remove players, needs the PIN) show only with #admin at the end of the link
 const Online = {
   board:null, trades:[], giftLog:[], lastSync:0, busy:null,
   on(){ return !!(CLOUD.url && CLOUD.key); },
@@ -1674,7 +1676,7 @@ async function showClass(mi, tab='players', note=''){
       ${msg ? `<p class="oerr">${esc(msg)}</p>` : ''}
       ${body}
       <div class="row"><button class="brick b-teal big-btn" id="oRef">↻ REFRESH</button><button class="brick b-blue big-btn" id="oMap">◂ MAP</button></div>
-      <div class="row"><button class="brick b-red hud-btn" id="oLeave">LEAVE CLASS</button><button class="brick b-purple hud-btn" id="oAdmin">🔑 TEACHER</button></div></div>`);
+      <div class="row"><button class="brick b-red hud-btn" id="oLeave">LEAVE CLASS</button>${ADMIN ? '<button class="brick b-purple hud-btn" id="oAdmin">🔑 TEACHER</button>' : ''}</div></div>`);
     overlay.querySelectorAll('[data-tab]').forEach(b => b.onclick = () => { Sound.click(); tab = b.dataset.tab; draw(); });
     overlay.querySelectorAll('[data-pl]').forEach(b => b.onclick = () => { Sound.click(); showPlayer(mi, b.dataset.pl); });
     const act = (sel, fn) => overlay.querySelectorAll(sel).forEach(b => b.onclick = async () => {
@@ -1686,7 +1688,7 @@ async function showClass(mi, tab='players', note=''){
     act('[data-cancel]', b => Online.cancel(+b.dataset.cancel));
     $('#oRef').onclick = () => { Sound.click(); load(); };
     $('#oMap').onclick = () => { Sound.click(); showMap(mi); };
-    $('#oAdmin').onclick = () => { Sound.click(); showClassAdmin(mi); };
+    if(ADMIN) $('#oAdmin').onclick = () => { Sound.click(); showClassAdmin(mi); };
     $('#oLeave').onclick = () => { Sound.click();
       showOverlay(`<div class="panel"><h2 class="h2">Leave the class?</h2><p class="sub">Your nickname and place on the list are removed. Your levels and cards stay on this device.</p>
         <div class="row"><button class="brick b-red big-btn" id="oYes">YES, LEAVE</button><button class="brick b-blue big-btn" id="oNo">NO</button></div></div>`);
@@ -1725,17 +1727,17 @@ function showClassJoin(mi, msg=''){
   resetStage();
   showOverlay(`<div class="panel"><div><div class="mission-tag">MY CLASS</div><h2 class="h2">Join your class</h2></div>
     <p class="sub">See everyone in your class and their crew cards, give gifts and swap cards.</p>
-    <div class="namebox"><label for="oCode">Class code</label><input class="namein" id="oCode" maxlength="20" autocomplete="off" autocapitalize="characters" placeholder="e.g. 3B-ZEE"></div>
+    ${CLOUD.classCode ? '' : `<div class="namebox"><label for="oCode">Class code</label><input class="namein" id="oCode" maxlength="20" autocomplete="off" autocapitalize="characters" placeholder="e.g. 3B-ZEE"></div>`}
     <div class="namebox"><label for="oNick">Nickname</label><input class="namein" id="oNick" maxlength="14" autocomplete="off" placeholder="Nickname" value=""></div>
     <p class="muted">Use a nickname, not your real name.</p>
     <p class="oerr" id="oErr" ${msg?'':'hidden'}>${esc(msg)}</p>
     <div class="row"><button class="brick b-green big-btn" id="oJoin">JOIN ▸</button><button class="brick b-blue big-btn" id="oMap">◂ MAP</button></div>
-    <div class="row"><button class="brick b-purple hud-btn" id="oAdmin">🔑 TEACHER</button></div></div>`);
+    ${ADMIN ? '<div class="row"><button class="brick b-purple hud-btn" id="oAdmin">🔑 TEACHER</button></div>' : ''}</div>`);
   const err = m => { const e = $('#oErr'); e.textContent = m; e.hidden = !m; };
   $('#oMap').onclick = () => { Sound.click(); showMap(mi); };
-  $('#oAdmin').onclick = () => { Sound.click(); showClassAdmin(mi); };
+  if(ADMIN) $('#oAdmin').onclick = () => { Sound.click(); showClassAdmin(mi); };
   const go = async () => {
-    const code = $('#oCode').value.trim(), nick = $('#oNick').value.trim();
+    const code = CLOUD.classCode || $('#oCode').value.trim(), nick = $('#oNick').value.trim();
     if(!code || !nick){ Sound.tone(200,0,.15,'square',.06); return err(!code ? ONLINE_ERR.NO_CLASS : ONLINE_ERR.BAD_NICK); }
     $('#oJoin').disabled = true; err('');
     try{ await Online.join(code, nick); Sound.fanfare(); showClass(mi); }
@@ -1816,12 +1818,12 @@ function showClassAdmin(mi, auth=null, msg=''){
   if(!auth){
     showOverlay(`<div class="panel"><div><div class="mission-tag">TEACHER</div><h2 class="h2">🔑 Class tools</h2></div>
       <p class="sub">For the teacher or a parent: rename or remove players.</p>
-      <div class="namebox"><label for="aCode">Class code</label><input class="namein" id="aCode" maxlength="20" autocomplete="off" value="${esc((Online.me()||{}).code||'')}"></div>
+      ${CLOUD.classCode ? '' : `<div class="namebox"><label for="aCode">Class code</label><input class="namein" id="aCode" maxlength="20" autocomplete="off" value="${esc((Online.me()||{}).code||'')}"></div>`}
       <div class="namebox"><label for="aPin">PIN</label><input class="namein" id="aPin" type="password" maxlength="40" autocomplete="off"></div>
       <p class="oerr" id="oErr" ${msg?'':'hidden'}>${esc(msg)}</p>
       <div class="row"><button class="brick b-green big-btn" id="aGo">OPEN ▸</button><button class="brick b-blue big-btn" id="oBack">◂ BACK</button></div></div>`);
     $('#oBack').onclick = () => { Sound.click(); Online.me() ? showClass(mi) : showClassJoin(mi); };
-    $('#aGo').onclick = async () => { const a = { p_code:$('#aCode').value.trim(), p_pin:$('#aPin').value }; $('#aGo').disabled = true;
+    $('#aGo').onclick = async () => { const a = { p_code:CLOUD.classCode || $('#aCode').value.trim(), p_pin:$('#aPin').value }; $('#aGo').disabled = true;
       try{ const list = await Online.rpc('zb_admin_list', a); showClassAdmin(mi, { ...a, list }); }
       catch(e){ showClassAdmin(mi, null, onlineErr(e)); } };
     return;
