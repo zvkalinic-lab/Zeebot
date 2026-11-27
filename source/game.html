@@ -417,6 +417,105 @@ button.brick:active{transform:translateY(3px)}
 .i-cap.pop{animation:panelIn .4s cubic-bezier(.3,1.6,.5,1)}
 .i-gate{position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:22px;z-index:25;background:rgba(10,14,44,.55);pointer-events:auto}
 .i-play{width:min(34cqw,30cqh);aspect-ratio:1;border-radius:50%;border:6px solid #fff;background:radial-gradient(circle at 40% 30%,#ffe95a,#ff8a1f);color:var(--ink);font-size:min(14cqw,12cqh);cursor:pointer;box-shadow:0 8px 0 rgba(0,0,0,.35),0 0 40px rgba(255,233,90,.7);animation:hpulse 1.4s ease-in-out infinite;display:grid;place-items:center;padding-left:4%}
+/* About tour ("What is Zeebot?") */
+#app.touring>.hud,#app.touring>.answers{display:none}
+#app.touring{grid-template-rows:minmax(0,1fr)}
+#app.touring #timer,#app.touring #lifebar,#app.touring #lclock,#app.touring #helpers,#app.touring #bubble{visibility:hidden}
+.t-layer{z-index:16}
+.t-skip{font-size:clamp(13px,2vw,17px);padding:7px 14px}
+.t-scene{position:absolute;inset:0}
+.t-cap{position:absolute;left:50%;bottom:2.5cqh;transform:translateX(-50%);z-index:20;width:min(94%,1100px);box-sizing:border-box;text-align:center;font-family:var(--body,inherit);font-weight:800;font-size:clamp(15px,min(3.1cqw,4.6cqh),30px);line-height:1.25;color:var(--ink);background:#fff;border-radius:18px;padding:.7em 1em .55em;box-shadow:0 6px 0 rgba(0,0,0,.35),0 0 0 4px var(--who,#ffe95a)}
+.t-cap.pop{animation:tIn .4s cubic-bezier(.3,1.6,.5,1)}
+.t-who{position:absolute;left:1.1em;top:0;transform:translateY(-62%);font-family:var(--display);font-weight:400;font-size:.8em;letter-spacing:.04em;background:var(--who,#ffe95a);color:var(--ink);padding:.15em .7em;border-radius:999px;box-shadow:0 3px 0 rgba(0,0,0,.35);text-transform:uppercase}
+.t-gatehead{font-family:var(--display);color:#5ff2ff;font-size:clamp(22px,min(5cqw,7cqh),48px);text-shadow:0 4px 0 #10307a}
+.t-logo{position:absolute;left:50%;top:5cqh;transform:translateX(-50%);width:94%;text-align:center;animation:tIn .7s cubic-bezier(.3,1.6,.5,1) backwards}
+.t-logo .logo{font-size:min(10cqw,13cqh)}
+.t-badges{position:absolute;left:50%;top:6cqh;transform:translateX(-50%);display:flex;align-items:center;gap:3cqw}
+.t-badge{font-family:var(--display);font-size:min(13cqw,17cqh);line-height:1;background:var(--yellow);color:var(--ink);border:6px solid #fff;border-radius:26px;padding:.12em .35em;box-shadow:0 8px 0 rgba(0,0,0,.35),0 0 40px rgba(255,233,90,.5);animation:tIn .7s cubic-bezier(.3,1.6,.5,1) backwards;animation-delay:var(--d)}
+.t-badge.b2{background:#5ff2ff}
+.t-plus{font-family:var(--display);font-size:min(8cqw,10cqh);color:#fff}
+.t-banner{position:absolute;left:50%;top:31cqh;transform:translateX(-50%);white-space:nowrap;font-family:var(--display);font-size:min(5.4cqw,7cqh);color:#fff;text-shadow:0 4px 0 #10307a;animation:tIn .6s cubic-bezier(.3,1.6,.5,1) backwards}
+.t-count{top:41cqh;color:var(--yellow);font-size:min(4.4cqw,6cqh)}
+.t-sym{position:absolute;font-family:var(--display);font-size:min(7cqw,9cqh);opacity:.85;text-shadow:0 0 20px currentColor;animation:tFloat 3s ease-in-out infinite alternate,tIn .5s backwards}
+@keyframes tFloat{from{transform:translateY(0) rotate(-8deg)}to{transform:translateY(-3cqh) rotate(8deg)}}
+.t-mcard{position:absolute;left:50%;top:5cqh;transform:translateX(-50%);min-width:min(60cqw,620px);text-align:center;background:rgba(10,14,44,.82);border:5px solid var(--mc);border-radius:24px;padding:1.6cqh 3cqw 2cqh;box-shadow:0 8px 0 rgba(0,0,0,.35),0 0 40px color-mix(in srgb,var(--mc) 50%,transparent);animation:tIn .45s cubic-bezier(.3,1.6,.5,1)}
+.t-mtag{font-family:var(--display);color:var(--mc);font-size:min(3cqw,4cqh);letter-spacing:.06em}
+.t-mtitle{font-family:var(--display);color:#fff;font-size:min(6cqw,8cqh);line-height:1.05;margin:.1em 0 .15em}
+.t-mmath{font-family:var(--body,inherit);font-weight:900;color:var(--yellow);font-size:min(5cqw,7cqh);white-space:nowrap}
+.t-mmath small{font-size:.75em}
+.t-duck{position:absolute;left:0;top:0;width:min(30cqw,34cqh);z-index:13}
+.t-duck svg{width:100%;height:auto;display:block;overflow:visible}
+.t-duck .hero-art{animation:bob 1s ease-in-out infinite}
+.t-duck-s{width:min(20cqw,24cqh)}
+.t-duck-c{left:50%;top:auto;bottom:22cqh;transform:translateX(-50%);width:min(26cqw,30cqh)}
+.t-talk>*:first-child,.t-talk .fsvg,.t-talk .card{animation:tTalk .32s ease-in-out infinite alternate!important}
+@keyframes tTalk{from{transform:scale(1) rotate(-2deg)}to{transform:scale(1.06) rotate(2deg)}}
+.t-ship{position:absolute;left:0;top:0;width:min(17cqw,22cqh);z-index:12}
+.t-ship svg{width:100%;height:auto;display:block;overflow:visible}
+.t-ship .crate{position:absolute;left:50%;top:92%;transform:translateX(-50%);font-family:var(--display);font-size:min(6cqw,7cqh);background:var(--yellow);color:var(--ink);padding:0 .35em;border-radius:10px;box-shadow:0 4px 0 rgba(0,0,0,.35)}
+.t-raider{width:min(20cqw,26cqh)}
+.t-small{width:min(11cqw,14cqh)}
+.t-side{width:min(18cqw,24cqh)}
+.t-q{position:absolute;left:50%;top:6cqh;transform:translateX(-50%);font-family:var(--display);font-size:min(7cqw,10cqh);color:var(--ink);background:#fff;border-radius:20px;padding:.1em .6em;box-shadow:0 6px 0 rgba(0,0,0,.35),0 0 0 5px var(--yellow);white-space:nowrap;z-index:14;animation:tIn .4s cubic-bezier(.3,1.6,.5,1)}
+.t-q.ok{box-shadow:0 6px 0 rgba(0,0,0,.35),0 0 0 5px #2bb24c;color:#16692b}
+.t-q.swap{box-shadow:0 6px 0 rgba(0,0,0,.35),0 0 0 5px #ff7ab8;animation:tWob .4s}
+.t-q.low{top:auto;bottom:31cqh;left:24%;font-size:min(5cqw,7cqh)}
+.t-q2{top:auto;bottom:30cqh;font-size:min(5.5cqw,8cqh)}
+.t-opts{position:absolute;left:50%;top:50cqh;transform:translateX(-50%);display:flex;gap:min(2cqw,16px);z-index:14}
+.t-opt{font-family:var(--display);font-size:min(5.5cqw,7cqh);padding:.3em .6em;min-width:2.4em;text-align:center;animation:tIn .4s cubic-bezier(.3,1.6,.5,1) backwards}
+.t-opt:nth-child(2){animation-delay:.08s}.t-opt:nth-child(3){animation-delay:.16s}.t-opt:nth-child(4){animation-delay:.24s}.t-opt:nth-child(5){animation-delay:.32s}
+.t-opt.t-right{outline:6px solid #5dff8a;outline-offset:3px;transform:scale(1.15);transition:transform .2s}
+.t-finger{position:absolute;z-index:40;font-size:min(9cqw,12cqh);pointer-events:none;filter:drop-shadow(0 4px 4px rgba(0,0,0,.5))}
+.t-float{position:absolute;z-index:40;left:0;top:0;font-family:var(--display);font-size:min(6cqw,8cqh);pointer-events:none;text-shadow:0 3px 0 rgba(0,0,0,.45);white-space:nowrap}
+.t-wfly{font-size:min(9cqw,12cqh)}
+.t-ring{position:absolute;left:50%;top:5cqh;transform:translateX(-50%);width:min(30cqw,36cqh);aspect-ratio:1;display:grid;place-items:center;z-index:14}
+.t-ring svg{position:absolute;inset:0;transform:rotate(-90deg)}
+.t-ring .tb{fill:rgba(10,14,44,.75);stroke:#2a3360;stroke-width:9}
+.t-ring .tr{fill:none;stroke:#5dff8a;stroke-width:9;stroke-linecap:round;transition:stroke-dashoffset .45s linear,stroke .3s}
+.t-ring b{position:relative;font-family:var(--display);font-weight:400;font-size:min(14cqw,17cqh);color:#fff}
+.t-ring.hot .tr{stroke:#ff5a5a}.t-ring.hot b{color:#ff8a7a;animation:hpulse .5s ease-in-out infinite}
+.t-figs{position:absolute;left:50%;top:4cqh;transform:translateX(-50%);display:flex;gap:4cqw;align-items:flex-end}
+.t-fig{position:relative;width:min(19cqw,27cqh);animation:tIn .6s cubic-bezier(.3,1.6,.5,1) backwards;filter:saturate(.6) brightness(.8);transition:filter .3s,transform .3s}
+.t-fig:first-child{width:min(24cqw,33cqh)}
+.t-fig svg{width:100%;height:auto;display:block;overflow:visible}
+.t-fig.on{filter:none;transform:translateY(-1.5cqh) scale(1.08)}
+.t-tag{position:absolute;left:50%;bottom:-2cqh;transform:translateX(-50%);font-family:var(--display);font-size:min(4.4cqw,6cqh);background:var(--yellow);color:var(--ink);padding:0 .4em;border-radius:12px;box-shadow:0 4px 0 rgba(0,0,0,.35);white-space:nowrap;opacity:0;transition:opacity .3s}
+.t-fig.on .t-tag{opacity:1}
+.t-score{position:absolute;right:3cqw;top:4cqh;font-family:var(--display);font-size:min(6cqw,8cqh);color:var(--yellow);text-shadow:0 4px 0 rgba(0,0,0,.4);z-index:15}
+.t-head{position:absolute;left:50%;top:4cqh;transform:translateX(-50%);font-family:var(--display);font-size:min(5.5cqw,7.5cqh);color:#fff;text-shadow:0 4px 0 #10307a;white-space:nowrap;animation:tIn .5s cubic-bezier(.3,1.6,.5,1)}
+.t-weaps{position:absolute;left:50%;top:17cqh;transform:translateX(-50%);width:min(92%,1000px);display:grid;grid-template-columns:repeat(5,1fr);gap:min(1.6cqw,14px)}
+.t-weap{background:rgba(10,14,44,.82);border:3px solid #5ff2ff;border-radius:16px;padding:.8cqh .4cqw;display:flex;flex-direction:column;align-items:center;animation:tIn .4s cubic-bezier(.3,1.6,.5,1) backwards;color:#fff}
+.t-weap .wi{font-size:min(5.5cqw,7.5cqh);line-height:1.1}
+.t-weap .wn{font-family:var(--display);font-size:min(1.8cqw,2.6cqh);text-align:center;line-height:1.1}
+.t-weap .wc{font-size:min(1.8cqw,2.6cqh);color:var(--yellow);font-weight:800}
+.t-weap.on{border-color:var(--yellow);box-shadow:0 0 30px rgba(255,233,90,.8);transform:scale(1.08)}
+.t-chip{position:absolute;font-family:var(--display);font-size:min(4.6cqw,6.4cqh);color:#fff;background:rgba(10,14,44,.85);border:4px solid #5ff2ff;border-radius:999px;padding:.15em .7em;white-space:nowrap;z-index:15;animation:tIn .45s cubic-bezier(.3,1.6,.5,1) backwards}
+.t-clock{left:6cqw;top:6cqh}
+.t-bolts{left:6cqw;top:17cqh;border-color:#ffc51a}
+.t-bolts.on{box-shadow:0 0 30px rgba(255,197,26,.8);transform:scale(1.1)}
+.t-part{right:4cqw;top:30cqh;border-color:#ff7ab8;font-size:min(3cqw,4.4cqh);white-space:normal;max-width:34cqw;text-align:center;border-radius:24px}
+.t-bigcard{position:absolute;left:4cqw;top:5cqh;width:min(22cqw,30cqh);z-index:15;animation:tIn .6s cubic-bezier(.3,1.6,.5,1) backwards}
+.t-bigcard .card{width:100%;pointer-events:none}
+.t-stats{position:absolute;right:4cqw;top:15cqh;display:flex;flex-direction:column;gap:1.6cqh;align-items:flex-end}
+.t-stats .t-chip{position:relative}
+.t-pilots{position:absolute;left:50%;top:15cqh;transform:translateX(-50%);display:flex;gap:3cqw}
+.t-pilot{font-family:var(--display);font-size:min(4.6cqw,6.4cqh);padding:.35em .8em;display:flex;flex-direction:column;align-items:center;white-space:nowrap;animation:tIn .5s cubic-bezier(.3,1.6,.5,1) backwards}
+.t-pilot small{font-size:.6em;color:var(--yellow);letter-spacing:.1em}
+.t-stars{top:5cqh}
+.t-games{top:30cqh;flex-wrap:nowrap}
+.t-games .i-game{font-size:min(3.8cqw,6cqh)}
+.t-cap60{left:50%;top:50cqh;transform:translateX(-50%);border-color:#5dff8a}
+.t-flags{position:absolute;left:50%;top:7cqh;transform:translateX(-50%);display:grid;grid-template-columns:repeat(5,minmax(0,1fr));gap:2cqh 2.4cqw;width:min(86cqw,1000px)}
+.t-flag{display:flex;flex-direction:column;align-items:center;animation:tIn .45s cubic-bezier(.3,1.6,.5,1) backwards}
+.t-flag .fl{font-size:min(8cqw,11cqh);line-height:1.05}
+.t-flag .ln{font-size:min(1.9cqw,2.7cqh);color:#9fb0e0}
+.t-flag .hi{font-family:var(--display);color:#fff;white-space:nowrap;font-size:min(3cqw,4.2cqh);text-shadow:0 3px 0 #10307a}
+.t-mate{position:absolute;top:18cqh}
+.t-mate.l{left:8cqw}.t-mate.r{right:8cqw}
+.t-gift{z-index:16}
+.t-end{position:absolute;left:50%;bottom:6cqh;transform:translateX(-50%);display:flex;gap:16px;align-items:center;z-index:25;animation:tIn .5s cubic-bezier(.3,1.6,.5,1)}
+@keyframes tIn{from{opacity:0;scale:.4}to{opacity:1;scale:1}}
+@keyframes tWob{0%,100%{rotate:0deg}25%{rotate:-4deg}75%{rotate:4deg}}
 .stage.arcade{touch-action:none;cursor:crosshair}
 .stage.arcade .robot-wrap,.stage.arcade .lifebar,.stage.arcade .copilot{opacity:0;pointer-events:none}
 .a-layer{position:absolute;inset:0;z-index:12;overflow:hidden}
@@ -3252,9 +3351,10 @@ function showTitle(){
     <div class="namebox"><label for="oName">${Profiles.m.list.length ? 'New pilot? Type a new name' : "What's your name, pilot?"}</label>
       <input class="namein" id="oName" maxlength="16" autocomplete="off" placeholder="Type your name" value=""></div>
     <button class="brick ${Profiles.m.list.length?'b-green':'b-yellow'} big-btn" id="oStart">${Profiles.m.list.length ? '＋ NEW PILOT ▸' : 'START ▸'}</button>
-    <div class="row"><button class="brick b-teal hud-btn" id="oIntro">▶ INTRO</button><button class="brick b-purple hud-btn" id="oLang" aria-label="Language">🌐 ${(LANGS.find(L=>L.id===LANG)||{}).name||''}</button></div>
+    <div class="row"><button class="brick b-teal hud-btn" id="oIntro">▶ INTRO</button><button class="brick b-orange hud-btn" id="oAbout">❓ ${tl(TOUR_UI.head)}</button><button class="brick b-purple hud-btn" id="oLang" aria-label="Language">🌐 ${(LANGS.find(L=>L.id===LANG)||{}).name||''}</button></div>
     <p class="muted">Works with a mouse or a touch screen. Keys 1–5 pick answers too.</p></div>`, 'clear');
   $('#oIntro').onclick = () => { Sound.init(); overlay.hidden = true; Studio.play(); };
+  $('#oAbout').onclick = () => { Sound.init(); Sound.click(); overlay.hidden = true; Tour.onEnd = null; Tour.play(); };
   $('#oLang').onclick = () => { Sound.init(); Sound.click(); showLangPick(); };
   const ni = $('#oName');
   const go = () => { const n = ni.value.trim(); if(!n){ ni.classList.remove('shake'); void ni.offsetWidth; ni.classList.add('shake'); ni.focus(); return; }
@@ -3265,6 +3365,7 @@ function showTitle(){
 function resetStage(){
   if(typeof Arcade!=='undefined' && Arcade.layer) Arcade.stop();
   if(typeof Intro!=='undefined' && Intro.layer){ Intro.token++; Voice.stop(); Intro.unmount(); }
+  if(typeof Tour!=='undefined' && Tour.layer) Tour.stop();
   Game.run++; Sound.musicStop(); Raid.clear(); renderCopilot();
   LevelClock.hide(); Ships.clear(); Timer.reset(); stage.classList.remove('bosslvl'); Boss.reset(false); Helpers.setup(false); Robot.reset(); Robot.setPower(5,5); robotAnim.style.opacity='1'; Game.busy = true; Game.cur = null;
   $('#hudTitle').textContent = "Zeebot's Star Math"; $('#pips').innerHTML=''; Game.setAnswers(null);
@@ -3540,6 +3641,551 @@ const Intro = {
       el.animate([{opacity:1},{opacity:0,transform:el.style.transform+' translateY(60px) rotate(40deg)'}],{duration:700,fill:'forwards'});
       await wait(350);
     }
+  },
+};
+/* =====================================================================
+   ABOUT TOUR ("What is Zeebot?"): the game's characters explain the whole game in a ~2 minute animated,
+   narrated show. Lines are written per language in TOUR_LINES (not through I18N). The title screen has
+   ❓ WHAT IS ZEEBOT?, and the link ending in #about opens it directly. window.__tourVoice(i, text) can
+   replace the device voice (used to record the video with prepared voice clips).
+   ===================================================================== */
+const TOUR_SPK = {
+  zee:  { name:'Zeebot', pitch:1.9, rate:1.08, col:'#5ff2ff' },
+  duck: { name:{ en:'Duck Wing', hr:'Patkica', sr:'Patkica', sl:'Račka', it:'Anatra Alata' }, pitch:1.5, rate:1.2, col:'#ffc51a' },
+  owl:  { name:'Owl Scope', pitch:1.0, rate:.98, col:'#b98aff' },
+  crab: { name:'Pinchy Crab', pitch:1.3, rate:1.22, col:'#ff6a4a' },
+  crew: { name:'Captain Oona', pitch:1.4, rate:1.06, col:'#5dff8a' },
+};
+const tl = o => typeof o === 'string' ? o : (o[LANG] || o.en);
+const TOUR_UI = {
+  head:  { en:'WHAT IS ZEEBOT?', hr:'ŠTO JE ZEEBOT?', it:"COS'È ZEEBOT?", de:'WAS IST ZEEBOT?', es:'¿QUÉ ES ZEEBOT?', fr:"C'EST QUOI ZEEBOT ?", el:'ΤΙ ΕΙΝΑΙ ΤΟ ZEEBOT;', sr:'ŠTA JE ZEEBOT?', sl:'KAJ JE ZEEBOT?' },
+  grade: { en:'2nd & 3rd GRADE', hr:'2. I 3. RAZRED', it:'2ª E 3ª ELEMENTARE', de:'2. UND 3. KLASSE', es:'2.º Y 3.º DE PRIMARIA', fr:'CE1 ET CE2', el:'Β΄ ΚΑΙ Γ΄ ΔΗΜΟΤΙΚΟΥ', sr:'2. I 3. RAZRED', sl:'2. IN 3. RAZRED' },
+  count: { en:'9 MISSIONS · 90 LEVELS', hr:'9 MISIJA · 90 RAZINA', it:'9 MISSIONI · 90 LIVELLI', de:'9 MISSIONEN · 90 LEVEL', es:'9 MISIONES · 90 NIVELES', fr:'9 MISSIONS · 90 NIVEAUX', el:'9 ΑΠΟΣΤΟΛΕΣ · 90 ΕΠΙΠΕΔΑ', sr:'9 MISIJA · 90 NIVOA', sl:'9 MISIJ · 90 STOPENJ' },
+  cap:   { en:'MAX 60 MIN A DAY', hr:'NAJVIŠE 60 MIN DNEVNO', it:'MAX 60 MIN AL GIORNO', de:'MAX. 60 MIN PRO TAG', es:'MÁX. 60 MIN AL DÍA', fr:'60 MIN MAX PAR JOUR', el:'ΕΩΣ 60 ΛΕΠΤΑ ΤΗ ΜΕΡΑ', sr:'NAJVIŠE 60 MIN DNEVNO', sl:'NAJVEČ 60 MIN NA DAN' },
+  words: { en:'word problems', hr:'zadaci riječima', it:'problemi', de:'Textaufgaben', es:'problemas', fr:'problèmes', el:'προβλήματα', sr:'tekstualni zadaci', sl:'besedilne naloge' },
+  rem:   { en:'r', hr:'ost.', sr:'ost.', sl:'ost.', it:'r', de:'R', es:'r', fr:'r', el:'υ' },
+};
+const TOUR_HELLO = ['Bok!','Hello!','Ciao!','Hallo!','¡Hola!','Salut !','Γεια!','Zdravo!','Živijo!'];
+const TOUR_LINES = [
+  { id:'hello', who:'zee', t:{
+    en:"Beep boop! Hi, I'm Zeebot! Welcome to Zeebot's Star Math!",
+    hr:"Bip bup! Bok, ja sam Zeebot! Dobro došli u Zeebotovu zvjezdanu matematiku!",
+    it:"Bip bup! Ciao, sono Zeebot! Benvenuti nella Matematica Stellare di Zeebot!",
+    de:"Piep piep! Hallo, ich bin Zeebot! Willkommen bei Zeebots Sternen-Mathe!",
+    es:"¡Bip bup! ¡Hola, soy Zeebot! ¡Bienvenidos a las Mates Estelares de Zeebot!",
+    fr:"Bip boup ! Salut, je suis Zeebot ! Bienvenue dans les Maths des Étoiles de Zeebot !",
+    el:"Μπιπ μπουπ! Γεια, είμαι ο Zeebot! Καλώς ήρθατε στα Αστρικά Μαθηματικά του Zeebot!",
+    sr:"Bip bup! Zdravo, ja sam Zeebot! Dobro došli u Zeebotovu zvezdanu matematiku!",
+    sl:"Bip bup! Živijo, jaz sem Zeebot! Dobrodošli v Zeebotovi zvezdni matematiki!" } },
+  { id:'grade', who:'zee', t:{
+    en:"It's a whole collection of math games for second and third grade.",
+    hr:"Ovo je cijela zbirka matematičkih igara za drugi i treći razred.",
+    it:"È una raccolta di giochi di matematica per la seconda e la terza elementare.",
+    de:"Das ist eine ganze Sammlung von Mathespielen für die zweite und dritte Klasse.",
+    es:"Es una colección de juegos de matemáticas para segundo y tercero de primaria.",
+    fr:"C'est toute une collection de jeux de maths pour le CE1 et le CE2.",
+    el:"Είναι μια συλλογή από παιχνίδια μαθηματικών για τη Β΄ και τη Γ΄ Δημοτικού.",
+    sr:"Ovo je cela zbirka matematičkih igara za drugi i treći razred.",
+    sl:"To je cela zbirka matematičnih iger za drugi in tretji razred." } },
+  { id:'worlds1', who:'zee', t:{
+    en:"Nine missions, ninety levels! We multiply in space, add under the sea, and sweat on the beach!",
+    hr:"Devet misija, devedeset razina! Množimo u svemiru, zbrajamo pod morem i znojimo se na plaži!",
+    it:"Nove missioni, novanta livelli! Moltiplichiamo nello spazio, sommiamo sotto il mare e sudiamo in spiaggia!",
+    de:"Neun Missionen, neunzig Level! Wir multiplizieren im Weltall, rechnen unter dem Meer und schwitzen am Strand!",
+    es:"¡Nueve misiones, noventa niveles! Multiplicamos en el espacio, sumamos bajo el mar y sudamos en la playa.",
+    fr:"Neuf missions, quatre-vingt-dix niveaux ! On multiplie dans l'espace, on additionne sous la mer et on transpire à la plage !",
+    el:"Εννέα αποστολές, ενενήντα επίπεδα! Πολλαπλασιάζουμε στο διάστημα, προσθέτουμε κάτω από τη θάλασσα και ιδρώνουμε στην παραλία!",
+    sr:"Devet misija, devedeset nivoa! Množimo u svemiru, sabiramo pod morem i znojimo se na plaži!",
+    sl:"Devet misij, devetdeset stopenj! Množimo v vesolju, seštevamo pod morjem in se potimo na plaži!" } },
+  { id:'worlds2', who:'zee', t:{
+    en:"Then a bat cave, snowy mountains, sailing seas, a busy city, fast trains and a space station!",
+    hr:"Zatim špilja sa šišmišima, snježne planine, jedrenje morem, gradska gužva, brzi vlakovi i svemirska stanica!",
+    it:"Poi una grotta di pipistrelli, montagne innevate, mari in barca a vela, una città trafficata, treni veloci e una stazione spaziale!",
+    de:"Dann eine Fledermaushöhle, verschneite Berge, Segeln auf dem Meer, eine volle Stadt, schnelle Züge und eine Raumstation!",
+    es:"¡Luego una cueva de murciélagos, montañas nevadas, mares a vela, una ciudad con tráfico, trenes rápidos y una estación espacial!",
+    fr:"Puis une grotte aux chauves-souris, des montagnes enneigées, la mer en voilier, une ville animée, des trains rapides et une station spatiale !",
+    el:"Μετά μια σπηλιά με νυχτερίδες, χιονισμένα βουνά, ιστιοπλοΐα στη θάλασσα, μια πόλη με κίνηση, γρήγορα τρένα και ένας διαστημικός σταθμός!",
+    sr:"Zatim pećina sa slepim miševima, snežne planine, jedrenje morem, gradska gužva, brzi vozovi i svemirska stanica!",
+    sl:"Nato jama z netopirji, zasnežene gore, jadranje po morju, gneča v mestu, hitri vlaki in vesoljska postaja!" } },
+  { id:'duck', who:'duck', t:{
+    en:"Quack! I'm Duck Wing! Ships bring number crates. Pick the right answer, and I zap them!",
+    hr:"Kvak! Ja sam Patkica! Brodovi donose sanduke s brojevima. Izaberi točan odgovor i ja ih pogodim!",
+    it:"Qua qua! Sono l'Anatra Alata! Le navi portano casse di numeri. Scegli la risposta giusta e io le colpisco!",
+    de:"Quak! Ich bin Duck Wing! Schiffe bringen Zahlenkisten. Wähl die richtige Antwort, und ich treffe sie!",
+    es:"¡Cuac! ¡Soy Duck Wing! Las naves traen cajas de números. ¡Elige la respuesta correcta y yo les disparo!",
+    fr:"Coin coin ! Je suis Duck Wing ! Les vaisseaux apportent des caisses de nombres. Choisis la bonne réponse et je les touche !",
+    el:"Κουάκ! Είμαι το Duck Wing! Τα σκάφη φέρνουν κιβώτια με αριθμούς. Διάλεξε τη σωστή απάντηση και τα χτυπάω!",
+    sr:"Kvak! Ja sam Patkica! Brodovi donose sanduke sa brojevima. Izaberi tačan odgovor i ja ih pogodim!",
+    sl:"Kvak! Jaz sem Račka! Ladje prinašajo zaboje s števili. Izberi pravilen odgovor in jih zadenem!" } },
+  { id:'timer', who:'zee', t:{
+    en:"But hurry! Every problem has a timer. If time runs out, the enemies zap me!",
+    hr:"Ali požuri! Svaki zadatak ima štopericu. Ako vrijeme istekne, neprijatelji me pogode!",
+    it:"Ma sbrigati! Ogni calcolo ha un timer. Se il tempo finisce, i nemici mi colpiscono!",
+    de:"Aber schnell! Jede Aufgabe hat eine Uhr. Wenn die Zeit abläuft, treffen mich die Gegner!",
+    es:"¡Pero date prisa! Cada problema tiene un reloj. ¡Si se acaba el tiempo, los enemigos me dan!",
+    fr:"Mais vite ! Chaque calcul a un chrono. Si le temps est écoulé, les ennemis me touchent !",
+    el:"Αλλά βιάσου! Κάθε άσκηση έχει χρονόμετρο. Αν τελειώσει ο χρόνος, οι εχθροί με χτυπάνε!",
+    sr:"Ali požuri! Svaki zadatak ima štopericu. Ako vreme istekne, neprijatelji me pogode!",
+    sl:"Ampak pohiti! Vsaka naloga ima uro. Če zmanjka časa, me sovražniki zadenejo!" } },
+  { id:'helpers', who:'owl', t:{
+    en:"Hoo hoo! Stuck? Call a helper! I show the whole answer, the firefly shows one digit, and the penguin skips the problem.",
+    hr:"Hu hu! Zapelo je? Pozovi pomagača! Ja pokažem cijeli odgovor, krijesnica jednu znamenku, a pingvin preskoči zadatak.",
+    it:"Uh uh! Sei bloccato? Chiama un aiutante! Io mostro tutta la risposta, la lucciola una cifra e il pinguino salta il calcolo.",
+    de:"Hu hu! Kommst du nicht weiter? Ruf einen Helfer! Ich zeige die ganze Antwort, das Glühwürmchen eine Ziffer, und der Pinguin überspringt die Aufgabe.",
+    es:"¡Uh uh! ¿Atascado? ¡Llama a un ayudante! Yo muestro toda la respuesta, la luciérnaga una cifra y el pingüino salta el problema.",
+    fr:"Hou hou ! Bloqué ? Appelle un assistant ! Moi, je montre toute la réponse, la luciole un chiffre, et le pingouin passe le calcul.",
+    el:"Χου χου! Κόλλησες; Κάλεσε έναν βοηθό! Εγώ δείχνω όλη την απάντηση, η πυγολαμπίδα ένα ψηφίο και ο πιγκουίνος προσπερνά την άσκηση.",
+    sr:"Hu hu! Zapelo je? Pozovi pomagača! Ja pokažem ceo odgovor, svitac jednu cifru, a pingvin preskoči zadatak.",
+    sl:"Hu hu! Se je zataknilo? Pokliči pomočnika! Jaz pokažem cel odgovor, kresnička eno števko, pingvin pa preskoči nalogo." } },
+  { id:'raiders', who:'crab', t:{
+    en:"Hehe! We raiders sneak in, steal seconds and mix up the numbers. Tap us, quick!",
+    hr:"Hehe! Mi gusari se ušuljamo, krademo sekunde i miješamo brojeve. Brzo nas lupni!",
+    it:"Eh eh! Noi predoni arriviamo di nascosto, rubiamo secondi e mescoliamo i numeri. Toccaci, presto!",
+    de:"Hehe! Wir Räuber schleichen uns an, klauen Sekunden und vertauschen Zahlen. Tipp uns schnell an!",
+    es:"¡Jeje! Los piratas nos colamos, robamos segundos y mezclamos los números. ¡Tócanos, rápido!",
+    fr:"Héhé ! Nous, les pirates, on se faufile, on vole des secondes et on mélange les nombres. Touche-nous, vite !",
+    el:"Χεχε! Εμείς οι πειρατές μπαίνουμε κρυφά, κλέβουμε δευτερόλεπτα και ανακατεύουμε τους αριθμούς. Πάτα μας, γρήγορα!",
+    sr:"Hehe! Mi gusari se ušunjamo, krademo sekunde i mešamo brojeve. Brzo nas lupni!",
+    sl:"Hehe! Mi pirati se prikrademo, ukrademo sekunde in premešamo števila. Hitro nas tapni!" } },
+  { id:'boss', who:'zee', t:{
+    en:"On level ten waits a big boss with red eyes. Every right answer burns one of its parts!",
+    hr:"Na desetoj razini čeka veliki šef crvenih očiju. Svaki točan odgovor spali mu jedan dio!",
+    it:"Al livello dieci ti aspetta un grande boss con gli occhi rossi. Ogni risposta giusta gli brucia un pezzo!",
+    de:"In Level zehn wartet ein großer Boss mit roten Augen. Jede richtige Antwort brennt ihm ein Teil weg!",
+    es:"En el nivel diez espera un gran jefe de ojos rojos. ¡Cada respuesta correcta le quema una pieza!",
+    fr:"Au niveau dix attend un grand boss aux yeux rouges. Chaque bonne réponse lui brûle une pièce !",
+    el:"Στο δέκατο επίπεδο περιμένει ένα μεγάλο αφεντικό με κόκκινα μάτια. Κάθε σωστή απάντηση του καίει ένα κομμάτι!",
+    sr:"Na desetom nivou čeka veliki šef crvenih očiju. Svaki tačan odgovor mu spali jedan deo!",
+    sl:"Na deseti stopnji čaka velik šef z rdečimi očmi. Vsak pravilen odgovor mu zažge en del!" } },
+  { id:'arcade', who:'duck', t:{
+    en:"After levels three, six and nine comes a secret bonus level. I fly, you shoot, and every hit scores points!",
+    hr:"Nakon treće, šeste i devete razine stiže tajna bonus razina. Ja letim, ti pucaš, a svaki pogodak donosi bodove!",
+    it:"Dopo i livelli tre, sei e nove arriva un livello bonus segreto. Io volo, tu spari, e ogni colpo vale punti!",
+    de:"Nach Level drei, sechs und neun kommt ein geheimes Bonuslevel. Ich fliege, du schießt, und jeder Treffer bringt Punkte!",
+    es:"Después de los niveles tres, seis y nueve llega un nivel extra secreto. ¡Yo vuelo, tú disparas, y cada acierto da puntos!",
+    fr:"Après les niveaux trois, six et neuf arrive un niveau bonus secret. Je vole, tu tires, et chaque tir réussi donne des points !",
+    el:"Μετά τα επίπεδα τρία, έξι και εννέα έρχεται ένα μυστικό επίπεδο μπόνους. Εγώ πετάω, εσύ πυροβολείς, και κάθε χτύπημα δίνει πόντους!",
+    sr:"Posle trećeg, šestog i devetog nivoa stiže tajni bonus nivo. Ja letim, ti pucaš, a svaki pogodak donosi bodove!",
+    sl:"Po tretji, šesti in deveti stopnji pride skrivna bonus stopnja. Jaz letim, ti streljaš, vsak zadetek pa prinese točke!" } },
+  { id:'shop', who:'duck', t:{
+    en:"Points buy new weapons in the shop, from a bubble cannon to a rainbow ray!",
+    hr:"Bodovima u trgovini kupuješ novo oružje, od topa s mjehurićima do dugine zrake!",
+    it:"Con i punti compri nuove armi nel negozio, dal cannone a bolle al raggio arcobaleno!",
+    de:"Mit Punkten kaufst du im Laden neue Waffen, von der Blasenkanone bis zum Regenbogenstrahl!",
+    es:"¡Con los puntos compras armas nuevas en la tienda, desde un cañón de burbujas hasta un rayo arcoíris!",
+    fr:"Avec les points, tu achètes de nouvelles armes à la boutique, du canon à bulles au rayon arc-en-ciel !",
+    el:"Με τους πόντους αγοράζεις νέα όπλα στο κατάστημα, από κανόνι με φούσκες μέχρι ακτίνα ουράνιου τόξου!",
+    sr:"Bodovima u prodavnici kupuješ novo oružje, od topa sa mehurićima do duginog zraka!",
+    sl:"S točkami v trgovini kupiš novo orožje, od topa z mehurčki do mavričnega žarka!" } },
+  { id:'workshop', who:'zee', t:{
+    en:"Seconds you save turn into bolts. In my workshop, bolts buy me hats, capes and shiny paint!",
+    hr:"Ušteđene sekunde postaju vijci. U mojoj radionici vijcima mi kupuješ šešire, plašteve i sjajnu boju!",
+    it:"I secondi risparmiati diventano bulloni. Nella mia officina, con i bulloni mi compri cappelli, mantelli e vernice lucida!",
+    de:"Gesparte Sekunden werden zu Schrauben. In meiner Werkstatt kaufst du mir damit Hüte, Umhänge und glänzende Farbe!",
+    es:"Los segundos que ahorras se convierten en tornillos. ¡En mi taller, con tornillos me compras sombreros, capas y pintura brillante!",
+    fr:"Les secondes gagnées deviennent des boulons. Dans mon atelier, les boulons m'achètent des chapeaux, des capes et une peinture brillante !",
+    el:"Τα δευτερόλεπτα που κερδίζεις γίνονται βίδες. Στο εργαστήρι μου, με τις βίδες μου αγοράζεις καπέλα, κάπες και γυαλιστερή μπογιά!",
+    sr:"Ušteđene sekunde postaju šrafovi. U mojoj radionici šrafovima mi kupuješ šešire, plašteve i sjajnu boju!",
+    sl:"Prihranjene sekunde postanejo vijaki. V moji delavnici mi z vijaki kupiš klobuke, plašče in sijočo barvo!" } },
+  { id:'crew', who:'crew', t:{
+    en:"Hi! I'm a crew card. Every level wins a card. Pick three for your squad, and we give you extra time, energy and power!",
+    hr:"Bok! Ja sam kartica iz posade. Svaka razina donosi karticu. Izaberi tri za svoj tim i dobit ćeš više vremena, energije i snage!",
+    it:"Ciao! Sono una carta della squadra. Ogni livello ti dà una carta. Scegline tre per la tua squadra e avrai più tempo, energia e forza!",
+    de:"Hallo! Ich bin eine Crew-Karte. Jedes Level bringt eine Karte. Wähl drei für dein Team, und du bekommst mehr Zeit, Energie und Kraft!",
+    es:"¡Hola! Soy una carta del equipo. Cada nivel da una carta. ¡Elige tres para tu equipo y tendrás más tiempo, energía y fuerza!",
+    fr:"Salut ! Je suis une carte d'équipage. Chaque niveau donne une carte. Choisis-en trois pour ton équipe, et tu auras plus de temps, d'énergie et de force !",
+    el:"Γεια! Είμαι μια κάρτα του πληρώματος. Κάθε επίπεδο δίνει μια κάρτα. Διάλεξε τρεις για την ομάδα σου και θα έχεις περισσότερο χρόνο, ενέργεια και δύναμη!",
+    sr:"Zdravo! Ja sam kartica iz posade. Svaki nivo donosi karticu. Izaberi tri za svoj tim i dobićeš više vremena, energije i snage!",
+    sl:"Živijo! Jaz sem karta iz posadke. Vsaka stopnja prinese karto. Izberi tri za svojo ekipo in dobiš več časa, energije in moči!" } },
+  { id:'pilots', who:'zee', t:{
+    en:"Brothers, sisters and friends can each fly their own pilot, with their own progress.",
+    hr:"Braća, sestre i prijatelji mogu svatko imati svog pilota i svoj napredak.",
+    it:"Fratelli, sorelle e amici possono avere ognuno il proprio pilota e i propri progressi.",
+    de:"Geschwister und Freunde haben jeder einen eigenen Piloten mit eigenem Fortschritt.",
+    es:"Hermanos, hermanas y amigos pueden tener cada uno su propio piloto y su propio progreso.",
+    fr:"Frères, sœurs et amis ont chacun leur propre pilote et leur propre progression.",
+    el:"Αδέρφια και φίλοι μπορούν να έχουν ο καθένας τον δικό του πιλότο και τη δική του πρόοδο.",
+    sr:"Braća, sestre i prijatelji mogu svako da ima svog pilota i svoj napredak.",
+    sl:"Bratje, sestre in prijatelji imajo lahko vsak svojega pilota in svoj napredek." } },
+  { id:'minutes', who:'zee', t:{
+    en:"Stars earn real minutes for Minecraft, Roblox, or play time with Mom or Dad. Don't worry, parents: there's a daily limit!",
+    hr:"Zvjezdice donose prave minute za Minecraft, Roblox ili igru s mamom ili tatom. Bez brige, roditelji: postoji dnevno ograničenje!",
+    it:"Le stelle fanno guadagnare minuti veri per Minecraft, Roblox o per giocare con mamma o papà. Tranquilli, genitori: c'è un limite giornaliero!",
+    de:"Sterne bringen echte Minuten für Minecraft, Roblox oder Spielzeit mit Mama oder Papa. Keine Sorge, liebe Eltern: Es gibt ein Tageslimit!",
+    es:"Las estrellas dan minutos de verdad para Minecraft, Roblox o para jugar con mamá o papá. Tranquilos, padres: ¡hay un límite diario!",
+    fr:"Les étoiles rapportent de vraies minutes pour Minecraft, Roblox ou un jeu avec maman ou papa. Pas d'inquiétude, chers parents : il y a une limite par jour !",
+    el:"Τα αστέρια δίνουν αληθινά λεπτά για Minecraft, Roblox ή παιχνίδι με τη μαμά ή τον μπαμπά. Μην ανησυχείτε, γονείς: υπάρχει ημερήσιο όριο!",
+    sr:"Zvezdice donose prave minute za Minecraft, Roblox ili igru sa mamom ili tatom. Bez brige, roditelji: postoji dnevno ograničenje!",
+    sl:"Zvezdice prinesejo prave minute za Minecraft, Roblox ali igro z mamo ali očetom. Brez skrbi, starši: obstaja dnevna omejitev!" } },
+  { id:'langs', who:'zee', t:{
+    en:"And I speak nine languages! Hello! Bok! Ciao! Hallo! Hola! Salut!",
+    hr:"I govorim devet jezika! Bok! Hello! Ciao! Hallo! Hola! Salut!",
+    it:"E parlo nove lingue! Ciao! Bok! Hello! Hallo! Hola! Salut!",
+    de:"Und ich spreche neun Sprachen! Hallo! Bok! Hello! Ciao! Hola! Salut!",
+    es:"¡Y hablo nueve idiomas! ¡Hola! ¡Bok! ¡Hello! ¡Ciao! ¡Hallo! ¡Salut!",
+    fr:"Et je parle neuf langues ! Salut ! Bok ! Hello ! Ciao ! Hallo ! Hola !",
+    el:"Και μιλάω εννέα γλώσσες! Γεια! Bok! Hello! Ciao! Hallo! Hola!",
+    sr:"I govorim devet jezika! Zdravo! Bok! Hello! Ciao! Hallo! Hola!",
+    sl:"In govorim devet jezikov! Živijo! Bok! Hello! Ciao! Hallo! Hola!" } },
+  { id:'class', who:'zee', t:{
+    en:"With My Class, classmates can gift and swap cards and weapons with each other.",
+    hr:"U Mom razredu prijatelji iz razreda mogu jedni drugima darivati i mijenjati kartice i oružje.",
+    it:"Con La mia classe, i compagni possono regalarsi e scambiarsi carte e armi.",
+    de:"Mit Meine Klasse können sich Klassenkameraden Karten und Waffen schenken und sie tauschen.",
+    es:"Con Mi clase, los compañeros pueden regalarse e intercambiar cartas y armas.",
+    fr:"Avec Ma classe, les camarades peuvent s'offrir et s'échanger des cartes et des armes.",
+    el:"Με το «Η τάξη μου», οι συμμαθητές μπορούν να χαρίζουν και να ανταλλάσσουν κάρτες και όπλα.",
+    sr:"U Mom razredu drugari iz razreda mogu jedni drugima da poklanjaju i menjaju kartice i oružje.",
+    sl:"V Mojem razredu si lahko sošolci podarjajo in menjajo karte in orožje." } },
+  { id:'finale', who:'zee', t:{
+    en:"Ready, pilot? Let's learn math and have fun together!",
+    hr:"Spreman, pilote? Idemo zajedno učiti matematiku i zabaviti se!",
+    it:"Pronto, pilota? Impariamo la matematica e divertiamoci insieme!",
+    de:"Bereit, Pilot? Lass uns zusammen Mathe lernen und Spaß haben!",
+    es:"¿Listo, piloto? ¡Aprendamos matemáticas y divirtámonos juntos!",
+    fr:"Prêt, pilote ? Apprenons les maths et amusons-nous ensemble !",
+    el:"Έτοιμος, πιλότε; Ας μάθουμε μαθηματικά και ας διασκεδάσουμε μαζί!",
+    sr:"Spreman, pilote? Hajde zajedno da učimo matematiku i da se zabavimo!",
+    sl:"Pripravljen, pilot? Skupaj se učimo matematiko in se zabavajmo!" } },
+];
+const Tour = {
+  token:0, layer:null, raf:null, actors:{}, onEnd:null,
+  mount(){
+    this.unmount(); $('#app').classList.add('touring');
+    const L = document.createElement('div'); L.className = 'intro-layer t-layer'; stage.appendChild(L); this.layer = L; return L;
+  },
+  unmount(){
+    cancelAnimationFrame(this.raf); this.raf = null;
+    if(this.layer){ this.layer.remove(); this.layer = null; }
+    stage.querySelectorAll('.t-skip').forEach(b => b.remove());
+    $('#app').classList.remove('touring');
+  },
+  gate(){
+    resetStage(); overlay.hidden = true;
+    const L = this.mount();
+    L.innerHTML = `<div class="i-gate"><h1 class="logo">ZEEBOT'S<span>STAR MATH</span></h1>
+      <div class="t-gatehead">❓ ${tl(TOUR_UI.head)}</div>
+      <button class="i-play" id="tPlay" aria-label="Play">▶</button>
+      <button class="brick b-blue big-btn" id="tSkip0">SKIP ⏭</button></div>`;
+    $('#tPlay').onclick = () => { Sound.init(); this.play(); };
+    $('#tSkip0').onclick = () => { Sound.init(); this.end(); };
+  },
+  stop(){
+    this.token++; Voice.stop(); Sound.musicStop();
+    this.unmount(); Boss.reset(false); stage.classList.remove('bosslvl'); applyLook(); robotAnim.style.opacity = '1';
+    Robot.mood('idle'); window.dispatchEvent(new Event('resize'));
+  },
+  end(){ this.stop(); if(this.onEnd) this.onEnd(); else showTitle(); },
+  /* small helpers */
+  el(cls, html='', parent){ const d = document.createElement('div'); d.className = cls; d.innerHTML = html; (parent || this.sc).appendChild(d); return d; },
+  alive(t){ return t === this.token; },
+  robotC(){ return stagePoint(robotSvg.getBoundingClientRect()); },
+  W(){ return stage.clientWidth; }, H(){ return stage.clientHeight; },
+  duckHTML(){ // own gradient ids: the hidden #hero's gradients do not paint in copies
+    return `<div class="hero-art">${$('#hero .hero-art').innerHTML.replace(/id="([^"]+)"/g, 'id="$1_t"').replace(/url\(#([^)]+)\)/g, 'url(#$1_t)')}</div>`; },
+  fly(el, from, to, ms=900, easing='cubic-bezier(.2,.8,.3,1)'){
+    return el.animate([{ transform:from }, { transform:to }], { duration:ms, easing, fill:'forwards' }).finished.catch(()=>{});
+  },
+  popText(pt, text, color='#ffe95a'){
+    const d = document.createElement('div'); d.className = 't-float'; d.textContent = text; d.style.color = color; d.style.left = pt.x + 'px'; d.style.top = pt.y + 'px';
+    this.layer && this.layer.appendChild(d);
+    d.animate([{ transform:'translate(-50%,-50%) scale(.6)', opacity:0 }, { transform:'translate(-50%,-90%) scale(1.15)', opacity:1, offset:.25 }, { transform:'translate(-50%,-200%) scale(1)', opacity:0 }], { duration:1100, easing:'ease-out' }).finished.catch(()=>{}).then(() => d.remove());
+  },
+  finger(target, ms=700){ // a tapping finger on an element (shows how kids play)
+    const r = target.getBoundingClientRect(), p = stagePoint(r, .6, .75);
+    const f = document.createElement('div'); f.className = 't-finger'; f.textContent = '👆'; f.style.left = p.x + 'px'; f.style.top = p.y + 'px'; this.layer && this.layer.appendChild(f);
+    f.animate([{ transform:'translate(-30%,40%) scale(1.2)', opacity:0 }, { transform:'translate(-30%,0) scale(1)', opacity:1, offset:.5 }, { transform:'translate(-30%,-8%) scale(.9)', opacity:1, offset:.7 }, { transform:'translate(-30%,0) scale(1)', opacity:1 }], { duration:ms, fill:'forwards' });
+    setTimeout(() => f.remove(), ms + 500); return wait(ms * .7);
+  },
+  ship(id, num, cls='t-ship'){ return this.el(cls, fleetSVG(id) + (num != null ? `<span class="crate">${num}</span>` : '')); },
+  async say(i, line){
+    const spk = TOUR_SPK[line.who], text = tl(line.t), actor = this.actors[line.who];
+    let stopTalk = () => {};
+    if(line.who === 'zee'){ let on = true; const id = setInterval(() => { Robot.mood(on ? 'happy' : 'idle'); on = !on; }, 260); stopTalk = () => { clearInterval(id); Robot.mood('happy'); }; }
+    else if(actor){ actor.classList.add('t-talk'); stopTalk = () => actor.classList.remove('t-talk'); }
+    try{
+      if(window.__tourVoice) await window.__tourVoice(i, text, line);
+      else await Voice.speak(text, { pitch:spk.pitch, rate:spk.rate });
+    } finally { stopTalk(); }
+  },
+  async play(){
+    resetStage(); overlay.hidden = true;
+    const t = ++this.token, L = this.mount();
+    const skip = document.createElement('button'); skip.className = 'brick b-blue i-skip t-skip'; skip.textContent = 'SKIP ⏭'; stage.appendChild(skip);
+    skip.onclick = () => { Sound.click(); this.end(); };
+    Boss.reset(false); applyTheme(''); window.dispatchEvent(new Event('resize'));
+    Sound.musicStart(); if(Sound.music) Sound.music.bus.gain.value = .16;
+    this.sc = this.el('t-scene', '', L);
+    const cap = this.el('t-cap', '', L); cap.hidden = true;
+    await wait(400);
+    for(let i = 0; i < TOUR_LINES.length; i++){
+      const line = TOUR_LINES[i];
+      if(!this.alive(t)) return;
+      this.sc.innerHTML = ''; this.actors = {}; this.loop = null;
+      const spk = TOUR_SPK[line.who];
+      const scene = (this['s_' + line.id] || (() => {})).call(this, t) || Promise.resolve();
+      cap.hidden = false; cap.style.setProperty('--who', spk.col);
+      cap.innerHTML = `<span class="t-who">${esc(tl(spk.name))}</span><span class="t-txt">${esc(tl(line.t))}</span>`;
+      cap.classList.remove('pop'); void cap.offsetWidth; cap.classList.add('pop');
+      await wait(250);
+      await Promise.all([this.say(i, line), scene]);
+      if(!this.alive(t)) return;
+      this.loop = null;
+      await wait(line.id === 'finale' ? 1800 : 550);
+      if(this['x_' + line.id]) this['x_' + line.id]();
+    }
+    if(!this.alive(t)) return;
+    if(window.__tourVoice){ window.__tourDone = true; return; }   // recording: hold the last frame
+    cap.hidden = true;
+    const go = this.el('t-end', `<button class="brick b-yellow big-btn" id="tGo">START ▸</button><button class="brick b-teal hud-btn" id="tAgain">↻ ${tl(TOUR_UI.head)}</button>`);
+    go.style.pointerEvents = 'auto';
+    $('#tGo').onclick = () => { Sound.click(); this.end(); };
+    $('#tAgain').onclick = () => { Sound.click(); this.play(); };
+  },
+
+  /* ---------- scenes (each returns a promise for its animation, the line waits for voice and scene) ---------- */
+  s_hello(t){
+    this.el('t-logo', `<h1 class="logo">ZEEBOT'S<span>STAR MATH</span></h1>`);
+    Robot.play('jump', 650); stageSparks(this.robotC(), 22, '#5ff2ff'); Sound.fanfare();
+  },
+  async s_grade(t){
+    const b = this.el('t-badges', `<span class="t-badge" style="--d:0s">2.</span><span class="t-plus">+</span><span class="t-badge b2" style="--d:.35s">3.</span>`);
+    const g = this.el('t-banner', esc(tl(TOUR_UI.grade)));
+    const syms = ['+','−','×','÷','=','7','3','10','½','%'].slice(0, 8);
+    syms.forEach((s, k) => { const d = this.el('t-sym', s); d.style.left = (6 + k*12 + Math.random()*4) + '%'; d.style.top = (8 + (k%3)*16 + Math.random()*6) + 'cqh'; d.style.animationDelay = (k*.18) + 's'; d.style.color = ['#ffe95a','#5ff2ff','#ff7ab8','#5dff8a'][k%4]; });
+    await wait(1600); if(!this.alive(t)) return;
+    this.el('t-banner t-count', esc(tl(TOUR_UI.count))); Sound.tone(880,0,.15,'triangle',.1); Sound.tone(1320,.12,.2,'triangle',.1);
+    await wait(1200);
+  },
+  mcard(mi, math){
+    const m = MISSIONS[mi], col = ['#ffc51a','#5ff2ff','#ff8a1f','#b98aff','#ffffff','#1f8fe6','#ff5a5a','#5dff8a','#ffe95a'][mi];
+    const c = this.el('t-mcard', `<div class="t-mtag">${esc(T(m.name).toUpperCase())}</div><div class="t-mtitle">${esc(T(m.title))}</div><div class="t-mmath">${math}</div>`);
+    c.style.setProperty('--mc', col); return c;
+  },
+  async montage(t, list, step){
+    for(const [mi, theme, math] of list){
+      if(!this.alive(t)) return;
+      applyTheme(theme); this.sc.querySelectorAll('.t-mcard').forEach(e => e.remove());
+      this.mcard(mi, math); Sound.whoosh(0, .5);
+      if(theme === 'cave' || theme === 'sea' || theme === 'beach') Robot.play('jump', 500);
+      await wait(step);
+    }
+  },
+  s_worlds1(t){ return this.montage(t, [[0,'','× ÷'],[1,'sea','+ − <small>100</small>'],[2,'beach','+ − <small>1000</small>']], 2300); },
+  s_worlds2(t){ return this.montage(t, [[3,'cave',`143 × 4 · 47 ÷ 5 = 9 ${esc(tl(TOUR_UI.rem))} 2`],[4,'snow','mm · cm · m · km'],[5,'sail','g · dag · kg · t'],[6,'city','ml · cl · dl · l'],[7,'rail','s · min · h 🕒'],[8,'station',`📖 ${esc(tl(TOUR_UI.words))}`]], 1550); },
+  x_worlds2(){ applyTheme(''); },
+  async s_duck(t){
+    const duck = this.el('t-duck', this.duckHTML()); this.actors.duck = duck;
+    const W = this.W(), H = this.H(), dw = duck.offsetWidth;
+    this.fly(duck, `translate(${-dw}px,${H*.06}px)`, `translate(${W*.06}px,${H*.06}px)`, 900);
+    await wait(700); if(!this.alive(t)) return;
+    const q = this.el('t-q', '6 × 7 = ?');
+    const a = this.ship('crab', 6), b = this.ship('shark', 7);
+    const sx = W*.62, y = H*.17, place = (el, x0, x1) => this.fly(el, `translate(${x0}px,${y}px)`, `translate(${x1}px,${y}px)`, 800);
+    place(a, W + 40, sx - a.offsetWidth*.6); place(b, W + 260, sx + b.offsetWidth*.55);
+    await wait(900); if(!this.alive(t)) return;
+    const opts = this.el('t-opts', [36, 42, 48, 49, 56].map((n, k) => `<span class="brick ${['b-red','b-yellow','b-blue','b-green','b-orange'][k]} t-opt" data-n="${n}">${n}</span>`).join(''));
+    await wait(1400); if(!this.alive(t)) return;
+    const right = opts.querySelector('[data-n="42"]'); await this.finger(right);
+    right.classList.add('t-right'); Sound.correct(); q.textContent = '6 × 7 = 42'; q.classList.add('ok');
+    await wait(300);
+    for(const el of [a, b]){
+      if(!this.alive(t)) return;
+      Sound.pew(); await fireBolt(stagePoint(duck.getBoundingClientRect(), .8, .55), stagePoint(el.getBoundingClientRect()), 'duck', 260);
+      Sound.boom(); stageSparks(stagePoint(el.getBoundingClientRect()), 18);
+      el.getAnimations().forEach(x => { x.commitStyles?.(); x.cancel(); });
+      el.animate([{ opacity:1 }, { opacity:0, transform:el.style.transform + ' translateY(70px) rotate(35deg)' }], { duration:800, fill:'forwards' });
+      await wait(300);
+    }
+    Robot.play('jump', 650); Robot.mood('happy');
+  },
+  async s_timer(t){
+    const R = this.el('t-ring', `<svg viewBox="0 0 100 100"><circle cx="50" cy="50" r="42" class="tb"/><circle cx="50" cy="50" r="42" class="tr"/></svg><b>8</b>`);
+    const ring = R.querySelector('.tr'), num = R.querySelector('b'), C = 2*Math.PI*42;
+    ring.style.strokeDasharray = C;
+    const q = this.el('t-q', '9 × 8 = ?'); q.classList.add('low');
+    const foe = this.ship('spike', null); const W = this.W(), H = this.H();
+    this.fly(foe, `translate(${W + 20}px,${H*.12}px)`, `translate(${W*.74}px,${H*.12}px)`, 900);
+    for(let s = 8; s >= 0; s--){
+      if(!this.alive(t)) return;
+      num.textContent = s; ring.style.strokeDashoffset = C * (1 - s/8);
+      R.classList.toggle('hot', s <= 3); if(s <= 3 && s > 0) Sound.tone(980, 0, .08, 'square', .06);
+      await wait(s ? 520 : 200);
+    }
+    if(!this.alive(t)) return;
+    await fireBolt(stagePoint(foe.getBoundingClientRect(), .2, .6), this.robotC(), 'enemy', 260);
+    Sound.zap(); Robot.zap('', 'Ouch!'); await wait(900);
+  },
+  x_timer(){ Robot.hits = 0; $('#soot').setAttribute('opacity', 0); },
+  async s_helpers(t){
+    applyTheme('sea');
+    const hs = [['owl','42'],['firefly','4?'],['penguin','⏭']];
+    const row = this.el('t-figs');
+    const figs = hs.map(([id, tag], k) => { const f = this.el('t-fig', fleetSVG(id) + `<span class="t-tag">${tag}</span>`, row); f.style.animationDelay = (k*.5 + .1) + 's'; return f; });
+    this.actors.owl = figs[0];
+    const q = this.el('t-q t-q2', '6 × 7 = ?');
+    for(let k = 0; k < 3; k++){ await wait(k ? 1600 : 1300); if(!this.alive(t)) return;
+      figs[k].classList.add('on'); Sound.tone(660 + k*220, 0, .2, 'triangle', .12); stageSparks(stagePoint(figs[k].getBoundingClientRect()), 10, '#ffe95a');
+      q.textContent = ['6 × 7 = 42', '6 × 7 = 4?', '8 + 5 = ?'][k]; }
+    await wait(800);
+  },
+  x_helpers(){ applyTheme(''); },
+  async s_raiders(t){
+    applyTheme('sea');
+    const W = this.W(), H = this.H();
+    const crab = this.ship('crab', null, 't-ship t-raider'); this.actors.crab = crab;
+    const sq = this.ship('squid', null, 't-ship t-raider');
+    this.fly(crab, `translate(${W + 20}px,${H*.1}px)`, `translate(${W*.58}px,${H*.08}px)`, 1000);
+    this.fly(sq, `translate(${-200}px,${H*.3}px)`, `translate(${W*.08}px,${H*.26}px)`, 1200);
+    const q = this.el('t-q t-q2', '45 + 27 = ?');
+    await wait(1800); if(!this.alive(t)) return;
+    q.textContent = '45 − 27 = ?'; q.classList.add('swap'); this.popText(stagePoint(sq.getBoundingClientRect(), .5, 0), '+ ↔ −', '#ff7ab8'); Sound.tone(300,0,.25,'sawtooth',.08,600);
+    await wait(1500); if(!this.alive(t)) return;
+    this.popText(stagePoint(crab.getBoundingClientRect(), .5, 0), '−4 s', '#ff6a4a'); Sound.tone(500,0,.3,'square',.06,200);
+    await wait(1600); if(!this.alive(t)) return;
+    for(const el of [sq, crab]){ await this.finger(el, 600); if(!this.alive(t)) return;
+      Sound.pop ? Sound.pop() : Sound.boom(); stageSparks(stagePoint(el.getBoundingClientRect()), 14, '#5ff2ff');
+      el.getAnimations().forEach(x => { x.commitStyles?.(); x.cancel(); });
+      el.animate([{ opacity:1 }, { opacity:0, transform:el.style.transform + ' scale(.3) rotate(200deg)' }], { duration:600, fill:'forwards' });
+      if(el === sq){ q.textContent = '45 + 27 = ?'; q.classList.remove('swap'); } await wait(350); }
+  },
+  x_raiders(){ applyTheme(''); },
+  async s_boss(t){
+    stage.classList.add('bosslvl'); robotAnim.style.opacity = '1';
+    Boss.reset(true, 'scraptor', ['crab','spike','shark','squid']);
+    Boss.q.hidden = true; await Boss.enter(); if(!this.alive(t)) return;
+    Boss.q.hidden = false; setQ(Boss.q, '7 × 8 = ?');
+    await wait(600);
+    for(let k = 0; k < 3; k++){
+      if(!this.alive(t)) return;
+      setQ(Boss.q, ['7 × 8 = 56', '63 ÷ 9 = 7', '4 × 9 = 36'][k]); Boss.q.classList.add('solved'); Sound.correct();
+      await Boss.takeHit(1); if(!this.alive(t)) return;
+      await wait(500); Boss.q.classList.remove('solved'); setQ(Boss.q, ['63 ÷ 9 = ?', '4 × 9 = ?', '8 × 8 = ?'][k]);
+      await wait(700);
+    }
+  },
+  x_boss(){ Boss.reset(false); stage.classList.remove('bosslvl'); $('#minions').innerHTML = ''; },
+  async s_arcade(t){
+    robotAnim.style.opacity = '0';
+    const duck = this.el('t-duck t-duck-s', this.duckHTML()); this.actors.duck = duck;
+    const score = this.el('t-score', '⭐ 0'); let pts = 0, run = true;
+    const W = this.W(), H = this.H(); let y = H*.4, t0 = performance.now();
+    this.loop = () => { if(!run) return; const now = performance.now(); y = H*.4 + Math.sin((now - t0)/700) * H*.22;
+      duck.style.transform = `translate(${W*.05}px,${y}px)`; this.raf = requestAnimationFrame(this.loop); };
+    this.loop();
+    const ids = ['crab','spike','shark','squid','bat','hornet','ufo','meteor','alien','toad'].filter(id => fleetById(id));
+    const spawn = async k => {
+      const e = this.ship(ids[k % ids.length], null, 't-ship t-small'); const ey = H*(.12 + Math.random()*.6);
+      const anim = e.animate([{ transform:`translate(${W + 30}px,${ey}px)` }, { transform:`translate(${-200}px,${ey + (Math.random()-.5)*80}px)` }], { duration:4200, fill:'forwards' });
+      await wait(1100 + Math.random()*700); if(!this.alive(t) || !run) return;
+      const p = stagePoint(e.getBoundingClientRect()); Sound.pew(); await fireBolt(stagePoint(duck.getBoundingClientRect(), .85, .5), p, 'duck', 180);
+      anim.pause(); Sound.boom(); stageSparks(stagePoint(e.getBoundingClientRect()), 14); this.popText(p, '+' + (k%3 + 1) + ' ⭐');
+      pts += k%3 + 1; score.textContent = '⭐ ' + pts; e.animate([{ opacity:1 }, { opacity:0 }], { duration:300, fill:'forwards' });
+    };
+    let k = 0; const end = performance.now() + 7600;
+    while(this.alive(t) && performance.now() < end){ spawn(k++); await wait(650); }
+    await wait(1500); run = false;
+  },
+  x_arcade(){ robotAnim.style.opacity = '1'; },
+  async s_shop(t){
+    robotAnim.style.opacity = '0';
+    const duck = this.el('t-duck t-duck-c', this.duckHTML()); this.actors.duck = duck;
+    this.el('t-head', 'WEAPON SHOP');
+    const pick = ['quick','bubble','spark','snow','laser','rocket','comet','rainbow','tornado','crown'].map(id => WEAPONS.find(w => w.id === id)).filter(Boolean);
+    const grid = this.el('t-weaps');
+    for(let k = 0; k < pick.length; k++){
+      if(!this.alive(t)) return;
+      const w = pick[k], d = this.el('t-weap', `<span class="wi">${w.icon}</span><span class="wn">${esc(w.name)}</span><span class="wc">⭐ ${w.cost}</span>`, grid);
+      Sound.tone(500 + k*90, 0, .12, 'triangle', .1); await wait(380);
+    }
+    const rb = grid.children[7]; if(rb){ await this.finger(rb); rb.classList.add('on'); Sound.correct(); }
+    await wait(900);
+  },
+  x_shop(){ robotAnim.style.opacity = '1'; },
+  async s_workshop(t){
+    applyTheme('station');
+    const clock = this.el('t-chip t-clock', '⏱ 0:42'); const bolts = this.el('t-chip t-bolts', '🔩 0');
+    let n = 0; for(let s = 42; s >= 0; s -= 3){ if(!this.alive(t)) return; clock.textContent = '⏱ 0:' + String(s).padStart(2,'0'); n = 42 - s; bolts.textContent = '🔩 ' + n; Sound.tone(1200 + (42-s)*15, 0, .04, 'square', .04); await wait(70); }
+    bolts.classList.add('on');
+    const base = curLook(), looks = [ { paint:'p-red', hat:'h-cap' }, { paint:'p-blue', hat:'h-wizard', extra:'x-cape' }, { paint:'p-gold', hat:'h-crown', face:'c-shades', extra:'x-cape' }, { paint:'p-green', hat:'h-pirate', face:'c-stache', extra:'x-scarf' } ];
+    const lbl = this.el('t-chip t-part', '');
+    for(const lk of looks){
+      await wait(1250); if(!this.alive(t)) return;
+      applyLook(Object.assign({}, base, { face:'c-none', extra:'x-none' }, lk));
+      lbl.textContent = Object.values(lk).slice(0, 2).map(id => T(partById(id).name)).join(' + '); lbl.style.animation = 'none'; void lbl.offsetWidth; lbl.style.animation = '';
+      Sound.repair(); Robot.play('jump', 500); stageSparks(this.robotC(), 16, '#ffe95a');
+    }
+    await wait(900);
+  },
+  x_workshop(){ applyLook(); applyTheme(''); },
+  async s_crew(t){
+    const big = this.el('t-bigcard', cardHTML(crewById('oona') || CREW[0])); this.actors.crew = big;
+    const ids = ['pip','quill','bubbles','octo','sola','zipzap'].filter(id => crewById(id));
+    const cards = ids.map(id => this.el('i-card', cardHTML(crewById(id))));
+    let ang = 0, last = performance.now(), run = true;
+    const tick = now => { if(!run || !this.layer) return; const dt = Math.min(.05, (now - last)/1000); last = now; ang += dt*.9;
+      const c = this.robotC(), rx = this.W()*.3, ry = this.H()*.16, kk = Math.max(.42, Math.min(.85, this.W()*.13/150, this.H()*.26/230));
+      cards.forEach((el, i) => { const a = ang + i*2*Math.PI/cards.length, z = (Math.sin(a) + 1)/2;
+        el.style.transform = `translate(${c.x + Math.cos(a)*rx - el.offsetWidth/2}px,${c.y - this.H()*.05 + Math.sin(a)*ry - el.offsetHeight/2}px) scale(${kk*(.7 + .35*z)})`; el.style.zIndex = z > .5 ? 14 : 11; el.style.opacity = .55 + .45*z; });
+      this.raf = requestAnimationFrame(tick); };
+    this.raf = requestAnimationFrame(tick);
+    const chips = this.el('t-stats', `<span class="t-chip">⏱ +3 s</span><span class="t-chip">🔋 +1</span><span class="t-chip">💪 ×2</span>`);
+    [...chips.children].forEach((c, k) => c.style.animationDelay = (2.2 + k*.6) + 's');
+    await wait(5200); run = false;
+  },
+  async s_pilots(t){
+    const names = ['Ana','Luka','Mia'], stars = ['★★★','★★☆','★☆☆'], looks = [{ paint:'p-pink', hat:'h-party' }, { paint:'p-blue', hat:'h-cap' }, { paint:'p-purple', hat:'h-phones' }];
+    const row = this.el('t-pilots', names.map((n, k) => `<span class="brick b-blue t-pilot">👤 ${n}<small>${stars[k]}</small></span>`).join(''));
+    const base = curLook();
+    for(let k = 0; k < 3; k++){
+      await wait(k ? 1500 : 900); if(!this.alive(t)) return;
+      const b = row.children[k]; await this.finger(b, 500);
+      [...row.children].forEach((x, j) => { x.classList.toggle('b-yellow', j === k); x.classList.toggle('b-blue', j !== k); });
+      applyLook(Object.assign({}, base, { face:'c-none', extra:'x-none' }, looks[k])); Sound.beeps(4); Robot.play('jump', 500);
+    }
+    await wait(800);
+  },
+  x_pilots(){ applyLook(); },
+  async s_minutes(t){
+    this.el('i-big i-stars t-stars', [0,1,2].map(i => `<span style="animation-delay:${i*.25}s">★</span>`).join(''));
+    [0,1,2].forEach(i => setTimeout(() => this.alive(t) && Sound.tone(660 + i*220, 0, .18, 'triangle', .12), i*250));
+    await wait(1500); if(!this.alive(t)) return;
+    this.el('i-big i-games t-games', `<div class="i-game" style="background:#2bb24c">MINECRAFT<small>+ minutes</small></div><div class="i-game" style="background:#e8412c;animation-delay:.35s">ROBLOX<small>+ minutes</small></div><div class="i-game" style="background:#8e44d6;animation-delay:.7s">MOM OR DAD<small>+ play time</small></div>`);
+    Sound.fanfare();
+    await wait(3600); if(!this.alive(t)) return;
+    this.el('t-chip t-cap60', '🛡️ ' + esc(tl(TOUR_UI.cap))); Sound.tone(520, 0, .3, 'sine', .1);
+  },
+  async s_langs(t){
+    const g = this.el('t-flags');
+    for(let k = 0; k < LANGS.length; k++){
+      if(!this.alive(t)) return;
+      this.el('t-flag', `<span class="fl">${LANGS[k].flag}</span><span class="hi">${TOUR_HELLO[k]}</span><span class="ln">${LANGS[k].name}</span>`, g);
+      Sound.tone(600 + k*80, 0, .1, 'triangle', .1); if(k % 3 === 2) Robot.play('jump', 400);
+      await wait(420);
+    }
+  },
+  async s_class(t){
+    this.el('t-head', '👥 MY CLASS');
+    const a = this.el('t-mate l', `<span class="brick b-blue t-pilot">👤 Ana</span>`), b = this.el('t-mate r', `<span class="brick b-green t-pilot">👤 Luka</span>`);
+    await wait(1200); if(!this.alive(t)) return;
+    const card = this.el('i-card t-gift', cardHTML(crewById('sola') || CREW[1]));
+    const pa = stagePoint(a.getBoundingClientRect(), .5, 1), pb = stagePoint(b.getBoundingClientRect(), .5, 1), k = .55;
+    await this.fly(card, `translate(${pa.x - 75}px,${pa.y}px) scale(${k}) rotate(-10deg)`, `translate(${pb.x - 75}px,${pa.y}px) scale(${k}) rotate(8deg)`, 1500, 'ease-in-out');
+    if(!this.alive(t)) return; this.popText(pb, '🎁', '#fff'); Sound.fanfare();
+    await wait(700); if(!this.alive(t)) return;
+    const w = this.el('t-float t-wfly', '🌈');
+    await this.fly(w, `translate(${pb.x}px,${pb.y + 40}px) scale(1)`, `translate(${pa.x}px,${pa.y + 40}px) scale(1.3)`, 1300, 'ease-in-out');
+    if(!this.alive(t)) return; this.popText(pa, '🔁', '#fff'); Sound.correct();
+    await wait(600);
+  },
+  async s_finale(t){
+    this.el('t-logo', `<h1 class="logo">ZEEBOT'S<span>STAR MATH</span></h1>`);
+    const duck = this.el('t-duck t-duck-s', this.duckHTML()); const W = this.W(), H = this.H();
+    this.fly(duck, `translate(${-200}px,${H*.4}px)`, `translate(${W*.08}px,${H*.4}px)`, 1000);
+    const o = this.ship('owl', null, 't-ship t-side r'); this.fly(o, `translate(${W + 20}px,${H*.36}px)`, `translate(${W*.76}px,${H*.36}px)`, 1100);
+    Robot.play('jump', 650); Sound.fanfare();
+    for(let k = 0; k < 6; k++){ setTimeout(() => { if(!this.alive(t)) return; stageSparks({ x:W*(.15 + Math.random()*.7), y:H*(.15 + Math.random()*.4) }, 20, ['#ffe95a','#5ff2ff','#ff7ab8','#5dff8a'][k%4]); Sound.tone(800 + Math.random()*900, 0, .12, 'triangle', .08); }, 400 + k*450); }
+    await wait(3200);
   },
 };
 /* =====================================================================
@@ -4284,6 +4930,6 @@ new ResizeObserver(sizeStars).observe(stage); sizeStars(); requestAnimationFrame
 
 applyLook(); renderCopilot(); Game.setAnswers(null);
 /* Every start: pick the language first (the last choice is highlighted), then the intro plays in that language. */
-showLangPick(() => Studio.play());
+showLangPick(() => location.hash === '#about' ? Tour.play() : Studio.play());
 window.__bleep = { Game, Save, MISSIONS, CREW, FLEET, Helpers, Online };
 </script>
