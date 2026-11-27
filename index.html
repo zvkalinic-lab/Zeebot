@@ -4177,8 +4177,8 @@ function loop(now){ const dt = Math.min(.05,(now-last)/1000); last = now; drawSt
 new ResizeObserver(sizeStars).observe(stage); sizeStars(); requestAnimationFrame(loop);
 
 applyLook(); renderCopilot(); Game.setAnswers(null);
-/* First visit: pick the language before anything else, so the intro is already in that language. The choice is remembered. */
-if(Profiles.m.lang) Studio.gate(); else showLangPick(() => Studio.gate());
+/* Every start: pick the language first (the last choice is highlighted), then the intro plays in that language. */
+showLangPick(() => Studio.play());
 window.__bleep = { Game, Save, MISSIONS, CREW, FLEET, Helpers, Online };
 </script>
 
