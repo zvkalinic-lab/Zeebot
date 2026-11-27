@@ -1,6 +1,6 @@
 # Zeebot online: My Class
 
-Class leaderboard and card swaps for Zeebot's Star Math, on a free Supabase project.
+Class player list, card and weapon gifts, and card swaps for Zeebot's Star Math, on a free Supabase project.
 
 1. Create a Supabase project (free plan).
 2. SQL Editor > New query: paste `zeebot-online.sql`, press Run.
@@ -9,4 +9,4 @@ Class leaderboard and card swaps for Zeebot's Star Math, on a free Supabase proj
 
 More classes: run step 3 again with another code. Change a PIN: run it again with the same code and a new PIN.
 
-Stored per player: nickname, score, total stars, card ids, best time per level. No real names, emails or chat.
+Stored per player: nickname, score, total stars, card ids, weapon ids, best time per level. No real names, emails or chat.
