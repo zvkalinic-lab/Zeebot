@@ -79,3 +79,13 @@ Every bonus level (after levels 3, 6 and 9) lasts 4 minutes (`ARCADE.duration`) 
 ## Display notes
 - The display font (Bungee) draws ÷ almost like +, so the operator ball uses the body font and boss questions wrap ÷ in `<span class="dv">` (`setQ`).
 - Answer buttons pick their size class from the translated text, so "292 ost. 2" still fits five buttons on a small phone.
+
+## Level clock, bolts and Zeebot's workshop
+- **Level clock** (`LevelClock`, `LEVEL_CLOCK`): a second clock under the problem timer (⏱ m:ss 🔩). Its budget is 60% of all problem times in the level (a boss counts as 10 problems). It only runs while a problem is open. Seconds left when the level is cleared become 🔩 bolts (`Save.d.bolts`), counted up on the "Level complete" screen. If it runs out the level goes on normally, just without bolts. Helpers that add seconds do not add to it.
+- **Workshop** (`showWorkshop`, `PARTS`, `PART_CATS`, `GEAR_SVG`): a space station hangar with an open door. Reach it from the 🔧 WORKSHOP button on the map, in the weapon shop and on the 👤 screen. Tap a part to try it on, then BUY with bolts; bought parts stay owned (`Save.d.parts`) and the chosen look is `Save.d.look`. Each pilot has their own bolts, parts and look.
+- `applyLook()` changes the real `#robot` SVG (gradient stops, pupils, antenna tips via `--tipA/--tipB`, feet) and fills the extra layers `#rbAnt`, `#rbFace`, `#rbHat`, `#rbChest`, `#rbBack` (cape). New parts: add a row to `PARTS` (and art to `GEAR_SVG`) plus a translation row.
+- Weapons still use ⭐ points from bonus levels; the workshop uses bolts.
+
+## Helpers
+- Helpers are dimmed while they cannot be used (ships flying in, animations). A tap then makes Zeebot say what the helper does.
+- The first time a helper appears, `helperIntro` shows its card, makes the button bounce and Zeebot reads its power aloud (seen flags `helper-<id>` in `Save.d.seen`).
