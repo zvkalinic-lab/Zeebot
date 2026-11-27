@@ -5,7 +5,7 @@
 -- How it is protected:
 --  * The tables are closed (row level security on, no policies). The game can only call the zb_ functions below.
 --  * A player proves who they are with a secret that only their device knows.
---  * Only nicknames, scores, card ids, weapon ids and best times are stored. No names, emails or chat.
+--  * Only nicknames, scores, card ids, weapon ids, robot parts and best times are stored. No names, emails or chat.
 --  * zb_new_class can only be run here in the SQL Editor, not from the game.
 
 create table if not exists zb_classes (
@@ -44,6 +44,7 @@ create table if not exists zb_trades (
 create index if not exists zb_trades_to on zb_trades (to_id, status);
 
 alter table zb_players add column if not exists weapons text[] not null default '{}';
+alter table zb_players add column if not exists look jsonb not null default '{}';   -- Zeebot's workshop look (part ids)
 
 create table if not exists zb_gifts (
   id         bigint generated always as identity primary key,
@@ -119,13 +120,15 @@ end $$;
 -- Upload progress. p_applied = accepted trades this device has already swapped.
 -- Returns accepted trades the device still has to swap, plus open offers.
 drop function if exists zb_sync(uuid, uuid, int, int, text[], jsonb, bigint[]);
+drop function if exists zb_sync(uuid, uuid, int, int, text[], jsonb, bigint[], text[], bigint[]);
 create or replace function zb_sync(p_id uuid, p_secret uuid, p_score int, p_stars int, p_cards text[], p_bests jsonb,
-  p_applied bigint[] default '{}', p_weapons text[] default '{}', p_gifted bigint[] default '{}')
+  p_applied bigint[] default '{}', p_weapons text[] default '{}', p_gifted bigint[] default '{}', p_look jsonb default '{}')
 returns json
 language plpgsql security definer set search_path = public as $$
 declare me zb_players := zb_me(p_id, p_secret); t record; v_cards text[]; v_weap text[]; todo json; gtodo json;
 begin
-  if coalesce(array_length(p_cards,1),0) > 400 or coalesce(array_length(p_weapons,1),0) > 60 or octet_length(coalesce(p_bests,'{}')::text) > 30000 then raise exception 'TOO_BIG'; end if;
+  if coalesce(array_length(p_cards,1),0) > 400 or coalesce(array_length(p_weapons,1),0) > 60 or octet_length(coalesce(p_bests,'{}')::text) > 30000
+     or octet_length(coalesce(p_look,'{}')::text) > 600 then raise exception 'TOO_BIG'; end if;
   v_cards := (select coalesce(array_agg(distinct x), '{}') from unnest(coalesce(p_cards,'{}')) x where char_length(x) between 1 and 24);
   v_weap  := (select coalesce(array_agg(distinct x), '{}') from unnest(coalesce(p_weapons,'{}')) x where char_length(x) between 1 and 24);
   -- mark swaps and gifts the device reports as done
@@ -147,7 +150,7 @@ begin
     end if;
   end loop;
   update zb_players set score = greatest(0, coalesce(p_score,0)), stars = greatest(0, coalesce(p_stars,0)), cards = v_cards, weapons = v_weap,
-    bests = coalesce(p_bests,'{}'), updated = now() where id = me.id;
+    look = case when jsonb_typeof(p_look) = 'object' then p_look else '{}' end, bests = coalesce(p_bests,'{}'), updated = now() where id = me.id;
   select coalesce(json_agg(json_build_object('id', x.id, 'gave', case when x.from_id = me.id then x.give else x.want end,
       'got', case when x.from_id = me.id then x.want else x.give end) order by x.id), '[]')
     into todo from zb_trades x where x.status = 'accepted'
@@ -217,7 +220,7 @@ declare c text := upper(btrim(coalesce(p_code,'')));
 begin
   if not exists (select 1 from zb_classes where code = c) then raise exception 'NO_CLASS'; end if;
   return json_build_object('code', c,
-    'players', (select coalesce(json_agg(json_build_object('id', id, 'nick', nick, 'score', score, 'stars', stars, 'cards', cards, 'weapons', weapons)
+    'players', (select coalesce(json_agg(json_build_object('id', id, 'nick', nick, 'score', score, 'stars', stars, 'cards', cards, 'weapons', weapons, 'look', look)
                  order by lower(nick)), '[]') from zb_players where class_code = c),
     'bests', (select coalesce(json_object_agg(k, json_build_object('nick', nick, 'secs', secs)), '{}') from (
                  select distinct on (b.key) b.key as k, p.nick, (b.value)::text::numeric as secs
@@ -332,7 +335,7 @@ revoke all on function zb_clean_nick(text) from public;
 do $$ begin
   if exists (select 1 from pg_roles where rolname = 'anon') then
     execute 'revoke all on function zb_new_class(text, text), zb_me(uuid, uuid), zb_clean_nick(text), zb_trades_of(uuid), zb_gifts_of(uuid), zb_admin_ok(text, text) from anon, authenticated';
-    execute 'grant execute on function zb_join(text, text), zb_sync(uuid, uuid, int, int, text[], jsonb, bigint[], text[], bigint[]), zb_board(text), zb_gift(uuid, uuid, uuid, text, text),
+    execute 'grant execute on function zb_join(text, text), zb_sync(uuid, uuid, int, int, text[], jsonb, bigint[], text[], bigint[], jsonb), zb_board(text), zb_gift(uuid, uuid, uuid, text, text),
       zb_offer(uuid, uuid, uuid, text, text), zb_answer(uuid, uuid, bigint, boolean), zb_cancel(uuid, uuid, bigint), zb_leave(uuid, uuid),
       zb_admin_list(text, text), zb_admin_rename(text, text, uuid, text), zb_admin_delete(text, text, uuid) to anon';
   end if;

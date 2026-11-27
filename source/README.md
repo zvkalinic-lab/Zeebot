@@ -20,7 +20,7 @@ All content lives at the top of the `<script>` in `index.html`:
 The map screen currently shows `MISSIONS[0]`; a mission picker is the next step when Mission 2 exists.
 
 - **Player name**: asked on the title screen (saved as `player`).
-- **REWARD**: session reward formula (minutes per level, per star, boss bonus, 90%-accuracy bonus, daily cap 60). REWARD.games: Minecraft, Roblox, Mom or Dad. "I'M DONE" on the map shows the report; "CLAIM MY REWARD" saves it and shows a reward ticket to show a parent. No email is sent.
+- **REWARD**: session reward formula (minutes per level, per star, boss bonus, 90%-accuracy bonus, daily cap 60). REWARD.games: Games (video game time) and Mom or Dad (play time with Mom and Dad). Zee asked 2026-11-27 not to name Minecraft or Roblox anywhere. "I'M DONE" on the map shows the report; "CLAIM MY REWARD" saves it and shows a reward ticket to show a parent. No email is sent.
 - **SQUAD**: before a level the child picks up to 3 crew cards. Speed: +1 s per 4 points (max +6). Battery: +1 bar at 8, +2 at 20. Strength: chance of a 2-part power hit on bosses (strength/40, max 50%).
 - **CARD_SETS**: completing a set gives a one-time bonus of minutes on top of the daily cap.
 
@@ -94,6 +94,13 @@ Every bonus level (after levels 3, 6 and 9) lasts 4 minutes (`ARCADE.duration`) 
 - Optional and off until `CLOUD = { url, key }` (after `Save.load()`) holds a Supabase Project URL and publishable/anon key. While it is empty the 👥 MY CLASS button is hidden and nothing leaves the device.
 - Database: run `online/zeebot-online.sql` (Zeebot repo) in Supabase > SQL Editor (safe to re-run; it upgrades), then `select zb_new_class('CODE','PIN');` per class. Tables are closed (RLS, no policies); the game only calls `zb_` functions over `/rest/v1/rpc/`.
 - A pilot joins with a class code and a nickname; `Save.d.online` keeps `{ code, id, secret, nick, applied, done, gifted, giftDone }`.
-- Screens: 👥 PLAYERS (everyone in the class, card count, weapon icons) → a player (their cards, glow = you lack it, their weapons) → 🎁 GIFT A CARD / 🎁 GIFT A WEAPON / 🔁 SWAP. 🔁 SWAP CARDS tab (offers for you YES/NO, your offers TAKE BACK). 🎁 GIFTS tab (last 30 days, in/out with nickname). TEACHER (class code + PIN: rename/remove). No chat, no score list (Zee dropped TOP 10/FASTEST on 2026-11-27; score and best times are still uploaded but not shown).
+- Screens: 👥 PLAYERS (everyone in the class with their own Zeebot as built in the workshop (`robotFor(look)`), card count, weapon icons) → a player (their cards, glow = you lack it, their weapons) → 🎁 GIFT A CARD / 🎁 GIFT A WEAPON / 🔁 SWAP. 🔁 SWAP CARDS tab (offers for you YES/NO, your offers TAKE BACK). 🎁 GIFTS tab (last 30 days, in/out with nickname). TEACHER (class code + PIN: rename/remove). No chat, no score list (Zee dropped TOP 10/FASTEST on 2026-11-27; score and best times are still uploaded but not shown).
 - A gift moves at once on the server (`zb_gift`); the giver loses it (the Duck Blaster cannot be given). The receiver's device gets it on the next sync and shows "A GIFT FOR YOU! From <nick>". Swaps and gifts are applied once per device and acknowledged with `p_applied` / `p_gifted`.
 - `Save.d.earned` lists every card won on this device; a level or bonus gift is not given again for a card that was swapped or given away.
+
+## About tour ("What is Zeebot?")
+- `Tour`, `TOUR_LINES`, `TOUR_SPK`, `TOUR_UI` (after the opening intro code). An animated, narrated ~2 minute show where Zeebot, Duck Wing, Owl Scope, Pinchy Crab and Captain Oona explain the whole game: 2nd/3rd grade, the 9 missions and themes, crates and answers, the timer, helpers, raiders, the boss, bonus levels, the weapon shop, bolts and the workshop, crew cards and squads, pilots, reward minutes with the daily limit, the 9 languages and My Class.
+- Open it with ❓ WHAT IS ZEEBOT? on the title screen, or with a link ending in `#about` (it plays right after the language is picked). SKIP ends it; at the end START ▸ goes to the title screen.
+- Lines are written per language inside `TOUR_LINES` (en, hr, it, de, es, fr, el, sr, sl), not in I18N_DATA. Each scene is a `s_<id>` method; `x_<id>` cleans up after it. The HUD and answer bar are hidden while it runs (`#app.touring`).
+- The device voice reads each line with the speaker's pitch. `window.__tourVoice(i, text, line)` can replace it (returns a promise); the video recorder uses it to play prepared voice clips.
+- Video: `video/` in the project files has the recorder (`rec.js`: headless Chromium screencast + in-page audio capture), `voices.py` (English: Piper voices, Croatian: Coqui VITS model `tts_models--hr--cv--vits`), and `mux.py` (ffmpeg, 1080p30 MP4).

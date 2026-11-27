@@ -792,7 +792,7 @@ button.brick:active{transform:translateY(3px)}
 .admin-in{min-width:0;font:inherit;font-weight:700;padding:6px 8px;border-radius:8px;border:2px solid #fff;background:#141a3a;color:#fff}
 .lbgap{color:#7880c0;text-align:center}
 .plist{width:min(560px,100%);display:flex;flex-direction:column;gap:6px}
-.prow{display:grid;grid-template-columns:minmax(0,1fr) auto auto;gap:10px;align-items:center;background:rgba(20,26,58,.85);border:2px solid #3a4290;border-radius:12px;padding:10px 12px;color:#fff;font:inherit;text-align:left;cursor:pointer}
+.prow{display:grid;grid-template-columns:44px minmax(0,1fr) auto auto;gap:10px;align-items:center;background:rgba(20,26,58,.85);border:2px solid #3a4290;border-radius:12px;padding:10px 12px;color:#fff;font:inherit;text-align:left;cursor:pointer}
 .prow:hover{border-color:#5ff2ff}.prow.me{border-color:var(--yellow)}
 .prow .pn{font-weight:700;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}.prow .pc{color:#b8c0ff;font-size:13px}.prow .pw{font-size:16px;letter-spacing:1px}
 .mweap{width:88px;border-radius:12px;padding:6px 4px;border:3px solid #3a4a8a;background:rgba(20,26,58,.9);color:#fff;display:flex;flex-direction:column;align-items:center;gap:4px;cursor:pointer;font:inherit}
@@ -800,6 +800,8 @@ button.brick:active{transform:translateY(3px)}
 .mweap.sel{box-shadow:0 0 0 4px var(--yellow),0 0 18px var(--yellow);transform:scale(1.06)}
 .mcard.new{box-shadow:0 0 0 3px #5dff8a,0 0 14px #5dff8a}
 .giftw{max-width:200px;margin:0 auto}
+.pbot{width:44px;height:54px;display:block}.pbot svg,.pbig svg{width:100%;height:100%;display:block}
+.pbig{width:130px;height:170px;margin:0 auto;filter:drop-shadow(0 6px 14px rgba(0,0,0,.45))}
 .mcards{display:flex;flex-wrap:wrap;gap:8px;justify-content:center;width:100%}
 .mcard{--r1:#3a7bff;--r2:#1a3a9a;width:88px;border-radius:12px;padding:5px;border:3px solid #fff;background:linear-gradient(160deg,var(--r1),var(--r2));color:#fff;display:flex;flex-direction:column;align-items:center;gap:3px;cursor:pointer;font:inherit}
 .mcard.rare{--r1:#b45cff;--r2:#4a1a8c}
@@ -1538,7 +1540,7 @@ const Online = {
     this.busy = (async () => { try{
       const s = this.score(), sent = (me.applied||[]).slice(), sentG = (me.gifted||[]).slice();
       const r = await this.rpc('zb_sync', { ...this.auth(), p_score:s.score, p_stars:s.stars, p_cards:Save.d.crew, p_bests:Save.d.bests||{},
-        p_applied:sent, p_weapons:this.weapons(), p_gifted:sentG });
+        p_applied:sent, p_weapons:this.weapons(), p_gifted:sentG, p_look:(typeof curLook === 'function' ? curLook() : {}) });
       this.lastSync = Date.now(); me.nick = r.nick; me.code = r.code;
       me.applied = (me.applied||[]).filter(id => !sent.includes(id));   // the server has these now
       me.gifted = (me.gifted||[]).filter(id => !sentG.includes(id));
@@ -1621,6 +1623,22 @@ function miniWeapon(id, cls='', attrs=''){
   return `<button class="mweap ${w.tier===2?'strong':''} ${cls}" ${attrs}><span class="wi">${w.icon}</span><span class="mn">${esc(w.name)}</span></button>`;
 }
 const giftItemName = g => g.kind === 'card' ? ((crewById(g.item)||{}).name || g.item) : ((weaponById(g.item)||{}).name || g.item);
+/* Someone's Zeebot exactly as they built it in the workshop. Borrows the real robot for a moment, then puts our own look back. */
+function lookFrom(raw){ const L = { ...LOOK_DEF }; if(raw && typeof raw === 'object') for(const k in L){ const x = partById(raw[k]); if(x && x.cat === k) L[k] = x.id; } return L; }
+let robotUid = 0;
+function robotFor(raw){
+  applyLook(lookFrom(raw));
+  const c = robotSvg.cloneNode(true), u = 'r' + (++robotUid), ids = {};
+  c.removeAttribute('id'); c.removeAttribute('data-mood'); c.removeAttribute('style');
+  c.querySelectorAll('[id]').forEach(e => { ids[e.id] = e.id + '_' + u; e.id = ids[e.id]; });
+  c.querySelectorAll('*').forEach(e => { for(const at of ['fill','stroke']){ const v = e.getAttribute(at); const m = v && v.match(/^url\(#(.+)\)$/); if(m && ids[m[1]]) e.setAttribute(at, `url(#${ids[m[1]]})`); } });
+  c.querySelectorAll('.m-idle,.m-hurt,.xeyes,.rb-zap,.rb-wings,.rb-flame,.rb-soot').forEach(e => e.remove());
+  c.querySelectorAll('.m-happy,.cheek').forEach(e => e.style.display = 'inline');
+  const tA = robotSvg.style.getPropertyValue('--tipA') || '#ff3b3b', tB = robotSvg.style.getPropertyValue('--tipB') || '#ffe95a';
+  c.querySelectorAll('.ant-tip').forEach(e => e.setAttribute('fill', e.classList.contains('r') ? tB : tA));
+  c.classList.add('botpic'); c.style.overflow = 'visible';
+  const html = c.outerHTML; applyLook(); return html;
+}
 function classBadge(){ const n = Online.incoming().length, b = $('#oClassN'); if(b){ b.textContent = n; b.hidden = !n; } }
 
 /* MY CLASS screen. tab: players | trade | gifts */
@@ -1636,8 +1654,8 @@ async function showClass(mi, tab='players', note=''){
     if(!B) body = `<p class="muted">${msg ? '' : 'Loading…'}</p>`;
     else if(tab === 'players'){
       body = `<p class="muted">Tap a player to see their cards, give a gift or swap cards.</p>
-        <div class="plist">${P.map(p => `<button class="prow ${p.id===me.id?'me':''}" data-pl="${p.id}">
-          <span class="pn">👤 ${esc(p.nick)}</span><span class="pc">🃏 ${p.cards.length}</span>
+        <div class="plist">${P.map(p => `<button class="prow ${p.id===me.id?'me':''}" data-pl="${p.id}"><span class="pbot">${robotFor(p.look)}</span>
+          <span class="pn">${esc(p.nick)}</span><span class="pc">🃏 ${p.cards.length}</span>
           <span class="pw">${(p.weapons||[]).filter(id => id !== 'blaster').map(id => (weaponById(id)||{}).icon || '').join('')}</span></button>`).join('')}</div>
         ${P.length > 1 ? '' : '<p class="muted">Nobody else is in the class yet.</p>'}`;
     } else if(tab === 'gifts'){
@@ -1740,7 +1758,8 @@ function showPlayer(mi, pid, msg=''){
   const isMe = p.id === me.id, cards = p.cards.filter(id => crewById(id)), weaps = (p.weapons||[]).filter(id => weaponById(id) && id !== 'blaster');
   const canCards = Save.d.crew.filter(id => crewById(id) && !p.cards.includes(id));
   const canWeaps = Online.weapons().filter(id => id !== 'blaster' && weaponById(id) && !(p.weapons||[]).includes(id));
-  showOverlay(`<div class="panel"><div><div class="mission-tag">${isMe ? 'THAT IS YOU' : 'CLASSMATE'}</div><h2 class="h2">👤 ${esc(p.nick)}</h2></div>
+  showOverlay(`<div class="panel"><div><div class="mission-tag">${isMe ? 'THAT IS YOU' : 'CLASSMATE'}</div><h2 class="h2">${esc(p.nick)}</h2></div>
+    <div class="pbig">${robotFor(p.look)}</div>
     ${msg ? `<p class="oerr">${esc(msg)}</p>` : ''}
     ${isMe ? '' : `<div class="row"><button class="brick b-green big-btn" id="gCard" ${canCards.length?'':'disabled'}>🎁 GIFT A CARD</button><button class="brick b-orange big-btn" id="gWeap" ${canWeaps.length?'':'disabled'}>🎁 GIFT A WEAPON</button><button class="brick b-purple big-btn" id="gSwap">🔁 SWAP</button></div>`}
     <div class="grp-h">Crew cards · ${cards.length}</div>
@@ -4423,14 +4442,14 @@ function showWorkshop(mi, back){
       return `<div class="hg-item ${x.id===on?'on':''} ${x.id===trying?'try':''} ${!own && (Save.d.bolts||0) < x.cost ? 'poor' : ''}" data-id="${x.id}">${partSwatch(x)}<div class="nm">${x.name}</div><div class="pr">${own ? (x.id===on ? '✓' : '') : '🔩 ' + x.cost}</div></div>`; }).join('');
     $('#hgItems').querySelectorAll('.hg-item').forEach(el => el.onclick = () => { const id = el.dataset.id;
       Sound.tone(900, 0, .06, 'square', .04);
-      if(ownsPart(id)){ Save.d.look = { ...saved(), [cat]: id }; Save.write(); trying = null; Robot.mood('happy'); }
+      if(ownsPart(id)){ Save.d.look = { ...saved(), [cat]: id }; Save.write(); trying = null; Robot.mood('happy'); Online.bump(); }
       else trying = id;
       draw(); });
     const act = $('#hgAct');
     if(trying){ const x = partById(trying), have = Save.d.bolts || 0;
       act.innerHTML = have >= x.cost ? `<button class="brick b-green big-btn" id="hgBuy">BUY · 🔩 ${x.cost}</button>` : `<button class="brick big-btn" disabled>🔩 ${x.cost}</button><small class="need">Need ${x.cost - have} more</small>`;
       const bb = $('#hgBuy'); if(bb) bb.onclick = () => { if((Save.d.bolts||0) < x.cost) return;
-        Save.d.bolts -= x.cost; Save.d.parts = [...(Save.d.parts||[]), x.id]; Save.d.look = { ...saved(), [x.cat]: x.id }; Save.write(); trying = null;
+        Save.d.bolts -= x.cost; Save.d.parts = [...(Save.d.parts||[]), x.id]; Save.d.look = { ...saved(), [x.cat]: x.id }; Save.write(); trying = null; Online.bump();
         Sound.fanfare(); Robot.say('New part!', x.name, 1600); draw(); stageSparks({ x: stage.clientWidth/2, y: stage.clientHeight*.35 }, 24, '#ffe95a'); };
     } else act.innerHTML = '';
   };
