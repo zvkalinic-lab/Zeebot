@@ -24,8 +24,10 @@ head = '''<!doctype html>
 src = src.replace('<meta name="claude:viewport-fit-sides" content="cover">\n', '')
 i = src.index('<div id="app">')
 out = head + src[:i] + '</head>\n<body>\n' + src[i:]
-out = out.replace("window.__bleep = { Game, Save, MISSIONS, CREW };", """window.__bleep = { Game, Save, MISSIONS, CREW };
-if('serviceWorker' in navigator && location.protocol==='https:') addEventListener('load',()=>navigator.serviceWorker.register('sw.js').catch(()=>{}));""")
+# Register the offline service worker right after the debug handle line (whatever it lists).
+out, n = re.subn(r"(window\.__bleep = \{[^}]*\};)", r"""\1
+if('serviceWorker' in navigator && location.protocol==='https:') addEventListener('load',()=>navigator.serviceWorker.register('sw.js').catch(()=>{}));""", out, count=1)
+if n != 1: raise SystemExit('build_site: could not add the service worker registration')
 out += '\n</body>\n</html>\n'
 open(D + 'index.html', 'w').write(out)
 if len(sys.argv) > 1:
