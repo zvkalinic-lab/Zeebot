@@ -450,6 +450,7 @@ button.brick:active{transform:translateY(3px)}
 .about-big.mini small{font-size:clamp(11px,1.6vw,13px);font-weight:700}
 .about-big.mini .ab-play{width:clamp(30px,5vh,38px);font-size:clamp(14px,2.4vh,18px);padding-left:3px}
 .hud-l{display:flex;gap:8px;align-items:center}
+.leave-mini{position:absolute;top:8px;right:10px;z-index:2;font:700 11px/1 var(--body,inherit);letter-spacing:.03em;padding:5px 8px;border-radius:8px;border:1px solid rgba(255,255,255,.18);background:transparent;color:rgba(255,255,255,.45);cursor:pointer}
 .t-title{gap:12px;flex-shrink:0}
 .t-title>*{flex-shrink:0}
 @media (max-height:900px){.t-title .sub{display:none}.t-title .logo{font-size:clamp(30px,min(6.5vw,8vh),70px)}}
@@ -1686,6 +1687,8 @@ function robotFor(raw){
 function classBadge(){ const n = Online.incoming().length, b = $('#oClassN'); if(b){ b.textContent = n; b.hidden = !n; } }
 
 /* MY CLASS screen. tab: players | trade | gifts */
+let classFrom = 'map';   // 'title' when MY CLASS was opened from the start screen: ◂ BACK returns there
+const classBack = mi => classFrom === 'title' ? showTitle() : showMap(mi);
 async function showClass(mi, tab='players', note=''){
   resetStage();
   const me = Online.me();
@@ -1726,8 +1729,9 @@ async function showClass(mi, tab='players', note=''){
       <div class="mtabs">${tabs.map(([k,l])=>`<button class="brick mtab ${k===tab?'cur b-yellow':'b-blue'}" data-tab="${k}">${l}${k==='trade' && inc.length ? `<span class="nbadge">${inc.length}</span>` : ''}</button>`).join('')}</div>
       ${msg ? `<p class="oerr">${esc(msg)}</p>` : ''}
       ${body}
-      <div class="row"><button class="brick b-teal big-btn" id="oRef">↻ REFRESH</button><button class="brick b-blue big-btn" id="oMap">◂ MAP</button></div>
-      <div class="row"><button class="brick b-red hud-btn" id="oLeave">LEAVE CLASS</button>${ADMIN ? '<button class="brick b-purple hud-btn" id="oAdmin">🔑 TEACHER</button>' : ''}</div></div>`);
+      <div class="row"><button class="brick b-blue big-btn" id="oMap">◂ BACK</button><button class="brick b-teal big-btn" id="oRef">↻ REFRESH</button></div>
+      ${ADMIN ? '<div class="row"><button class="brick b-purple hud-btn" id="oAdmin">🔑 TEACHER</button></div>' : ''}</div>
+      <button class="leave-mini" id="oLeave">LEAVE CLASS</button>`);
     overlay.querySelectorAll('[data-tab]').forEach(b => b.onclick = () => { Sound.click(); tab = b.dataset.tab; draw(); });
     overlay.querySelectorAll('[data-pl]').forEach(b => b.onclick = () => { Sound.click(); showPlayer(mi, b.dataset.pl); });
     const act = (sel, fn) => overlay.querySelectorAll(sel).forEach(b => b.onclick = async () => {
@@ -1738,7 +1742,7 @@ async function showClass(mi, tab='players', note=''){
     act('[data-no]', b => Online.answer(+b.dataset.no, false));
     act('[data-cancel]', b => Online.cancel(+b.dataset.cancel));
     $('#oRef').onclick = () => { Sound.click(); load(); };
-    $('#oMap').onclick = () => { Sound.click(); showMap(mi); };
+    $('#oMap').onclick = () => { Sound.click(); classBack(mi); };
     if(ADMIN) $('#oAdmin').onclick = () => { Sound.click(); showClassAdmin(mi); };
     $('#oLeave').onclick = () => { Sound.click();
       showOverlay(`<div class="panel"><h2 class="h2">Leave the class?</h2><p class="sub">Your nickname and place on the list are removed. Your levels and cards stay on this device.</p>
@@ -1785,10 +1789,10 @@ function showClassJoin(mi, msg=''){
     ${CLOUD.classCode ? '' : `<div class="namebox"><label for="oCode">Class code</label><input class="namein" id="oCode" maxlength="20" autocomplete="off" autocapitalize="characters" placeholder="e.g. 3B-ZEE"></div>`}
     <div class="namebox"><label>Your nickname</label><div class="nickpick"><b id="oNick">${randNick()}</b><button class="brick b-yellow hud-btn" id="oDice" aria-label="New nickname">🎲 NEW NICKNAME</button></div></div>
     <p class="oerr" id="oErr" ${msg?'':'hidden'}>${esc(msg)}</p>
-    <div class="row"><button class="brick b-green big-btn" id="oJoin">JOIN ▸</button><button class="brick b-blue big-btn" id="oMap">◂ MAP</button></div>
+    <div class="row"><button class="brick b-green big-btn" id="oJoin">JOIN ▸</button><button class="brick b-blue big-btn" id="oMap">◂ BACK</button></div>
     ${ADMIN ? '<div class="row"><button class="brick b-purple hud-btn" id="oAdmin">🔑 TEACHER</button></div>' : ''}</div>`);
   const err = m => { const e = $('#oErr'); e.textContent = m; e.hidden = !m; };
-  $('#oMap').onclick = () => { Sound.click(); showMap(mi); };
+  $('#oMap').onclick = () => { Sound.click(); classBack(mi); };
   if(ADMIN) $('#oAdmin').onclick = () => { Sound.click(); showClassAdmin(mi); };
   const go = async () => {
     const code = CLOUD.classCode || $('#oCode').value.trim(), nick = $('#oNick').textContent.trim();
@@ -3461,7 +3465,7 @@ function showTitle(){
     if(!typed()){ const cur = Profiles.m.list.find(p => p.id === Profiles.m.cur) || Profiles.m.list[0];
       if(!cur){ $('#oHint').hidden = false; return shake(); }
       Profiles.use(cur.id); }
-    Sound.click(); showClass(Save.d.lastMission || 0); };
+    Sound.click(); classFrom = 'title'; showClass(Save.d.lastMission || 0); };
 }
 function resetStage(){
   if(typeof Arcade!=='undefined' && Arcade.layer) Arcade.stop();
@@ -3496,7 +3500,7 @@ function showMap(mi){
   $('#oBank').onclick = () => { Sound.init(); Sound.click(); showBank(mi); };
   $('#oWork').onclick = () => { Sound.init(); Sound.click(); showWorkshop(mi); };
   $('#oHome').onclick = () => { Sound.init(); Sound.click(); showTitle(); };
-  const oc = $('#oClass'); if(oc){ oc.onclick = () => { Sound.init(); Sound.click(); showClass(mi); }; classBadge();
+  const oc = $('#oClass'); if(oc){ oc.onclick = () => { Sound.init(); Sound.click(); classFrom = 'map'; showClass(mi); }; classBadge();
     Online.sync().then(r => { classBadge(); if(!r || !$('#oClass')) return;
       if(r.gifts && r.gifts.length) return showGiftArrived(mi, r.gifts, () => showMap(mi));
       if(r.got && r.got.length) Robot.say('Card swap done!', 'New card: ' + r.got.map(id => crewById(id).name).join(', '), 2600); }).catch(()=>{}); }
